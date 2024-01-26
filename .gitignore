@@ -1,0 +1,12 @@
+/**/node_modules/
+/**/public/
+/**/src/serverInfo.js
+/**/*.log
+/**/build/
+/**/__pycache__/
+/**/*.pyc
+/**/.vscode/
+/**/operation_data/
+*.code-workspace
+/**/generic.go
+database/

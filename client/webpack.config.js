@@ -1,0 +1,110 @@
+
+const path = require('path');
+const htmlWebpackPlugin = require('html-webpack-plugin');
+const webpack  = require('webpack');
+const fs = require('fs');
+
+const config = {
+	entry: './src/index.js',
+	output: {
+		path: path.resolve(__dirname, '/var/www/octavio/scripts'),
+		filename: 'boundle.js'
+	},
+	devServer: {
+		open: false,
+		host: "192.168.0.140",
+		port: 5005,	
+		hot: true,
+		https: {
+			key: fs.readFileSync("/home/el_maligno/local_domain_certificates/santa-elena.mx/dev-santa-elena.mx-key.pem"),
+			cert: fs.readFileSync("/home/el_maligno/local_domain_certificates/santa-elena.mx/dev-santa-elena.mx.pem"),
+		},
+		static:{
+			directory: path.join(__dirname, 'public')
+		},
+		allowedHosts: "all",
+		historyApiFallback: true
+	},
+	resolve: {
+		alias: {
+			svelte: path.resolve('node_modules', 'svelte'),
+			'@libs': path.resolve(__dirname, 'src/libs'),
+			'@components': path.resolve(__dirname, 'src/components'),
+			'@pages': path.resolve(__dirname, 'src/pages'),
+			'@svg': path.resolve(__dirname, 'src/svg'),
+			'@models': path.resolve(__dirname, 'src/models'),
+			"@actions": path.resolve(__dirname, 'src/actions'),
+			"@events": path.resolve(__dirname, 'src/events'),
+			"@stores": path.resolve(__dirname, 'src/stores'),
+			"@databases": path.resolve(__dirname, 'src/databases'),
+		},
+		extensions: ['*', '.mjs', '.js', '.svelte'],
+		mainFields: ['svelte', 'browser', 'module', 'main'],
+	},
+	module: {
+		rules: [
+			{
+				test:  /\.js?$/,
+				exclude: /node_modules/,
+				use: {
+					loader: 'babel-loader'
+				}
+			},
+			{
+				test: /\.svelte$/,
+				use: {
+					loader: 'svelte-loader',
+					options: {
+						onwarn: (warning, handler) => {
+							if (warning.code.startsWith("a11y") || warning.code.startsWith("css-unused")) return;
+
+							if (warning.code === "unused-export-let") return;
+							console.log(`stupid warning: ${warning.code}`);
+		
+							handler(warning);
+						}
+					}
+				}
+				
+			},
+			{
+				test: /\.svg$/,
+				exclude: /node_modules/,
+				use: {
+					loader: 'svg-inline-loader',
+					options: {
+					  removeSVGTagAttrs: true
+					}
+				}
+			}
+		],
+		exports: {
+			context: path.resolve(__dirname, 'src'),
+			entry: {
+				home: './src/index.js'
+			}
+		}
+	},
+	plugins: [
+		new htmlWebpackPlugin({
+			inject: true,
+			template: './public/index.html',
+			filename: './index.html'
+		})
+	]
+}
+
+
+module.exports = (env, argv) => {
+	const build_config = {
+		JD_ADDRESS: process.env.JD_ADDRESS
+	}
+
+	config.plugins.push(
+		new webpack.DefinePlugin({
+			"JD_ADDRESS": JSON.stringify(build_config.JD_ADDRESS),
+		})
+	);
+
+	return config
+} 
