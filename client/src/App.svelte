@@ -188,7 +188,7 @@
 
             /* Buttons */
             --buttons-font-size: var(--font-size-3);
-            --buttons-padding: calc(var(--buttons-font-size) * 3.6) calc(var(--buttons-font-size) * .9);
+            --buttons-padding: calc(var(--buttons-font-size) * .9) calc(var(--buttons-font-size) * 3.6);
 
             /* Z-INDEX */
 
@@ -336,9 +336,14 @@
         column-gap: var(--page-gutter);
     }
 
-    #router-wrapper {
-        margin-top: var(--navbar-height);
+    :global(.bg-wrapper) {
+        position: absolute;
+        z-index: var(--z-index-b-1);
     }
+
+    /* #router-wrapper {
+        margin-top: var(--navbar-height);
+    } */
 
     .navbarless #router-wrapper {
         margin-top: 0px;
@@ -408,10 +413,13 @@
 =            Buttons            =
 =============================================*/
     :global(button, .button-1, .button-2) {
+        font-family: var(--font-read);
         border-radius: var(--border-radius);
         border: none;
         padding: var(--buttons-padding);
         font-size: var(--buttons-font-size);
+        font-weight: 300;
+        transition: all .4s ease-in-out;
     }
     
     :global(.button-1) {

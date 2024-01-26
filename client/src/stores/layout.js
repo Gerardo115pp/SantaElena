@@ -1,4 +1,6 @@
 import { writable, Writable } from "svelte/store";
+import { ImageResource  } from "@models/MediaResources";
+import { MEDIA_SIZES } from "@libs/media_loaders";
 import { isMobile } from "@libs/utils";
 
 const root_styles = getComputedStyle(document.documentElement);
@@ -32,3 +34,11 @@ export const defineLayout = () => {
  * @type {Writable<boolean>} whether the navbar is hidden or not, means the navbar css visibility property is set to hidden or visible
  */
 export const navbar_hidden = writable(false);
+
+/**
+ * All the images that are available
+ * @type {Object<string, ImageResource>}
+ */
+export const layout_images = {
+    HERO_BACKGROUND: new ImageResource("fcd5b3b8-9566-496c-868e-31e258ba6833.webp", MEDIA_SIZES.ORIGINAL.postfix),
+}

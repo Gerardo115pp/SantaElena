@@ -7,6 +7,7 @@
 /**/*.pyc
 /**/.vscode/
 /**/operation_data/
+/**/*.backup
 *.code-workspace
 /**/generic.go
 database/

@@ -1,7 +1,9 @@
 <script>
-    console.log("Hello World");
+    import Hero from "@pages/Home/sections/Hero.svelte";
 </script>
 
 <main id="libery-santa-elena-home-page">
-    <h1>Santa Elena</h1>
+    <div id="home-page-section-wrapper" class="page-section-wrapper">
+        <Hero />
+    </div>
 </main>
