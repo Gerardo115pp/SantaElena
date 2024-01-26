@@ -1,11 +1,13 @@
-
 const path = require('path');
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const webpack  = require('webpack');
 const fs = require('fs');
 
+const APP_NAME = "Santa Elena";
+
 const config = {
 	entry: './src/index.js',
+	// context: path.resolve(__dirname),
 	output: {
 		path: path.resolve(__dirname, '/var/www/octavio/scripts'),
 		filename: 'boundle.js'
@@ -27,7 +29,7 @@ const config = {
 	},
 	resolve: {
 		alias: {
-			svelte: path.resolve('node_modules', 'svelte'),
+			svelte: path.resolve('node_modules', 'svelte/src/runtime'),
 			'@libs': path.resolve(__dirname, 'src/libs'),
 			'@components': path.resolve(__dirname, 'src/components'),
 			'@pages': path.resolve(__dirname, 'src/pages'),
@@ -38,8 +40,9 @@ const config = {
 			"@stores": path.resolve(__dirname, 'src/stores'),
 			"@databases": path.resolve(__dirname, 'src/databases'),
 		},
-		extensions: ['*', '.mjs', '.js', '.svelte'],
+		extensions: ['.*', '.mjs', '.js', '.svelte'],
 		mainFields: ['svelte', 'browser', 'module', 'main'],
+		conditionNames: ['svelte', 'browser', 'module', 'import'],
 	},
 	module: {
 		rules: [
@@ -62,10 +65,24 @@ const config = {
 							console.log(`stupid warning: ${warning.code}`);
 		
 							handler(warning);
-						}
+						},
+						emitCss: false,
 					}
 				}
 				
+			},
+			{
+				test: /\.css$/,
+				use: [
+					'style-loader',
+					'css-loader'
+				]	
+			},
+			{
+				test: /node_modules\/svelte\/.*\.mjs$/,
+				resolve: {
+				  fullySpecified: false
+				}
 			},
 			{
 				test: /\.svg$/,
@@ -77,13 +94,7 @@ const config = {
 					}
 				}
 			}
-		],
-		exports: {
-			context: path.resolve(__dirname, 'src'),
-			entry: {
-				home: './src/index.js'
-			}
-		}
+		]
 	},
 	plugins: [
 		new htmlWebpackPlugin({
@@ -103,6 +114,7 @@ module.exports = (env, argv) => {
 	config.plugins.push(
 		new webpack.DefinePlugin({
 			"JD_ADDRESS": JSON.stringify(build_config.JD_ADDRESS),
+			"APP_NAME": JSON.stringify(APP_NAME),
 		})
 	);
 
