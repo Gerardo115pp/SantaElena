@@ -1,6 +1,3 @@
-import { push } from 'svelte-spa-router';   
-
-
 const MOBILE_BREAKPOINT = 768;
 
 
@@ -32,27 +29,6 @@ export const createUnsecureJWT = payload => {
     return `${encoded_headers}.${encoded_payload}.`;
 }
 
-export function attributesToJson() {
-    const json_data = {};
-    console.log("AttributestoJson:" + this);
-    Object.entries(this).forEach(([key, value]) => {
-        if (!(this[key] instanceof Function) && key[0] !== '_') {
-            json_data[key] = value;
-        }
-    });
-    return JSON.stringify(json_data);
-}
-
-export function attributesToJsonExclusive() {
-    const json_data = {};
-    Object.entries(this).forEach(([key, value]) => {
-        if (!(this[key] instanceof Function) && key[0] !== '_' && value !== null) {
-            json_data[key] = value;   
-        }
-    });
-
-    return JSON.stringify(json_data);
-}
 
 export const getUrlPARAM = key => {
     let url_string = window.location.href; 

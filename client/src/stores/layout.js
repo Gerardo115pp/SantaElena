@@ -1,6 +1,6 @@
 import { writable, Writable } from "svelte/store";
 import { ImageResource  } from "@models/MediaResources";
-import { MEDIA_SIZES } from "@libs/media_loaders";
+import { MEDIA_SIZES } from "@libs/Services/media_loaders";
 import { isMobile } from "@libs/utils";
 
 const root_styles = getComputedStyle(document.documentElement);

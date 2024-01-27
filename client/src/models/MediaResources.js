@@ -1,4 +1,4 @@
-import { MEDIA_SIZES, getImageResourceUrl } from "@libs/media_loaders";
+import { MEDIA_SIZES, getImageResourceUrl } from "@libs/Services/media_loaders";
 
 export class ImageResource {
     /** 

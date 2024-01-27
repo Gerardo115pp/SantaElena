@@ -3,6 +3,7 @@
     import About from "@pages/Home/sections/About.svelte";
     import ParallaxDivider from "@components/UI/ParallaxDivider.svelte";
     import Services from "@pages/Home/sections/Services.svelte";
+    import Footer from "@components/Footer/Footer.svelte";
 </script>
 
 <main id="libery-santa-elena-home-page">
@@ -19,3 +20,4 @@
         <Services />
     </div>
 </main>
+<Footer />
