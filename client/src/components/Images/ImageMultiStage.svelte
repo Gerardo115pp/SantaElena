@@ -13,6 +13,13 @@
         export let image_resource;
 
         /**
+         * Image percentage to be loaded
+         * @type {number}
+         * @default 1
+         */
+        export let image_percentage = 1;
+
+        /**
          * The alt text for the image
          * @type {string}
          */
@@ -52,7 +59,7 @@
 
         image_holder.onload = () => handleHDImageLoad(image_holder);
 
-        image_holder.src = image_resource.getUrl(1);
+        image_holder.src = image_resource.getUrl(image_percentage);
     });
     
     /*=============================================
