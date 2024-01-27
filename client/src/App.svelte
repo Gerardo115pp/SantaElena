@@ -187,8 +187,8 @@
             font-size: var(--font-size-p) !important;
 
             /* Buttons */
-            --buttons-font-size: var(--font-size-3);
-            --buttons-padding: calc(var(--buttons-font-size) * .9) calc(var(--buttons-font-size) * 3.6);
+            --buttons-font-size: var(--font-size-2);
+            --buttons-padding: calc(var(--buttons-font-size) * .6) calc(var(--buttons-font-size) * 2.6);
 
             /* Z-INDEX */
 
@@ -430,8 +430,8 @@
     }
 
     :global(.button-2) {
-        background: var(--shade-2);
-        color: var(--color-light-8);
+        background: var(--dark-7);
+        color: var(--color-light-2);
     }
 
     @media (pointer: fine) {
