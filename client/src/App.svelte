@@ -387,26 +387,24 @@
         }
     }
 
+    :global(.santa-elena-image) {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        border-radius: var(--border-radius);
+        border: 1px solid var(--color-light-7);
+    }
 
 /*=============================================
 =            Text Styles            =
 =============================================*/
 
-    :global(.highlight-text) {
-        font-family: var(--font-read);
-        font-weight: bold;
-        font-size: var(--font-size-2);
-    }
-
-    :global(.highlight-text--CTA) {
+    :global(.headline-2) {
         font-family: var(--font-titles);
-        font-size: var(--font-size-CTA-1);
-    }
-
-    :global(.sub-headline) {
-        font-family: var(--font-read);
-        color: var(--main-5);
-        font-size: var(--font-size-4);
+        color: var(--shade-light-9);
+        font-size: var(--font-size-h3);
+        font-weight: 300;
     }
 
 /*=============================================
@@ -421,6 +419,10 @@
         font-weight: 300;
         transition: all .4s ease-in-out;
     }
+
+    :global(.button-thin) {
+        width: max-content;
+    }
     
     :global(.button-1) {
         background: var(--color-4);
@@ -428,8 +430,8 @@
     }
 
     :global(.button-2) {
-        background: var(--shade-1);
-        color: var(--color-light-7);
+        background: var(--shade-2);
+        color: var(--color-light-8);
     }
 
     @media (pointer: fine) {

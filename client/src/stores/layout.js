@@ -41,4 +41,6 @@ export const navbar_hidden = writable(false);
  */
 export const layout_images = {
     HERO_BACKGROUND: new ImageResource("fcd5b3b8-9566-496c-868e-31e258ba6833.webp", MEDIA_SIZES.ORIGINAL.postfix),
+    WHITE_EAGLE_IMAGE: new ImageResource("about-free-eagle.webp", MEDIA_SIZES.ORIGINAL.postfix),
+    IDYLLICISM_IMAGE: new ImageResource("idyllicism.webp", MEDIA_SIZES.LARGE.postfix)
 }
