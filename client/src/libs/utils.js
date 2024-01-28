@@ -118,7 +118,6 @@ export class Stack {
      */
     Add(value) {
         let new_node = new StackNode(value);
-        console.log("Added called");
         new_node.Next = this.#top;
         this.#top = new_node;
     }

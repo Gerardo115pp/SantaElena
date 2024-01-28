@@ -1,7 +1,7 @@
 <script>
     import ImageMultiStage from "@components/Images/ImageMultiStage.svelte";
     import MainLogo from "@components/UI/MainLogo.svelte";
-    import { layout_images } from "@stores/layout";
+    import { layout_images, layout_properties } from "@stores/layout";
 </script>
 
 <section id="lse-hp-hero-section">
@@ -71,4 +71,13 @@
         color: var(--clear-3);
         text-align: center;
     }
+
+    @media only screen and (max-width: 768px)  {
+        #lse-hp-hs-center-content {
+            grid-column: 1 / -1;
+            height: 100%;
+            padding: var(--spacing-3);
+        }
+    }
+
 </style>

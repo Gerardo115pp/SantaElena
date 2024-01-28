@@ -95,7 +95,6 @@
          * @returns {void}
          */
         const updateParallaxPosition = () => {
-            console.log(`is_on_viewport: ${$is_on_viewport}\nparallax_position: ${parallax_position}\nparallax_position_max: ${parallax_position_max}`);
             if (!is_on_viewport || parallax_position >= parallax_position_max) return;
             const parallax_divider_element_box = parallax_divider_element.getBoundingClientRect();
             const viewport_height = window.innerHeight;
@@ -106,7 +105,6 @@
 
             parallax_position = Math.max(0, Math.min(parallax_position_max, percentage * parallax_position_max));
 
-            console.log(`parallax_position: ${parallax_position}`);
         }
 
     
@@ -151,6 +149,7 @@
         overflow-y: hidden;
         width: 100%;
         height: 546px;
+        border-top: 2px solid var(--color-4)
     }
     
     .parallax-divider .bg-wrapper.parallax-image {

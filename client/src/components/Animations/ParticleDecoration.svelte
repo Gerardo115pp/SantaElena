@@ -115,8 +115,6 @@
             random_size = random_size < absolute_particles_min_size ? absolute_particles_min_size : random_size;
             random_size = random_size > particles_min_size * times_min_size_max ? particles_min_size * times_min_size_max : random_size;
 
-            console.log(random_size);
-
             return random_size;
         }
 
@@ -193,7 +191,7 @@
         let a_particles_wrapper;
 
         const updateMousePosition = (event) => {
-            if (a_particles_wrapper === undefined || layout_properties.is_mobile) return;
+            if (a_particles_wrapper === undefined || $layout_properties.IS_MOBILE) return;
 
             let a_particles_wrapper_rect = a_particles_wrapper.getBoundingClientRect();
 

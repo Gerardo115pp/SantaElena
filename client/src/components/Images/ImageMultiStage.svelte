@@ -53,8 +53,6 @@
 
         parent_width_ratio = getParentElementViewportRatio();
 
-        console.log(`parent_width_ratio: ${parent_width_ratio}`);
-
         const image_holder = document.createElement("img");
 
         image_holder.onload = () => handleHDImageLoad(image_holder);
@@ -84,7 +82,6 @@
          * @param {HTMLImageElement} image_holder
          */
         const handleHDImageLoad = image_holder => {
-            console.log("handleHDImageLoad: ", image_holder);
             is_loaded = true;
             image_element.src = image_holder.src;
         }

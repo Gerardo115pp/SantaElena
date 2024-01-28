@@ -4,11 +4,11 @@
     import NotificationsPopup from '@components/Popups/NotificationsPopup.svelte';
     import Navbar from '@components/Navbar/Navbar.svelte';
     import { onMount } from 'svelte';
-    import { defineLayout, layout_properties, navbar_hidden } from '@stores/layout';
+    import { defineLayout, layout_properties, navbar_hidden, hasChangedLayout } from '@stores/layout';
     
     
     const ENABLE_DEBUG_ON_MOBILE = false;
-    if (ENABLE_DEBUG_ON_MOBILE && layout_properties.IS_MOBILE) {
+    if (ENABLE_DEBUG_ON_MOBILE && $layout_properties.IS_MOBILE) {
         debugOnMobile();
     }
 
@@ -23,8 +23,17 @@
         script.onload = () => eruda.init();
     }
 
+    const handleLayoutResize = () => {
+        if (hasChangedLayout()) {
+            defineLayout();
+        }
+    }
 
 </script>
+
+<svelte:window 
+    on:resize={handleLayoutResize}
+/>
 
 <svelte:head>
     <link rel="stylesheet" href="https://use.typekit.net/tpf7knz.css">
@@ -163,23 +172,23 @@
             --spacing-9: calc(var(--spacing-8) * 2); /* 2048px */
             
             /* Fonts */
-            --font-size-1: var(--spacing-2); /* 16px */
-            --font-size-2: calc(var(--spacing-3) * 0.59375); /* 19px */
-            --font-size-3: calc(var(--spacing-3) * 0.65625); /* 21px */
-            --font-size-4: calc(var(--spacing-3) * 0.71875); /* 23px */
+            --font-size-1: 16px; /* 16px */
+            --font-size-2: calc(var(--font-size-1) * 1.1875); /* 19px */
+            --font-size-3: calc(var(--font-size-1) * 1.3225); /* 21px */
+            --font-size-4: calc(var(--font-size-1) * 1.5); /* 23px */
 
-            --font-size-p: var(--font-size-4);
+            --font-size-p: var(--font-size-2);
             --font-size-p-small: var(--font-size-1);
             --font-size-fineprint: calc(var(--font-size-1) * 0.7);
 
-            --font-size-h1: calc(var(--spacing-5) * 0.71875); /* 112px */
-            --font-size-h2: var(--spacing-4); /* 64px */
+            --font-size-h1: calc(112px); /* 112px */
+            --font-size-h2: calc(0.57142 * var(--font-size-h1)); /* 64px */
             --font-size-h3: calc(var(--spacing-4) * 0.71875); /* 46px */
             --font-size-h4: calc(var(--font-size-h3) * 0.71875); /* 33px */
             --font-size-h5: calc(var(--font-size-h4) * 0.71875); /* 24px */
             --font-size-h6: calc(var(--font-size-h5) * 0.71875); /* 17px */
 
-            --font-size-CTA-1: calc(var(--spacing-4) * 0.5625);
+            --font-size-CTA-1: calc(var(--font-size-h2) * 0.5625);
 
             --font-titles: 'ivymode';
             --font-read: 'commuters-sans';
@@ -192,38 +201,38 @@
 
             /* Z-INDEX */
 
-            /* Use these -b- suffix for background elements */
-            --z-index-b-1: -1; /* B stands for bottom, not base */
-            --z-index-b-2: -2;
-            --z-index-b-3: -3;
-            --z-index-b-4: -4;
-            --z-index-b-5: -5;
-            --z-index-b-6: -6;
-            --z-index-b-7: -7;
-            --z-index-b-8: -8;
-            --z-index-b-9: -9;
+                /* Use these -b- suffix for background elements */
+                --z-index-b-1: -1; /* B stands for bottom, not base */
+                --z-index-b-2: -2;
+                --z-index-b-3: -3;
+                --z-index-b-4: -4;
+                --z-index-b-5: -5;
+                --z-index-b-6: -6;
+                --z-index-b-7: -7;
+                --z-index-b-8: -8;
+                --z-index-b-9: -9;
 
-            /* Regular elements */
-            --z-index-1: 1;
-            --z-index-2: 2;
-            --z-index-3: 3;
-            --z-index-4: 4;
-            --z-index-5: 5;
-            --z-index-6: 6;
-            --z-index-7: 7;
-            --z-index-8: 8;
-            --z-index-9: 9;
+                /* Regular elements */
+                --z-index-1: 1;
+                --z-index-2: 2;
+                --z-index-3: 3;
+                --z-index-4: 4;
+                --z-index-5: 5;
+                --z-index-6: 6;
+                --z-index-7: 7;
+                --z-index-8: 8;
+                --z-index-9: 9;
 
-            /* Use these -t- suffix for top elements like modals */
-            --z-index-t-1: 11; /* T stands for top */
-            --z-index-t-2: 12;
-            --z-index-t-3: 13;
-            --z-index-t-4: 14;
-            --z-index-t-5: 15;
-            --z-index-t-6: 16;
-            --z-index-t-7: 17;
-            --z-index-t-8: 18;
-            --z-index-t-9: 19;
+                /* Use these -t- suffix for top elements like modals */
+                --z-index-t-1: 11; /* T stands for top */
+                --z-index-t-2: 12;
+                --z-index-t-3: 13;
+                --z-index-t-4: 14;
+                --z-index-t-5: 15;
+                --z-index-t-6: 16;
+                --z-index-t-7: 17;
+                --z-index-t-8: 18;
+                --z-index-t-9: 19;
 
 
             /* Layout */
@@ -244,6 +253,11 @@
             --navbar-height: calc(var(--spacing-5) * 0.96875);
             --border-radius: 2px;
             --border-radius-2: 19px;
+            --box-shadow: 4px 10px 12px 0px rgba(0,0,0,0.09);
+            /* --box-shadow: 4px 10px 12px 0px rgba(0,0,0,0.0); */
+
+            --mobile-breakpoint: 765px;
+            --tablet-breakpoint: 1024px;
     }
 
 /*=============================================
@@ -364,13 +378,13 @@
     }
 
     :global(.libery-scroll::-webkit-scrollbar) {
-        color: var(--grey-5);
+        color: var(--dark-5);
         width: var(--spacing-1);
         opacity: .1 !important;
     }
     
     :global(.libery-scroll::-webkit-scrollbar-thumb) {
-        background: var(--grey-5);
+        background: var(--dark-5);
         border-radius: calc(.27777 * var(--border-radius-2));
         opacity: .1;
     }
@@ -400,6 +414,7 @@
         object-position: center;
         border-radius: var(--border-radius);
         border: 1px solid var(--color-light-7);
+        box-shadow: var(--box-shadow);
     }
 
 /*=============================================
@@ -424,6 +439,7 @@
         font-size: var(--buttons-font-size);
         font-weight: 300;
         transition: all .4s ease-in-out;
+        box-shadow: var(--box-shadow);
     }
 
     :global(.button-thin) {
@@ -522,10 +538,11 @@
 
     @media only screen and (max-width: 765px) {
         :root {
-            --spacing-scale: .714583;
+            --spacing-scale: .614583;
 
-            --font-size-h1: calc(var(--spacing-5) * 0.575); /* 112px */
-            --font-size-h2: calc(var(--spacing-5) * 0.3375);
+            --font-size-h1: 48px; /* 112px */
+            --font-size-1: 14px; /* 16px */
+            
 
             --default-grid: var(--mobile-grid);
             --html-tag-color: var(--grey-6);
@@ -537,6 +554,10 @@
             flex-direction: column;
             column-gap: var(--spacing-3);
         } 
+    
+        :global(body){
+            width: 100vw;
+        }
     }
 
 /*=====  End of Mobile  ======*/

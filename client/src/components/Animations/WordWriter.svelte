@@ -25,7 +25,7 @@
         <span 
             class="blast" 
             data-delay="{between_words_delay*h}"
-            style:width={layout_properties.is_mobile ? 'max-content' : `${word.length}ch`}
+            style:width={$layout_properties.IS_MOBILE ? 'max-content' : `${word.length}ch`}
         >
             <span 
                 class="animatable-word"
