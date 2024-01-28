@@ -33,7 +33,7 @@
     </TwoColumnImageText>
     <TwoColumnImageText image_resource={layout_images.IDYLLICISM_IMAGE} background_color="var(--shade-light-1)" reverse padding_top="var(--spacing-4)">
         <div id="our-process-wrapper" class="about-text-content" slot="text_content">
-            <div id="op-description">
+            <div class="a-tc-description">
                 <h3 class="headline-2">
                     Nuestro Proceso
                 </h3>
@@ -80,4 +80,29 @@
         font-weight: 300;
         color: var(--grey-7);
     }
+
+    @container (width <= 768px) {
+        .about-text-content {
+            row-gap: var(--spacing-4);
+            /* align-items: center; */
+        }
+
+        .a-tc-description {
+            row-gap: var(--spacing-3);
+        }
+
+        /* .a-tc-description h3 {
+            text-align: center;
+        } */
+
+        .paragraphs-wrapper {
+            row-gap: var(--spacing-2);
+        }
+
+        /* .ov-paragraph {
+            text-align: center;
+        } */
+    }
+
+
 </style>

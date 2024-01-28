@@ -73,38 +73,41 @@
     
 </script>
 
-<article class="two-column-image-text-wrapper"
-    style:background-color={background_color}
-    style:--padding-top={padding_top}
-    style:--padding-bottom={padding_bottom}
-    style:--padding-left={padding_left}
-    style:--padding-right={padding_right}
->
-    <div class="tcit-columns-wrapper" style:flex-direction={!reverse ? 'row' : 'row-reverse'}>
-        <div class="tcit-image-wrapper">
-            {#if $$slots.image_resource}
-                <slot name="image_resource" />
-            {:else if image_resource !== undefined}
-                <ImageLazyLoader image_url={image_resource.getUrl(0.4)}>
-                    <img class="santa-elena-image" slot="lazy-wrapper-image" let:image_src src="{image_src}" alt="{alt_text}">
-                </ImageLazyLoader>
-            {:else}
-                <p class="tcit-missing-image">
-                   No image resource provided 
-                </p>
-            {/if}
+<div class="container-inline-wrapper">
+    <article class="two-column-image-text-wrapper"
+        style:background-color={background_color}
+        style:--padding-top={padding_top}
+        style:--padding-bottom={padding_bottom}
+        style:--padding-left={padding_left}
+        style:--padding-right={padding_right}
+    >
+        <div class="tcit-columns-wrapper" style:flex-direction={!reverse ? 'row' : 'row-reverse'}>
+            <div class="tcit-image-wrapper">
+                {#if $$slots.image_resource}
+                    <slot name="image_resource" />
+                {:else if image_resource !== undefined}
+                    <ImageLazyLoader image_url={image_resource.getUrl(0.4)}>
+                        <img class="santa-elena-image" slot="lazy-wrapper-image" let:image_src src="{image_src}" alt="{alt_text}">
+                    </ImageLazyLoader>
+                {:else}
+                    <p class="tcit-missing-image">
+                       No image resource provided 
+                    </p>
+                {/if}
+            </div>
+            <div class="tcit-text-wrapper">
+                <slot name="text_content" />
+            </div>
         </div>
-        <div class="tcit-text-wrapper">
-            <slot name="text_content" />
-        </div>
-    </div>
-</article>
+    </article>
+</div>
 
 <style>
   .two-column-image-text-wrapper {
     width: 100%;
     display: grid;
     container-type: inline-size;
+    container-name: tcitw-container;
     place-items: center;
     padding: var(--padding-top) var(--padding-right) var(--padding-bottom) var(--padding-left);
   }  
@@ -127,5 +130,26 @@
         width: 50%;
         display: grid;
         place-items: center;
+    }
+
+
+
+    @container (max-width: 768px) {
+        article.two-column-image-text-wrapper {
+            padding: var(--padding-top) calc(var(--padding-right) * 0.5) var(--padding-bottom) calc(var(--padding-left) * 0.5);
+        }
+
+        .two-column-image-text-wrapper .tcit-columns-wrapper {
+            flex-direction: column !important;
+            row-gap: var(--spacing-4);
+        }
+
+        .two-column-image-text-wrapper .tcit-image-wrapper {
+            width: 100%;
+        }
+
+        .two-column-image-text-wrapper .tcit-text-wrapper {
+            width: 100%;
+        }
     }
 </style>
