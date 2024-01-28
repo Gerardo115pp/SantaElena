@@ -1,6 +1,7 @@
 <script>
     import ImageLazyLoader from "@components/Images/ImageLazyLoader.svelte";
     import { ImageResource } from "@models/MediaResources";
+    import { layout_properties } from "@stores/layout";
 
     
     /*=============================================
@@ -23,6 +24,9 @@
             
             
             /*----------  Styling  ----------*/
+
+                let default_vertical_padding = "var(--spacing-5)";
+                let default_horizontal_padding = $layout_properties.IS_MOBILE ? "var(--spacing-4)" : "var(--spacing-5)";
             
                 /**
                  * The color of the background for this section
@@ -36,21 +40,21 @@
                  * @type {string}
                  * @default "var(--spacing-5)"
                  */
-                export let padding_top = "var(--spacing-5)";
+                export let padding_top = default_vertical_padding;
 
                 /**
                  * The padding bottom for this section
                  * @type {string}
                  * @default "var(--spacing-5)"
                  */
-                export let padding_bottom = "var(--spacing-5)";
+                export let padding_bottom = default_vertical_padding;
 
                 /**
                  * The padding left for this section
                  * @type {string}
                  * @default "var(--spacing-6)"
                  */ 
-                export let padding_left = "var(--spacing-6)";
+                export let padding_left = default_horizontal_padding;
 
 
                 /**
@@ -58,7 +62,7 @@
                  * @type {string}
                  * @default "var(--spacing-6)"
                  */
-                export let padding_right = "var(--spacing-6)";
+                export let padding_right = default_horizontal_padding;
             
                 /**
                  * If true the image and the text will be reversed
@@ -135,10 +139,6 @@
 
 
     @container (max-width: 768px) {
-        article.two-column-image-text-wrapper {
-            padding: var(--padding-top) calc(var(--padding-right) * 0.5) var(--padding-bottom) calc(var(--padding-left) * 0.5);
-        }
-
         .two-column-image-text-wrapper .tcit-columns-wrapper {
             flex-direction: column !important;
             row-gap: var(--spacing-4);

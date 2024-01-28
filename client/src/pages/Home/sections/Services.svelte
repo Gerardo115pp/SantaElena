@@ -75,4 +75,14 @@
         justify-items: center;
         grid-gap: var(--spacing-4);
     }
+
+    @media only screen and (max-width: 768px)  {
+        #our-services-section #oss-content {
+            padding: var(--spacing-5) var(--spacing-4);
+        }
+
+        #oss-content-center {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>

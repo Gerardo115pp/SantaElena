@@ -36,9 +36,11 @@
         height: 100%;
         background: var(--clear);
         padding: var(--spacing-4);
+        container-type: inline-size;
         align-items: center;
         border-radius: var(--border-radius);
         row-gap: var(--spacing-2);
+        box-shadow: var(--box-shadow);
     }
 
     .santa-elena-service-card .image-wrapper {
@@ -55,19 +57,22 @@
 
     .santa-elena-service-card .service-title {
         font-size: var(--font-size-h5);
-        text-align: center;
     }
 
     .santa-elena-service-card .service-description {
         font-size: var(--font-size-p-small);
         font-weight: lighter;
-        text-align: center;
     }
 
     .santa-elena-service-card .button-1 {
         --buttons-padding: calc(var(--buttons-font-size) * .4) calc(var(--buttons-font-size) * 1.6);
-
         font-size: var(--font-size-1);
+    }
 
+    @media only screen and (max-width: 768px)  {
+        .santa-elena-service-card .service-title {
+            font-size: var(--font-size-h3);
+            white-space: nowrap;
+        }
     }
 </style>

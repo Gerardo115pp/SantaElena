@@ -182,8 +182,8 @@
             --font-size-fineprint: calc(var(--font-size-1) * 0.7);
 
             --font-size-h1: calc(112px); /* 112px */
-            --font-size-h2: calc(0.57142 * var(--font-size-h1)); /* 64px */
-            --font-size-h3: calc(var(--spacing-4) * 0.71875); /* 46px */
+            --font-size-h2: calc(0.67142 * var(--font-size-h1)); /* 64px */
+            --font-size-h3: calc(var(--font-size-h2) * 0.71875); /* 46px */
             --font-size-h4: calc(var(--font-size-h3) * 0.71875); /* 33px */
             --font-size-h5: calc(var(--font-size-h4) * 0.71875); /* 24px */
             --font-size-h6: calc(var(--font-size-h5) * 0.71875); /* 17px */
@@ -354,6 +354,14 @@
         width: var(--page-content-width);
         grid-template-columns: repeat(12, 1fr);
         column-gap: var(--page-gutter);
+    }
+
+    :global(.container-inline-wrapper) {
+        container-type: inline-size;
+    }
+
+    :global(.container-size-wrapper) {
+        container-type: size;
     }
 
     :global(.bg-wrapper) {
@@ -538,7 +546,7 @@
 
     @media only screen and (max-width: 765px) {
         :root {
-            --spacing-scale: .614583;
+            --spacing-scale: .714583;
 
             --font-size-h1: 48px; /* 112px */
             --font-size-1: 14px; /* 16px */

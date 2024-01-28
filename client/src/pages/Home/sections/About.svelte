@@ -84,7 +84,7 @@
     @container (width <= 768px) {
         .about-text-content {
             row-gap: var(--spacing-4);
-            /* align-items: center; */
+            align-items: center;
         }
 
         .a-tc-description {
