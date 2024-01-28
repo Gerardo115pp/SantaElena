@@ -20,4 +20,4 @@
         <Services />
     </div>
 </main>
-<!-- <Footer /> -->
+<Footer />

@@ -1,6 +1,7 @@
 <script>
     import MainLogo from "@components/UI/MainLogo.svelte";
     import SocialIcon from "@components/UI/SocialIcon.svelte";
+    import { layout_properties } from "@stores/layout";
 </script>
 
 <footer id="santa-elena-footer-juvenil">
@@ -41,13 +42,13 @@
             <h2 class="fpp-privacy-page">
                 <!-- svelte-ignore a11y-invalid-attribute -->
                 <a href="#">
-                    Términos y condiciones
+                    {$layout_properties.VIEWPORT_WIDTH > 450 ? "Términos y condiciones" : "Términos&Condiciones" }
                 </a>
             </h2>
             <h2 class="fpp-privacy-page">
                 <!-- svelte-ignore a11y-invalid-attribute -->
                 <a href="#">
-                    Aviso de privacidad
+                    {$layout_properties.VIEWPORT_WIDTH > 450 ? "Aviso de privacidad" : "Privacidad" }
                 </a>
             </h2>
         </div>
@@ -142,5 +143,37 @@
     #footer-juvenil-right #footer-privacy-pages h2.fpp-privacy-page a {
         color: var(--color-light-2);
         text-decoration: none;
+    }
+
+    @media only screen and (max-width: 768px) {
+        #santa-elena-footer-juvenil {
+            grid-template-columns: 1fr;
+            grid-auto-rows: max-content;
+        }
+
+        .footer-section {
+            border-right: none;
+            border-bottom: 1px solid var(--color-light-2);
+            height: max-content;
+            padding: var(--spacing-4) var(--spacing-3);
+        }
+
+        .footer-section:last-of-type {
+            border-bottom: none;
+        }
+
+        #footer-juvenil-right {
+            align-items: flex-start;
+            row-gap: var(--spacing-5)
+        }
+
+        #footer-juvenil-right #footer-main-pages {
+            flex-direction: column;
+            row-gap: var(--spacing-4);
+        }
+
+        #footer-juvenil-right #footer-privacy-pages h2.fpp-privacy-page a {
+            font-size: var(--font-size-p-small);
+        }
     }
 </style>
