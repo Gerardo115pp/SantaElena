@@ -57,7 +57,7 @@
     }
 
     #lse-hp-hs-center-content {
-        grid-column: 5 / span 4;
+        grid-column: 4 / span 5;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -70,6 +70,10 @@
         font-weight: 300;
         color: var(--clear-3);
         text-align: center;
+    }
+
+    #lse-hp-hs-cc-logo-wrapper {
+        width: 100%;
     }
 
     @media only screen and (max-width: 768px)  {

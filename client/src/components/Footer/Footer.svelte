@@ -77,7 +77,13 @@
     }
 
     #footer-juvenil-left {
+        align-items: center;
         row-gap: var(--spacing-3);
+    }
+
+    #footer-juvenil-left #footer-logo-wrapper {
+        height: 80%;
+        width: max-content;
     }
 
     #footer-juvenil-left ul#footer-socials {
