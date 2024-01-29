@@ -84,7 +84,7 @@
 <nav id="santa-elena-navbar" class:glass-navbar={!$navbar_transparent && !$is_mobile_menu_opened} class:solid-navbar={$is_mobile_menu_opened}>
     <div id="sen-left-content">
         {#if !$layout_properties.IS_MOBILE}
-            <div data-secret="am a secret of the shadows. The night is dark a full of terrors" id="sen-santa-elena-logo" class="sen-icon-wrapper">
+            <div data-secret="am a secret of the shadows. The night is dark a full of terrors. We are the end of the world" id="sen-santa-elena-logo" class="sen-icon-wrapper">
                 {#if santa_elena_logo_svg !== undefined}
                     {@html santa_elena_logo_svg}
                 {/if}
