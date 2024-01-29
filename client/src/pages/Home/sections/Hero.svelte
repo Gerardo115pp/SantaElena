@@ -21,6 +21,7 @@
 <section id="lse-hp-hero-section">
     <div class="bg-wrapper">
         <ImageMultiStage
+            image_percentage={$layout_properties.IS_MOBILE ? 4.5 : 1}
             image_resource={layout_images.HERO_BACKGROUND}
             alt_text="santa elena hero"
         />
@@ -61,17 +62,18 @@
         height: 100cqh;
     }
 
-    :global(#lse-hp-hero-section .bg-wrapper img.multi-image-loaded) {
-        filter: contrast(1.4) saturate(1.8) sepia(0.1) brightness(0.7) hue-rotate(1deg);    
-        /* mix-blend-mode: soft-light; */
-    }
+    /* :global(#lse-hp-hero-section .bg-wrapper img.multi-image-loaded) {
+        filter: contrast(1.4) saturate(1.8) sepia(0.1) brightness(0.7) hue-rotate(1deg);
+        filter: brightness(0.7);    
+        mix-blend-mode: soft-light;
+    } */
 
     #lse-hp-hs-overlay {
         
         width: 100cqw;
         height: 100cqh;
         border-bottom: 6px solid var(--color-light-7, #BB931C);
-        background: linear-gradient(90deg, hsla(28, 100%, 92%, 0.3) 0%, hsla(28, 100%, 92%, .45) 20%, hsla(28, 100%, 92%, .50) 50%, hsla(28, 100%, 92%, .45) 80%, hsla(28, 100%, 92%, 0.3) 100%);
+        background: linear-gradient(90deg, hsla(28, 100%, 92%, 0.3) 0%, hsla(28, 100%, 92%, .50) 20%, hsla(28, 100%, 92%, .50) 50%, hsla(28, 100%, 92%, .45) 80%, hsla(28, 100%, 92%, 0.3) 100%);
         /* background: hsl(from var(--color-8) h 30% 100% / 0.2); */
         /* background: hsla(28, 100%, 92%, 0.8); */
         /* background: hsl(from var(--dark-9) h s l / 0.5); */

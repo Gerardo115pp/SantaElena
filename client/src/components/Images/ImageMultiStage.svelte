@@ -56,7 +56,7 @@
         const image_holder = document.createElement("img");
 
         image_holder.onload = () => handleHDImageLoad(image_holder);
-
+        console.log(`requesting percentage ${image_percentage}`);
         image_holder.src = image_resource.getUrl(image_percentage);
     });
     
@@ -101,7 +101,7 @@
         object-fit: cover;
         object-position: center;
         filter: blur(2px);
-        transition: filter 4.5s ease-in-out;
+        transition: filter 1.5s ease-in-out;
     }
 
     .multi-image-loaded {

@@ -36,6 +36,10 @@ export class ImageResource {
         this.#extension = parsed_extension;
     }
 
+    get Name() {
+        return this.#name;
+    }
+
     /**
      * sets the max width available for this image resource from a postfix string
      * @param {"-S" | "-M" | "-L" | "-XL" | "-original"} postfix
@@ -66,7 +70,9 @@ export class ImageResource {
      */
     getPostfix(width_percentage) {
         const viewport_width = window.innerWidth;
+        console.log(`viewport percentage: ${width_percentage} viewport width: ${viewport_width} = ${viewport_width * width_percentage}`);
         const need_size = viewport_width * width_percentage;
+        console.log(`${this.#name} needs size: `, need_size);
         let appropriate_size = MEDIA_SIZES.ORIGINAL.postfix;
 
         if (need_size <= MEDIA_SIZES.EXTRA_LARGE.width && MEDIA_SIZES.EXTRA_LARGE.width <= this.#max_width_available) {

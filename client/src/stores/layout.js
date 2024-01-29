@@ -94,7 +94,7 @@ export function isMobile() {
 export const navbar_transparent = writable(true);
 
 export const layout_images = {
-    HERO_BACKGROUND: new ImageResource("fcd5b3b8-9566-496c-868e-31e258ba6833.webp", MEDIA_SIZES.EXTRA_LARGE.postfix),
+    HERO_BACKGROUND: new ImageResource("hero-bg.webp", MEDIA_SIZES.EXTRA_LARGE.postfix),
     WHITE_EAGLE_IMAGE: new ImageResource("about-free-eagle.webp", MEDIA_SIZES.ORIGINAL.postfix),
     IDYLLICISM_IMAGE: new ImageResource("idyllicism.webp", MEDIA_SIZES.LARGE.postfix),
     CHURCH_IMAGE: new ImageResource("249b0b3c-b6ab-45ac-8cfb-4364308ced63.webp", MEDIA_SIZES.LARGE.postfix),
