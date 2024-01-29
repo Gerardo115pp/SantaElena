@@ -1,9 +1,21 @@
 <script>
     import SectionHeader from "@components/UI/SectionHeader.svelte";
     import TwoColumnImageText from "@components/UI/Layout/TwoColumnImageText.svelte";
-    import { layout_images } from "@stores/layout";
+    import { layout_images, navbar_transparent } from "@stores/layout";
+    import viewport from "@components/viewport_actions/useViewportActions";
 
-    layout_images.IDYLLICISM_IMAGE
+    
+    /*=============================================
+    =            Methods            =
+    =============================================*/
+    
+        const handleViewportEnter = e => {
+            navbar_transparent.set(false);
+        }
+    
+    /*=====  End of Methods  ======*/
+    
+    
 </script>
 
 <section id="lse-hp-about-section">
@@ -34,7 +46,7 @@
     <TwoColumnImageText image_resource={layout_images.IDYLLICISM_IMAGE} background_color="var(--shade-light-1)" reverse padding_top="var(--spacing-4)">
         <div id="our-process-wrapper" class="about-text-content" slot="text_content">
             <div class="a-tc-description">
-                <h3 class="headline-2">
+                <h3 class="headline-2" on:viewportEnter={handleViewportEnter} use:viewport>
                     Nuestro Proceso
                 </h3>
                 <div class="paragraphs-wrapper">

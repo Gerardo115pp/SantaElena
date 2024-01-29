@@ -63,7 +63,7 @@
         width: 100%;
         height: 100%;
         background: rgb(236,236,236);
-        background: linear-gradient(98deg, rgba(236,236,236,1) 34%, rgba(255,255,255,1) 38%, rgba(255,255,255,1) 50%, rgba(235,235,235,1) 71%); 
+        background: linear-gradient(98deg, var(--clear-2) 34%, var(--clear-4) 38%, var(--clear-4) 50%, var(--clear-2) 71%); 
         background-size: 130%;
     }
 </style>

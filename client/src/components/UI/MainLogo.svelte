@@ -10,10 +10,25 @@
         export let monochrome = false;
 
         /**
-         * The color to use for the logo
+         * The color to use for the logo on monochrome mode
         */
-        export let color = "var(--color-light-2)";
+        export let monochrome_color = "var(--color-light-2)";
 
+        /**
+         * The color to use the swallow
+        */
+        export let swallow_color = "var(--color-light)";
+
+        /**
+         * The color to use for the headline
+         */
+        export let headline_color = "var(--dark)";
+
+
+        /**
+         * The color to use for the subheadline
+         */
+         export let subheadline_color = "var(--color-light-6)";
         /**
          * The do property of the svg path
         */
@@ -24,7 +39,13 @@
     
 </script>
 
-<div class="main-logo-wrapper {monochrome ? 'monochrome' : ''}" style:--logo-color={color}>
+<div 
+    class="main-logo-wrapper {monochrome ? 'monochrome' : ''}" 
+    style:--logo-color={monochrome_color}
+    style:--swallow-color={swallow_color}
+    style:--headline-color={headline_color}
+    style:--subheadline-color={subheadline_color}
+>
     <svg viewBox="0 0 623 392">
         {#if monochrome}
             <path class="logo-swallow" d="{path_d}"/>
@@ -57,9 +78,9 @@
             <filter id="filter0_d_16_32" x="-3.97974" y="0" width="275.944" height="399.283" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
                 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
                 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 227 0" result="hardAlpha"/>
-                <feOffset dy="4"/>
-                <feGaussianBlur stdDeviation="3"/>
-                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+                <feOffset dy="0" dx="2"/>
+                <feGaussianBlur stdDeviation="5"/>
+                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.30 0"/>
                 <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_16_32"/>
                 <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_16_32" result="shape"/>
             </filter>
@@ -77,12 +98,13 @@
     }
 
     .main-logo-wrapper svg {
+        overflow: visible;
         width: 100%;
         height: 100%;
     }
 
     .logo-swallow {
-        fill: var(--color-light);
+        fill: var(--swallow-color);
     }
 
     .monochrome .logo-swallow, .monochrome .logo-headline, .monochrome .logo-subheadline{
@@ -90,10 +112,10 @@
     }
 
     .logo-headline {
-        fill: var(--dark);
+        fill: var(--headline-color);
     }
 
     .logo-subheadline {
-        fill: var(--color-light-6);
+        fill: var(--subheadline-color);
     }
 </style>

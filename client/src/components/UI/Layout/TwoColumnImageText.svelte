@@ -90,7 +90,7 @@
                 {#if $$slots.image_resource}
                     <slot name="image_resource" />
                 {:else if image_resource !== undefined}
-                    <ImageLazyLoader image_url={image_resource.getUrl(0.4)}>
+                    <ImageLazyLoader className="tcit-lazy-loader" image_url={image_resource.getUrl(0.4)}>
                         <img class="santa-elena-image" slot="lazy-wrapper-image" let:image_src src="{image_src}" alt="{alt_text}">
                     </ImageLazyLoader>
                 {:else}
@@ -117,18 +117,26 @@
   }  
 
   .tcit-columns-wrapper {
-    width: 100%;
+    width: min(100%, 1664px);
     display: flex;
+    container-type: inline-size;
     justify-content: space-between;
     align-items: center;
   }
 
     .tcit-image-wrapper {
         width: 40%;
+        max-width: 656px;
+        min-height: 40cqw;
+        max-height: 656px;
         display: flex;
         justify-content: center;
         align-items: center;
-    }   
+    }
+
+    :global(.tcit-image-wrapper:has(.tcit-lazy-loader:empty)) {
+        height: 40cqw;
+    }
 
     .tcit-text-wrapper {
         width: 50%;
@@ -138,7 +146,7 @@
 
 
 
-    @container (max-width: 768px) {
+    @container tcitw-container (max-width: 768px) {
         .two-column-image-text-wrapper .tcit-columns-wrapper {
             flex-direction: column !important;
             row-gap: var(--spacing-4);

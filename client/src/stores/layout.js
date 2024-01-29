@@ -89,9 +89,9 @@ export function isMobile() {
 =============================================*/
 
 /**
- * @type {Writable<boolean>} whether the navbar is hidden or not, means the navbar css visibility property is set to hidden or visible
+ * @type {Writable<boolean>} whether the navbar is transparent or not
  */
-export const navbar_hidden = writable(false);
+export const navbar_transparent = writable(true);
 
 export const layout_images = {
     HERO_BACKGROUND: new ImageResource("fcd5b3b8-9566-496c-868e-31e258ba6833.webp", MEDIA_SIZES.EXTRA_LARGE.postfix),

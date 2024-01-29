@@ -4,7 +4,7 @@
     import NotificationsPopup from '@components/Popups/NotificationsPopup.svelte';
     import Navbar from '@components/Navbar/Navbar.svelte';
     import { onMount } from 'svelte';
-    import { defineLayout, layout_properties, navbar_hidden, hasChangedLayout } from '@stores/layout';
+    import { defineLayout, layout_properties, hasChangedLayout } from '@stores/layout';
     
     
     const ENABLE_DEBUG_ON_MOBILE = false;
@@ -38,7 +38,7 @@
 <svelte:head>
     <link rel="stylesheet" href="https://use.typekit.net/tpf7knz.css">
 </svelte:head>
-<div id="libery-website-wrapper" class:navbarless={$navbar_hidden}>
+<div id="libery-website-wrapper">
     <Navbar />
     <!-- <NotificationsPopup /> -->
     <div id="router-wrapper">
@@ -132,7 +132,7 @@
 
             --success-t: hsla(81, 100%, 51.2%, .7);
             /* Warning */
-            --warning: hsla(49, 100%, 49.6%, 1);
+            --warning: rgb(240, 196, 2);
             --warning-9: hsla(52, 100%, 2.9%, 1);
             --warning-8: hsla(50, 100%, 9.2%, 1);
             --warning-7: hsla(49, 100%, 12.4%, 1);
@@ -155,7 +155,7 @@
             --danger-1: hsla(4, 85.5%, 89.2%, 1);
 
             /* Gradients */
-            --glass-gradient: linear-gradient(90deg, var(--dark) 0%, var(--dark) 9%, hsla(0, 0%, 5%, .1) 29%, var(--dark) 80%);
+            --glass-gradient: linear-gradient(90deg, var(--shade-light-1) 0%, var(--shade-light-1) 9%, hsla(30, 70%, 96%, .1) 29%, var(--shade-light-1) 80%);
 
             /* Spacing */
             --spacing-base:8px;
@@ -373,9 +373,9 @@
         margin-top: var(--navbar-height);
     } */
 
-    .navbarless #router-wrapper {
+    /* .navbarless #router-wrapper {
         margin-top: 0px;
-    }
+    } */
 
     :global(ul.page-nav-menu) {
         display: flex;

@@ -1,7 +1,21 @@
 <script>
     import ImageMultiStage from "@components/Images/ImageMultiStage.svelte";
     import MainLogo from "@components/UI/MainLogo.svelte";
-    import { layout_images, layout_properties } from "@stores/layout";
+    import { layout_images, layout_properties, navbar_transparent } from "@stores/layout";
+    import viewport from "@components/viewport_actions/useViewportActions";
+
+    
+    /*=============================================
+    =            Methods            =
+    =============================================*/
+    
+        const handleViewportEnter = e => {
+            navbar_transparent.set(true);
+        }
+    
+    /*=====  End of Methods  ======*/
+    
+    
 </script>
 
 <section id="lse-hp-hero-section">
@@ -14,13 +28,17 @@
     <div id="lse-hp-hs-overlay" class="section-content-layout">
         <div id="lse-hp-hs-center-content">
             <div class="" id="lse-hp-hs-cc-logo-wrapper">
-                <MainLogo />
+                <MainLogo
+                    headline_color="var(--dark)"
+                    subheadline_color="var(--color-light-8)"
+                    swallow_color="var(--warning)"
+                />
             </div>
             <div id="lse-hp--hs-cc-hero-headline">
                 <p>Lorem ipsum dolor sit amet consectetur. Pharetra in odio sed quisque semper nibh. Volutpat id vehicula tincidunt facilisi neque amet. Ullamcorper fermentum arcu quisque nunc nunc lacus nec blandit.</p>
             </div>
             <div id="lse-hp-hs-cc-hero-cta-controls">
-                <button class="button-1">
+                <button class="button-1" on:viewportEnter={handleViewportEnter} use:viewport>
                     Contactanos
                 </button>
             </div>
@@ -53,11 +71,15 @@
         width: 100cqw;
         height: 100cqh;
         border-bottom: 6px solid var(--color-light-7, #BB931C);
-        background: linear-gradient(90deg, rgba(133, 133, 133, 0.59) 17.1%, rgba(245, 235, 224, 0.41) 50%);
+        background: linear-gradient(90deg, hsla(28, 100%, 92%, 0.3) 0%, hsla(28, 100%, 92%, .45) 20%, hsla(28, 100%, 92%, .50) 50%, hsla(28, 100%, 92%, .45) 80%, hsla(28, 100%, 92%, 0.3) 100%);
+        /* background: hsl(from var(--color-8) h 30% 100% / 0.2); */
+        /* background: hsla(28, 100%, 92%, 0.8); */
+        /* background: hsl(from var(--dark-9) h s l / 0.5); */
+        /* background: hsla(34, 66%, 15%, 0.404); */
     }
 
     #lse-hp-hs-center-content {
-        grid-column: 4 / span 5;
+        grid-column: 5 / span 4;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -67,13 +89,13 @@
 
     #lse-hp--hs-cc-hero-headline {
         font-size: var(--font-size-2);
-        font-weight: 300;
-        color: var(--clear-3);
+        font-weight: 500;
+        color: var(--dark);
         text-align: center;
     }
 
     #lse-hp-hs-cc-logo-wrapper {
-        width: 100%;
+        width: min(616px, 100%);
     }
 
     @media only screen and (max-width: 768px)  {
