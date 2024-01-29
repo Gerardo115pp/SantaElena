@@ -21,6 +21,7 @@ jobs:
       - name: Install and build
         run: |
           cd client/
+          ls -lha .
           npm install
           npm run build
       - name: Deploy to GCP
