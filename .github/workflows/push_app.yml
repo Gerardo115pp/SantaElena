@@ -35,7 +35,5 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          echo "$GCP_IP $GCP_HOST" | base64
-          ssh-keyscan -t rsa $GCP_HOST >> ~/.ssh/known_hosts
-          echo "$APP_PATH" | base64
+          ssh-keyscan -t rsa $GCP_IP >> ~/.ssh/known_hosts
           scp -r * $GCP_HOST:$APP_PATH

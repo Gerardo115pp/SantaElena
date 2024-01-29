@@ -77,14 +77,14 @@
     
     /*=====  End of Methods  ======*/
     
-    
+    const whisper = "am a secret of the shadows. The night is dark a full of terrors. We are the end of the world. We are free. We walk in darkness. We are free. We love nothing. We are free. We fear nothing. We are free. We need no words. We are free. We embrace all death. We are free. This is the end of the world. Now is the end of the world. We are the end of the world."
     
 </script>
 
 <nav id="santa-elena-navbar" class:glass-navbar={!$navbar_transparent && !$is_mobile_menu_opened} class:solid-navbar={$is_mobile_menu_opened}>
     <div id="sen-left-content">
         {#if !$layout_properties.IS_MOBILE}
-            <div data-secret="am a secret of the shadows. The night is dark a full of terrors. We are the end of the world. We are free. We walk in darkness. We are free." id="sen-santa-elena-logo" class="sen-icon-wrapper">
+            <div id="sen-santa-elena-logo" class="sen-icon-wrapper">
                 {#if santa_elena_logo_svg !== undefined}
                     {@html santa_elena_logo_svg}
                 {/if}
