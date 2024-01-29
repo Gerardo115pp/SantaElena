@@ -17,10 +17,6 @@ const config = {
 		host: "192.168.0.140",
 		port: 5005,	
 		hot: true,
-		https: {
-			key: fs.readFileSync("/home/el_maligno/local_domain_certificates/santa-elena.mx/dev-santa-elena.mx-key.pem"),
-			cert: fs.readFileSync("/home/el_maligno/local_domain_certificates/santa-elena.mx/dev-santa-elena.mx.pem"),
-		},
 		static:{
 			directory: path.join(__dirname, 'public')
 		},
@@ -107,8 +103,17 @@ const config = {
 
 
 module.exports = (env, argv) => {
+	const is_production = argv.mode === 'production';
+
 	const build_config = {
 		JD_ADDRESS: process.env.JD_ADDRESS
+	}
+
+	if (!is_production) {
+		config.https = {
+			key: fs.readFileSync("/home/el_maligno/local_domain_certificates/santa-elena.mx/dev-santa-elena.mx-key.pem"),
+			cert: fs.readFileSync("/home/el_maligno/local_domain_certificates/santa-elena.mx/dev-santa-elena.mx.pem"),
+		}
 	}
 
 	config.plugins.push(
