@@ -78,6 +78,7 @@
     /*=====  End of Methods  ======*/
     
     const whisper = "am a secret of the shadows. The night is dark a full of terrors. We are the end of the world. We are free. We walk in darkness. We are free. We love nothing. We are free. We fear nothing. We are free. We need no words. We are free. We embrace all death. We are free. This is the end of the world. Now is the end of the world. We are the end of the world."
+    console.log(`I ${whisper}`);
     
 </script>
 
