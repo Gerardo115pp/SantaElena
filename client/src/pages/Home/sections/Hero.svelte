@@ -52,7 +52,7 @@
         container-type: size;
         container-name: hero-section;
         width: 100dvw;
-        height: 100vh;
+        height: 104vh;
     }
 
     #lse-hp-hero-section .bg-wrapper {

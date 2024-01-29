@@ -110,7 +110,7 @@ module.exports = (env, argv) => {
 	}
 
 	if (!is_production) {
-		config.https = {
+		config.devServer.https = {
 			key: fs.readFileSync("/home/el_maligno/local_domain_certificates/santa-elena.mx/dev-santa-elena.mx-key.pem"),
 			cert: fs.readFileSync("/home/el_maligno/local_domain_certificates/santa-elena.mx/dev-santa-elena.mx.pem"),
 		}
