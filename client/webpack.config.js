@@ -9,7 +9,7 @@ const config = {
 	entry: './src/index.js',
 	// context: path.resolve(__dirname),
 	output: {
-		path: path.resolve(__dirname, '/var/www/octavio/scripts'),
+		path: path.resolve(__dirname, 'build'),
 		filename: 'boundle.js'
 	},
 	devServer: {
