@@ -1,0 +1,38 @@
+name: Deploy Santa Elena to GCP
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'client/**'
+
+jobs:
+  build-and-deploy-app:
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/master' }}
+    name: Build Santa Elena and deploy to GCP
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.x'
+      - name: Install and build
+        run: |
+          cd client/
+          npm install
+          npm run build
+      - name: Deploy to GCP
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PK }}
+          GCP_HOST: ${{ secrets.GCP_HOST }}
+          GCP_IP: ${{ secrets.GCP_IP }}
+          APP_PATH: ${{ secrets.APP_PATH }}
+        run: |
+          cd client/build
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -t rsa $GCP_HOST >> ~/.ssh/known_hosts
+          scp -r * $GCP_HOST:$APP_PATH
