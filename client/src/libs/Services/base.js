@@ -4,6 +4,14 @@ export class HttpResponse {
         this.data = data;
         this.headers = response.headers;
     }
+
+    /**
+     * Returns true if the response status larger than or equal to 200 and less than 300
+     * @returns {boolean}
+     */
+    get Ok() {
+        return this.status >= 200 && this.status < 300;
+    }
 }
 
 export function attributesToJson() {

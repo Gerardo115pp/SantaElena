@@ -3,12 +3,35 @@
     import { ImageResource } from "@models/MediaResources";
     import { layout_images } from "@stores/layout";
     import { ServiceData } from "@models/Services";
+    import { createEventDispatcher } from "svelte";
 
-    /**
-     * The service that this Card element represents
-     * @type {ServiceData}
-     */
-    export let service_data;
+    
+    /*=============================================
+    =            Properties            =
+    =============================================*/
+    
+        /**
+         * The service that this Card element represents
+         * @type {ServiceData}
+         */
+        export let service_data;
+
+        const dispatcher = createEventDispatcher();
+    
+    
+    /*=====  End of Properties  ======*/
+    
+    
+    /*=============================================
+    =            Methods            =
+    =============================================*/
+    
+        const emitServiceSelected = () => {
+            dispatcher("service-selected", service_data);
+        }    
+    
+    /*=====  End of Methods  ======*/
+    
 </script>
 
 <li class="santa-elena-service-card">
@@ -23,7 +46,7 @@
         <h3 class="service-title headline-2">{service_data.title}</h3>
         <p class="service-description">{service_data.brief_description}</p>
     </div>
-    <button class="button-1">
+    <button on:click={emitServiceSelected} class="button-1">
         Saber más
     </button>
 </li>

@@ -106,7 +106,8 @@ module.exports = (env, argv) => {
 	const is_production = argv.mode === 'production';
 
 	const build_config = {
-		JD_ADDRESS: process.env.JD_ADDRESS
+		JD_ADDRESS: process.env.JD_ADDRESS,
+		WP_API: process.env.WP_API,
 	}
 
 	if (!is_production) {
@@ -119,6 +120,7 @@ module.exports = (env, argv) => {
 	config.plugins.push(
 		new webpack.DefinePlugin({
 			"JD_ADDRESS": JSON.stringify(build_config.JD_ADDRESS),
+			"WP_API": JSON.stringify(build_config.WP_API),
 			"APP_NAME": JSON.stringify(APP_NAME),
 		})
 	);

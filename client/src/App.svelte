@@ -157,7 +157,7 @@
             /* Gradients */
             --glass-gradient: linear-gradient(90deg, var(--shade-light-1) 0%, var(--shade-light-1) 9%, hsla(30, 70%, 96%, .1) 29%, var(--shade-light-1) 80%);
 
-            /* Spacing */
+        /* Spacing */
             --spacing-base:8px;
             --spacing-scale: 1;
 
@@ -171,7 +171,7 @@
             --spacing-8: calc(var(--spacing-7) * 2); /* 1024px */
             --spacing-9: calc(var(--spacing-8) * 2); /* 2048px */
             
-            /* Fonts */
+        /* Fonts */
             --font-size-1: 16px; /* 16px */
             --font-size-2: calc(var(--font-size-1) * 1.1875); /* 19px */
             --font-size-3: calc(var(--font-size-1) * 1.3225); /* 21px */
@@ -195,69 +195,70 @@
 
             font-size: var(--font-size-p) !important;
 
-            /* Buttons */
+        /* Buttons */
             --buttons-font-size: var(--font-size-2);
             --buttons-padding: calc(var(--buttons-font-size) * .6) calc(var(--buttons-font-size) * 2.6);
+            --buttons-padding-thin: calc(var(--buttons-font-size) * .6) calc(var(--buttons-font-size) * 1.6);
 
-            /* Z-INDEX */
+        /* Z-INDEX */
 
-                /* Use these -b- suffix for background elements */
-                --z-index-b-1: -1; /* B stands for bottom, not base */
-                --z-index-b-2: -2;
-                --z-index-b-3: -3;
-                --z-index-b-4: -4;
-                --z-index-b-5: -5;
-                --z-index-b-6: -6;
-                --z-index-b-7: -7;
-                --z-index-b-8: -8;
-                --z-index-b-9: -9;
+            /* Use these -b- suffix for background elements */
+            --z-index-b-1: -1; /* B stands for bottom, not base */
+            --z-index-b-2: -2;
+            --z-index-b-3: -3;
+            --z-index-b-4: -4;
+            --z-index-b-5: -5;
+            --z-index-b-6: -6;
+            --z-index-b-7: -7;
+            --z-index-b-8: -8;
+            --z-index-b-9: -9;
 
-                /* Regular elements */
-                --z-index-1: 1;
-                --z-index-2: 2;
-                --z-index-3: 3;
-                --z-index-4: 4;
-                --z-index-5: 5;
-                --z-index-6: 6;
-                --z-index-7: 7;
-                --z-index-8: 8;
-                --z-index-9: 9;
+            /* Regular elements */
+            --z-index-1: 1;
+            --z-index-2: 2;
+            --z-index-3: 3;
+            --z-index-4: 4;
+            --z-index-5: 5;
+            --z-index-6: 6;
+            --z-index-7: 7;
+            --z-index-8: 8;
+            --z-index-9: 9;
 
-                /* Use these -t- suffix for top elements like modals */
-                --z-index-t-1: 11; /* T stands for top */
-                --z-index-t-2: 12;
-                --z-index-t-3: 13;
-                --z-index-t-4: 14;
-                --z-index-t-5: 15;
-                --z-index-t-6: 16;
-                --z-index-t-7: 17;
-                --z-index-t-8: 18;
-                --z-index-t-9: 19;
+            /* Use these -t- suffix for top elements like modals */
+            --z-index-t-1: 11; /* T stands for top */
+            --z-index-t-2: 12;
+            --z-index-t-3: 13;
+            --z-index-t-4: 14;
+            --z-index-t-5: 15;
+            --z-index-t-6: 16;
+            --z-index-t-7: 17;
+            --z-index-t-8: 18;
+            --z-index-t-9: 19;
 
 
-            /* Layout */
+        /* Layout */
 
-            --desktop-grid: 12;
-            --tablet-grid: 8;
-            --mobile-grid: 4;
+        --desktop-grid: 12;
+        --tablet-grid: 8;
+        --mobile-grid: 4;
 
-            --default-grid: var(--desktop-grid);
-            --full-width: 1 / -1;
+        --default-grid: var(--desktop-grid);
+        --full-width: 1 / -1;
 
-            --page-lateral-spacing: 4.6875vw;
-            --page-gutter: 36px;
-            --page-content-width: calc(100vw - (var(--page-lateral-spacing) * 2));
+        --page-lateral-spacing: 4.6875vw;
+        --page-gutter: 36px;
+        --page-content-width: calc(100vw - (var(--page-lateral-spacing) * 2));
 
-            /* Misc */
+        /* Misc */
 
-            --navbar-height: calc(var(--spacing-5) * 0.96875);
-            --border-radius: 2px;
-            --border-radius-2: 19px;
-            --box-shadow: 4px 10px 12px 0px rgba(0,0,0,0.09);
-            /* --box-shadow: 4px 10px 12px 0px rgba(0,0,0,0.0); */
+        --navbar-height: calc(var(--spacing-5) * 0.96875);
+        --border-radius: 2px;
+        --border-radius-2: 19px;
+        --box-shadow: 4px 10px 12px 0px rgba(0,0,0,0.09);
+        /* --box-shadow: 4px 10px 12px 0px rgba(0,0,0,0.0); */
 
-            --mobile-breakpoint: 765px;
-            --tablet-breakpoint: 1024px;
+        --mobile-breakpoint: 765px;
+        --tablet-breakpoint: 1024px;
     }
 
 /*=============================================
@@ -453,6 +454,11 @@
     :global(.button-thin) {
         width: max-content;
     }
+
+    :global(.button-secondary) {
+        filter: saturate(.3) brightness(1.1);
+        padding: var(--buttons-padding-thin);
+    }
     
     :global(.button-1) {
         background: var(--color-4);
@@ -466,7 +472,11 @@
 
     @media (pointer: fine) {
         :global(button:hover, .button-1:hover, .button-2:hover) {
-            filter: brightness(1.1);
+            filter: saturate(1) brightness(1.1);
+        }
+
+        :global(button.button-secondary:hover) {
+            filter: saturate(.7) brightness(1.1);
         }
     }
 

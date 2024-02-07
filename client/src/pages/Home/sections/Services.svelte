@@ -1,7 +1,10 @@
 <script>
+    import { ServiceData, getSantaElenaServices } from "@models/Services";
     import ServiceItem from "@components/ModelsViews/ServiceItem.svelte";
     import SectionHeader from "@components/UI/SectionHeader.svelte";
-    import { ServiceData } from "@models/Services";
+    import { onMount } from "svelte";
+    import ServiceContent from "@components/ModelsViews/ServiceContent.svelte";
+
 
     
     /*=============================================
@@ -10,54 +13,64 @@
     
         /** 
          * @type {ServiceData[]} 
-         * @todo fetch services data from the server
          */
-        let services_data = [
-            new ServiceData({
-                id: crypto.randomUUID(),
-                title: "Servicio de cremación",
-                description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-                brief_description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-                image: "",
-            }),
-            new ServiceData({
-                id: crypto.randomUUID(),
-                title: "Servicio de funeraria",
-                description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-                brief_description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-                image: "",
-            }),
-            new ServiceData({
-                id: crypto.randomUUID(),
-                title: "Servicio de recolección",
-                description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-                brief_description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-                image: "",
-            }),
-            new ServiceData({
-                id: crypto.randomUUID(),
-                title: "Servicio de importación",
-                description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-                brief_description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-                image: "",
-            }),
-        ];
+        let services_data = [];
+
+
+        /**
+         * The service the user has selected because he/she wants read more about it or purchase it
+         * @type {ServiceData} 
+         */
+        let selected_service;
     
     /*=====  End of Properties  ======*/
     
-        
+    onMount(() => {
+        getServicesData();
+    });
+    
+    /*=============================================
+    =            Methods            =
+    =============================================*/
+    
+        const getServicesData = async () => {
+            services_data = await getSantaElenaServices();
+
+            // For styling purposes
+            // selected_service = services_data[0];
+        }
+
+        const handleServiceSelection = e => {
+            /**
+             * @type {ServiceData}
+             */
+            let service_data = (e.detail instanceof ServiceData) ? e.detail : undefined;
+
+            selected_service = service_data;
+        }
+    
+    /*=====  End of Methods  ======*/
+    
+    
+
 </script>
 
 
 <section id="our-services-section">
     <SectionHeader section_name="Servicios"/>
-    <div id="oss-content">
-        <ul id="oss-content-center">
-            {#each services_data as service_data}
-                <ServiceItem service_data={service_data}/>
-            {/each}
-        </ul>
-    </div>
+    {#if selected_service === undefined}
+        <div id="oss-content">
+            <ul id="oss-content-center">
+                {#each services_data as service_data}
+                    <ServiceItem on:service-selected={handleServiceSelection} service_data={service_data}/>
+                {/each}
+            </ul>
+        </div>
+    {:else}
+        <div id="oss-service-description-wrapper">
+            <ServiceContent on:service-unselected={handleServiceSelection} service_data={selected_service}/>
+        </div>
+    {/if}
 </section>
 
 <style>

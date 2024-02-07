@@ -20,6 +20,7 @@ class Product {
     public ?string $image;
     public string $content;
     public string $short_description;
+    public string $next_steps;
     public float $price;
     public string $price_range;
     public string $slug;
@@ -39,6 +40,8 @@ class Product {
         $this->content = apply_filters('the_content', $raw_content);
 
         $this->short_description = libery_getPostMeta($this->post->ID, metaBoxNames::SHORT_DESCRIPTION->value);
+
+        $this->next_steps = libery_getPostMeta($this->post->ID, metaBoxNames::NEXT_STEPS->value);
 
         $raw_price = libery_getPostMeta($this->post->ID, metaBoxNames::PRICE->value);
 
