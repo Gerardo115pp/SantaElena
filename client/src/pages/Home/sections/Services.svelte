@@ -39,7 +39,7 @@
             window.services_santa_elena = services_data;
 
             // For styling purposes
-            selected_service = services_data[0];
+            // selected_service = services_data[0];
         }
 
         const handleServiceSelection = e => {

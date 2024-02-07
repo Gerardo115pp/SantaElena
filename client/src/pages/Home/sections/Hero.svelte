@@ -52,7 +52,8 @@
         position: relative;
         container-type: size;
         container-name: hero-section;
-        width: 100dvw;
+        width: 100svw;
+        overflow: hidden;
         height: 104vh;
     }
 

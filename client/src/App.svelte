@@ -273,6 +273,10 @@
         display: none;
     }
 
+    :root::-webkit-scrollbar {
+        display: none;
+    }
+
     :global(.grecaptcha-badge) {
         visibility: hidden !important;
     }
