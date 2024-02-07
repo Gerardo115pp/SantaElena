@@ -1,5 +1,6 @@
 import { GetProductsRequest } from "@libs/Services/HttpRequests";
 import { parseHtmlText } from "@libs/utils";
+import { WordpressMedia, getWordpressMediaById } from "@models/Wordpress";
 
 export class ServiceData {
     /**
@@ -14,6 +15,20 @@ export class ServiceData {
      * @type {number}
      */
     #price;
+
+    /**
+     * The id of the image of the Service
+     * @type {string}
+     * @readonly
+     */
+    #image;
+
+    /**
+     * The data representation of the Service image
+     * @type {WordpressMedia}
+     * @readonly
+     */
+    #image_data;
 
     /**
      * The instructions to follow after the purchase of the Service
@@ -32,7 +47,8 @@ export class ServiceData {
         this.id = slug;
         this.title = name;
         this.brief_description = short_description;
-        this.image = image;
+        this.#image = image;
+        this.#image_data = null;
         this.#price = price;
         this.price_range = price_range;
         this.#next_steps = next_steps;
@@ -57,6 +73,15 @@ export class ServiceData {
     }
 
     /**
+     * The Data representation of the Service image
+     * @returns {WordpressMedia}
+     * @readonly
+     */
+    get Image() {
+        return this.#image_data;
+    }
+
+    /**
      * The html content of the Service description
      * @returns {HTMLCollection}
      * @readonly
@@ -66,6 +91,14 @@ export class ServiceData {
     }
 
     /**
+     * Returns true if the Service has an available image associated with it. it verify this by checking if the image id is not an empty string
+     * @returns {boolean}
+     */
+    hasImage() {
+        return this.#image !== "";
+    } 
+
+    /**
      * Whether the Service can generate a stripe checkout session
      * @returns {boolean}
      */
@@ -73,6 +106,17 @@ export class ServiceData {
         return this.Price !== undefined && this.#next_steps !== "";
     }
 
+    /**
+     * loads the service image
+     * @returns {Promise<WordpressMedia>}
+     */
+    async loadImage() {
+        if (this.#image_data === null) {
+            this.#image_data = await getWordpressMediaById(this.#image);
+        }
+
+        return this.#image_data;
+    }
 
 }
 
@@ -86,5 +130,17 @@ export const getSantaElenaServices = async () => {
         return [];
     }
 
-    return response.data.map(service => new ServiceData(service));
+    let promises = response.data.map(async (service) => {
+        let new_service = new ServiceData(service);
+        
+        if (new_service.hasImage()) {
+            await new_service.loadImage();
+        }
+
+        return new_service;
+    });
+
+    let result = await Promise.allSettled(promises);
+
+    return result.map((promise) => promise.status === "fulfilled" ? promise.value : null).filter((service) => service !== null);
 };

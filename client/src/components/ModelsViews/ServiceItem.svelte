@@ -36,8 +36,8 @@
 
 <li class="santa-elena-service-card">
     <div class="image-wrapper">
-        {#if service_data.image}
-            <img class="santa-elena-image" src="{service_data.image}" alt="{service_data.title}">
+        {#if service_data.hasImage()}
+            <img class="santa-elena-image" src="{service_data.Image.MediumUrl}" alt="{service_data.title}">
         {:else}
             <ImageMultiStage image_resource={layout_images.WHITE_ROSES_IMAGE} image_percentage={0.2} alt_text="{service_data.title}"/>
         {/if}
@@ -70,6 +70,10 @@
         display: grid;
         width: 60%;
         place-items: center;
+    }
+
+    .santa-elena-service-card .image-wrapper:has(> img.santa-elena-image) {
+        width: 90%;
     }
 
     .santa-elena-service-card .service-about-wrapper {

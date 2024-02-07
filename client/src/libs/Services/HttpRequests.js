@@ -30,6 +30,30 @@ import { SVG_PREFIX, WORDPRESS_REST_API } from "./addresses";
             }
         }
 
+    /*----------  Wordpress Assets  ----------*/
+        export class GetWordpressMediaByIdRequest {
+            constructor(id) {
+                this.id = id;
+            }
+
+            toJson = attributesToJson.bind(this);
+
+            /**
+             * Sends a request to the get a wordpress media by its id
+             * @async
+             * @returns {Promise<HttpResponse>}
+             */
+            do = async () => {
+                const response = await fetch(`${WORDPRESS_REST_API}/wp/v2/media/${this.id}`);
+                let data = null;
+
+                if (response.status >= 200 && response.status < 300) {
+                    data = await response.json();
+                }
+
+                return new HttpResponse(response, data);
+            }
+        }
 
 /*=====  End of Wordpress  ======*/
 

@@ -4,6 +4,7 @@
     import { ServiceData } from "@models/Services";
     import { layout_images } from "@stores/layout";
     import { createEventDispatcher, onMount } from "svelte";
+    import { LiberyHTMLPreprocessor, NodesPreprocessRule } from "@libs/LiberyHTMLpreprocessor/html_preprocessor";
 
     
     /*=============================================
@@ -22,18 +23,56 @@
          */
         let description_mount;
 
+        /**
+         * The rules for the preprocessor of the services content that's fetched from the wordpress API
+         * @type {NodesPreprocessRule[]}
+         */
+        const service_content_preprocessor_rules = [
+            {
+                tag_name: "headline",
+                classes: ["headline-2"],
+                attributes: [],
+                event_handlers: []
+            },
+            {
+                tag_name: "p",
+                classes: ["service-description-paragraph"],
+                attributes: [],
+                event_handlers: []
+            },
+            {
+                tag_name: "ul",
+                classes: ["decorated-list-item"],
+            }
+        ]
+
+        /**
+         * The preprocessor for the service content
+         * @type {LiberyHTMLPreprocessor}
+         */
+        const service_content_preprocessor = new LiberyHTMLPreprocessor();
+
         const dispatcher = createEventDispatcher();
     
     /*=====  End of Properties  ======*/
 
     onMount(() => {
+        updateServiceContentPreprocessorRules(service_content_preprocessor_rules);
+
         renderServiceDescription(service_data);
     });
     
     /*=============================================
     =            Methods            =
     =============================================*/
-    
+
+        /**
+         * Handles the user's request to go back to the services list
+         */
+        const handleBack = () => {
+            dispatcher("service-unselected");
+        }
+
         /**
          * Renders the service description
          * @param {ServiceData} service_data 
@@ -47,15 +86,17 @@
             const service_description = service_data.Description;
 
             const nodes = Array.from(service_description);
+            const processed_nodes = service_content_preprocessor.processNodes(nodes);
 
-            description_mount.replaceChildren(...nodes);
+            description_mount.replaceChildren(...processed_nodes);
         }
 
         /**
-         * Handles the user's request to go back to the services list
+         * Updates the rules of the service content preprocessor
+         * @param {NodesPreprocessRule[]} rules
          */
-        const handleBack = () => {
-            dispatcher("service-unselected");
+        const updateServiceContentPreprocessorRules = (rules) => {
+            service_content_preprocessor.setRules(rules);
         }
 
     /*=====  End of Methods  ======*/
@@ -65,13 +106,12 @@
 
 <article class="service-content-display">
     <TwoColumnImageText
-        padding_bottom="0"
     >
-        <div bind:this={description_mount} class="service-description-wrapper scd-content-column" slot="text_content"></div>
+        <div bind:this={description_mount} class="service-description-wrapper scd-content-column libery-scroll" slot="text_content"></div>
         <aside class="article-details scd-content-column" slot="image_resource">
             <div class="scd-image-wrapper">
-                {#if service_data.image}
-                    <img class="santa-elena-image" src="{service_data.image}" alt="{service_data.title}">
+                {#if service_data.hasImage()}
+                    <img class="santa-elena-image" src="{service_data.Image.LargeUrl}" alt="{service_data.title}">
                 {:else}
                     <ImageMultiStage image_resource={layout_images.WHITE_ROSES_IMAGE} image_percentage={0.4} alt_text="{service_data.title}"/>
                 {/if}
@@ -98,7 +138,7 @@
 
 <style>
     .scd-content-column {
-        height: 40rlh;
+        height: 800px;
     }
 
     /*=============================================

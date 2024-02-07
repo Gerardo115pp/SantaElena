@@ -482,6 +482,27 @@
 
 
 /*=============================================
+=            Misc Elements            =
+=============================================*/
+
+    :global(ul.decorated-list-item) {
+        padding: 0 0 0 var(--spacing-1);
+    }
+
+    :global(ul.decorated-list-item li) {
+        font-family: var(--font-read);
+        color: var(--grey-5);
+        font-size: var(--font-size-p);
+        font-weight: normal;
+    }
+
+    :global(ul.decorated-list-item li::before) {
+        content: '•';
+        margin-right: var(--spacing-1);
+        color: var(--shade-light-8);
+    }
+
+/*=============================================
 =            Interactions            =
 =============================================*/
     @media(pointer: fine) {
