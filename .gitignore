@@ -10,3 +10,4 @@
 *.code-workspace
 /**/generic.go
 database/
+wordpress/wp_plugins/**/vendor/

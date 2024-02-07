@@ -1,0 +1,19 @@
+{
+    "name": "libery_labs/plugin-se-products",
+    "description": "Plugin para gestionar los productos que aparecerán en el listado de servicios de Santa Elena",
+    "type": "project",
+    "license": "GPL-2.0-only",
+    "autoload": {
+        "classmap": [ "models/", "handlers/" ],
+        "psr-4": {
+            "LiberyLabs\\PluginSeProducts\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Lalo Sanchez",
+            "email": "lalo.sanchez@libery-labs.com"
+        }
+    ],
+    "require": {}
+}
