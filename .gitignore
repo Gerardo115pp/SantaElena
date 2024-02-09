@@ -9,5 +9,6 @@
 /**/*.backup
 *.code-workspace
 /**/generic.go
-database/
+/database/
 wordpress/wp_plugins/**/vendor/
+docs/
