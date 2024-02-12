@@ -10,15 +10,17 @@ import (
 type contentEntryAttribute string
 
 type contentEntryAttributes struct {
-	Text     contentEntryAttribute
-	Href     contentEntryAttribute
-	MediaUrl contentEntryAttribute
+	Text         contentEntryAttribute
+	Href         contentEntryAttribute
+	MediaUrl     contentEntryAttribute
+	Instructions contentEntryAttribute
 }
 
 var ContentEntryAttributes = contentEntryAttributes{
-	Text:     "text",
-	Href:     "href",
-	MediaUrl: "media_url",
+	Text:         "text",
+	Href:         "href",
+	MediaUrl:     "media_url",
+	Instructions: "instructions",
 }
 
 func CastContentEntryAttribute(attribute string) (contentEntryAttribute, error) {
@@ -31,6 +33,8 @@ func CastContentEntryAttribute(attribute string) (contentEntryAttribute, error) 
 		return ContentEntryAttributes.Href, nil
 	case ContentEntryAttributes.MediaUrl:
 		return ContentEntryAttributes.MediaUrl, nil
+	case ContentEntryAttributes.Instructions:
+		return ContentEntryAttributes.Instructions, nil
 	default:
 		return "", fmt.Errorf("Invalid content entry attribute: %s", attribute)
 	}

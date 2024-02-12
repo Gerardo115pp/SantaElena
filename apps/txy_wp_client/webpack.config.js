@@ -20,7 +20,10 @@ const config = {
 			directory: path.join(__dirname, 'public')
 		},
 		allowedHosts: "all",
-		historyApiFallback: true
+		historyApiFallback: true,
+		watchFiles: {
+			paths: ["src/**/*", "../modules/**/*"]
+		}
 	},
 	resolve: {
 		alias: {
@@ -34,6 +37,7 @@ const config = {
 			"@events": path.resolve(__dirname, 'src/events'),
 			"@stores": path.resolve(__dirname, 'src/stores'),
 			"@databases": path.resolve(__dirname, 'src/databases'),
+			"@app_modules": path.resolve(__dirname, '../modules'),
 		},
 		extensions: ['.*', '.mjs', '.js', '.svelte'],
 		mainFields: ['svelte', 'browser', 'module', 'main'],
@@ -101,6 +105,7 @@ module.exports = (env, argv) => {
 	const build_config = {
 		JD_ADDRESS: process.env.JD_ADDRESS,
 		WP_API: process.env.WP_API,
+		TXY_API: process.env.TXY_API,
 	}
 
 	if (!is_production) {
@@ -115,6 +120,7 @@ module.exports = (env, argv) => {
 			"JD_ADDRESS": JSON.stringify(build_config.JD_ADDRESS),
 			"WP_API": JSON.stringify(build_config.WP_API),
 			"APP_NAME": JSON.stringify(APP_NAME),
+			"TXY_API": JSON.stringify(build_config.TXY_API),
 		})
 	);
 

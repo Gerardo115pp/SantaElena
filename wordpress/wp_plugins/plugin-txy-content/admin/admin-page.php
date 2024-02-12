@@ -4,7 +4,13 @@
 <script>
     const svelte_app_url = "<?php echo $SVELTE_APP_URL; ?>";
 
+    const home_page_txy_id = "santa-elena-home-page";
+
     const mountTxyApp = () => {
+        window.txy = {
+            home_page_txy_id
+        };
+
         const script = document.createElement('script');
         script.src = svelte_app_url;
         script.async = true;
@@ -15,8 +21,5 @@
     document.addEventListener('DOMContentLoaded', mountTxyApp);
 </script>
 <section id="libery-labs-txy-wp-menu">
-    <h1>
-        Txy Content Manager - loading  from <?php echo $SVELTE_APP_URL; ?>
-    </h1>
     <div id="app-root"></div>
 </section>

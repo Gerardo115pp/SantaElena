@@ -35,7 +35,9 @@ func setRepositories() {
 
 func BinderRoutes(server server.Server, router *patriot_router.Router) {
 	router.RegisterRoute(patriot_router.NewRoute("/alive", true), handlers.AliveHandler(server))
+	router.RegisterRoute(patriot_router.NewRoute("/content/attributes", true), handlers.ContentAttributesHandler(server))
 	router.RegisterRoute(patriot_router.NewRoute("/pages-content", true), handlers.PageContentHandler(server))
+	router.RegisterRoute(patriot_router.NewRoute("/pages", true), handlers.PagesHandler(server))
 	router.RegisterRoute(patriot_router.NewRoute("/locales(/.+)?$", false), handlers.LocalesHandler(server))
 }
 

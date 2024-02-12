@@ -3,8 +3,10 @@ package database
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"libery_txy_content_service/models"
 
+	"github.com/Gerardo115pp/patriots_lib/echo"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -23,6 +25,34 @@ func NewContentSQLiteDB() (*ContentSQLiteDB, error) {
 	}
 
 	return content_db, nil
+}
+
+// Only use prepared statements in methods that are public and receive user input
+
+func (content_db *ContentSQLiteDB) GetPages(ctx context.Context) ([]models.PageMetadata, error) {
+	var pages []models.PageMetadata
+
+	sql_statement := "SELECT `page_id`, `name` FROM `pages`"
+
+	rows, err := content_db.db.QueryContext(ctx, sql_statement)
+	if err != nil {
+		return pages, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var page models.PageMetadata
+
+		err = rows.Scan(&page.PageID, &page.Name)
+		if err != nil {
+			return pages, err
+		}
+
+		pages = append(pages, page)
+	}
+
+	return pages, nil
 }
 
 func (content_db *ContentSQLiteDB) GetPageLocales(ctx context.Context, page_id string) ([]string, error) {
@@ -78,6 +108,8 @@ func (content_db *ContentSQLiteDB) GetPageContent(ctx context.Context, page_id s
 
 	page.LocalesContent[locale] = &page_sections
 
+	echo.EchoDebug(fmt.Sprintf("page: %+v", page))
+
 	return page, nil
 }
 
@@ -86,6 +118,9 @@ func (content_db *ContentSQLiteDB) getPageSections(ctx context.Context, page_id 
 
 	var page_content_entries map[string]*[]models.ContentEntry
 	page_content_entries, err := content_db.getPageContentEntries(ctx, page_id, locale)
+	for key, value := range page_content_entries {
+		echo.EchoDebug(fmt.Sprintf("key: %s, value: %+v \n", key, value))
+	}
 
 	section_stmt, err := content_db.db.Prepare("SELECT `section_id`, `name` FROM `sections` WHERE `page_fk`=?")
 	if err != nil {
@@ -139,8 +174,13 @@ func (content_db *ContentSQLiteDB) getPageContentEntries(ctx context.Context, pa
 	var section_slice *[]models.ContentEntry
 
 	for rows.Next() {
-		var content_entry models.ContentEntry
+		var content_entry models.ContentEntry = *models.NewContentEntry()
 		var section_fk string
+
+		err = rows.Scan(&content_entry.EntryID, &section_fk, &content_entry.Name, &content_entry.ContentType, &content_entry.ContentHash)
+		if err != nil {
+			return nil, err
+		}
 
 		section_slice, _ = page_sections[section_fk]
 
@@ -148,11 +188,6 @@ func (content_db *ContentSQLiteDB) getPageContentEntries(ctx context.Context, pa
 			new_slice := make([]models.ContentEntry, 0)
 			page_sections[section_fk] = &new_slice
 			section_slice = &new_slice
-		}
-
-		err = rows.Scan(&content_entry.EntryID, &section_fk, &content_entry.Name, &content_entry.ContentType, &content_entry.ContentHash)
-		if err != nil {
-			return nil, err
 		}
 
 		err = content_db.populateAttributes(&content_entry)
