@@ -1,5 +1,6 @@
 <script>
     import { TxyContentEntry } from "@models/txy_content";
+    import { onMount } from "svelte";
 
     
     /*=============================================
@@ -14,11 +15,74 @@
 
         
         /*----------  Editor  ----------*/
-        
+            /**
+             * The new content to be saved.
+             * @type {TxyContentEntry}
+             */
+            let new_content = null;
+
             let editing_instructions = false;
+
+            let new_instructions = "";
+            let new_content_text = "";
+            let new_content_href = "";
+
+            let content_updated = false;
+
     
     /*=====  End of properties  ======*/
+
+    onMount(() => {
+        setupEditor();
+    });
+
     
+    /*=============================================
+    =            Methods            =
+    =============================================*/
+
+        const handleInstructionsKeydown = e => {
+            if (e.key === "Enter") {
+                return toggleEditingInstructions();
+            }
+
+            updateContent();
+        }
+
+        const setupEditor = () => {
+            new_content = content_entry.Copy();
+
+            new_instructions = content_entry.Instructions;
+            new_content_text = content_entry.Text;
+            new_content_href = content_entry.Href;
+        }
+
+        const toggleEditingInstructions = () => {
+            editing_instructions = !editing_instructions;
+        }
+
+        const updateContent = () => {
+            new_content.Text = new_content_text;
+            console.log('the new content is: ', new_content_text);
+            new_content.Href = new_content_href;
+            new_content.Instructions = new_instructions;
+
+            console.log(`the new content '${new_content.Text}' vs the old content '${content_entry.Text}'`);
+
+            content_updated = !(new_content.Equals(content_entry));
+            console.log(`Content updated: ${content_updated}`);
+        }
+
+        const saveContent = () => {
+            content_entry = new_content;
+            content_updated = false;
+        }
+    
+    /*=====  End of Methods  ======*/
+    
+    
+
+
     
 </script>
 
@@ -34,10 +98,10 @@
                  </p>
             {:else} 
                  {#if editing_instructions}
-                        <textarea name="" id="" cols="30" rows="10" class="tcee-editor"></textarea>
+                        <textarea on:keydown={handleInstructionsKeydown} bind:value={new_instructions} class="tcee-editor"></textarea>
                  {:else}
                     <div class="edit-instructions-wrapper">
-                        <button class="button-1 button-thin">
+                        <button on:click={toggleEditingInstructions} class="button-1 button-thin">
                             Añadir instrucciones
                         </button>
                     </div>
@@ -45,7 +109,7 @@
             {/if}
         </div>
         <div class="tcee-editor-wrapper">
-            <textarea class="tcee-editor"></textarea>
+            <textarea on:keyup={updateContent} bind:value={new_content_text} class="tcee-editor"></textarea>
         </div>
     </div>
     <div class="tcee-attributes-column">
@@ -56,14 +120,16 @@
             <dl class="attributes-list">
                 <dt class="attribute-name">Hipervínculo(Link) asociado</dt>
                 <dd class="attribute-editor-wrapper">
-                    <input type="text" class="attribute-editor" >
+                    <input on:change={updateContent} bind:value={new_content_href} type="text" class="attribute-editor" >
                 </dd>
             </dl>
         </details>
     </div>
     <div class="tcee-controls-bar">
-        <button class="button-2 button-thin">Guardar</button>
-        <button class="button-1 button-thin">Cancelar</button>
+        {#if content_updated}
+            <button on:click={saveContent} class="button-2 button-thin">Guardar</button>
+            <button class="button-1 button-thin">Cancelar</button>
+        {/if}
     </div>
 </li>
 
@@ -117,8 +183,10 @@
             font-family: var(--font-read);
             width: 100%;
             height: 60cqh;
-            background: var(--grey-1);
+            background: var(--grey-8);
             border: 2px solid var(--main-dark);
+            outline: none;
+            box-shadow: none !important;
         }
 
 
