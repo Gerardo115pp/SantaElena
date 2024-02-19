@@ -95,9 +95,26 @@ func getAvailableLocalesHandler(response http.ResponseWriter, request *http.Requ
 }
 
 func postLocalesHandler(response http.ResponseWriter, request *http.Request) {
-	response.WriteHeader(http.StatusMethodNotAllowed)
-	return
+	new_locale_request := &struct {
+		Locale string `json:"locale"`
+	}{}
+
+	err := json.NewDecoder(request.Body).Decode(new_locale_request)
+	if err != nil {
+		response.WriteHeader(400)
+		return
+	}
+
+	err = repository.PagesContent.AddLocale(request.Context(), new_locale_request.Locale)
+	if err != nil {
+		echo.Echo(echo.RedFG, fmt.Sprintf("Error adding locale: %s", err.Error()))
+		response.WriteHeader(500)
+		return
+	}
+
+	response.WriteHeader(201)
 }
+
 func patchLocalesHandler(response http.ResponseWriter, request *http.Request) {
 	response.WriteHeader(http.StatusMethodNotAllowed)
 	return

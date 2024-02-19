@@ -78,6 +78,7 @@ var ContentEntryTypes = contentEntryTypes{
 // END of Enums
 
 type ContentEntry struct {
+	id          string
 	EntryID     string                           `json:"entry_id"`
 	Name        string                           `json:"name"`
 	ContentType contentEntryType                 `json:"content_type"`
@@ -93,9 +94,15 @@ func NewContentEntry() *ContentEntry {
 }
 
 func (ce *ContentEntry) ID() string {
+	if ce.id != "" {
+		return ce.id
+	}
+
 	var hash_source string = fmt.Sprintf("%s+%s", ce.EntryID, ce.Locale)
 
-	return helpers.GenerateSha1ID(hash_source)
+	ce.id = helpers.GenerateSha1ID(hash_source)
+
+	return ce.id
 }
 
 func (ce *ContentEntry) GetAttribute(attribute contentEntryAttribute) string {

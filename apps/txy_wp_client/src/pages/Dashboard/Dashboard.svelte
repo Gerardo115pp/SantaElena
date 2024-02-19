@@ -7,6 +7,8 @@
     import { selected_locale, selected_page_id } from "@stores/txy_content";
     import { onMount } from "svelte";
     import PageEditor from "./sub-components/PageEditor.svelte";
+    import { blur } from "svelte/transition";
+    import { circIn } from "svelte/easing";
 
     /*=============================================
     =            Properties            =
@@ -62,6 +64,8 @@
                 await selected_page.addNewLocale(locale);
             }
 
+            console.debug("Selected page: ", selected_page);
+
             page_sections = selected_page.locales_content[locale];
         }
     
@@ -95,9 +99,11 @@
         <div id="tds-th-undefined-section" class="hide-on-mobile tds-th-column"></div>
     </header>
     <PagesSelector />
-    <div class="page-editor-wrapper">
-        <PageEditor {page_sections} />
-    </div>
+    {#key page_sections}
+        <div in:blur={{delay: 200, opacity: 0, duration: 1000, easing: circIn }} class="page-editor-wrapper">
+            <PageEditor {page_sections} />
+        </div>
+    {/key}
 </div>
 
 <style>

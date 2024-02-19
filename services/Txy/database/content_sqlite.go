@@ -114,6 +114,45 @@ func (content_db *ContentSQLiteDB) addPageContent(ctx context.Context, page_cont
 	return nil
 }
 
+func (content_db *ContentSQLiteDB) AddLocale(ctx context.Context, locale string) error {
+	rows, err := content_db.db.QueryContext(ctx, "SELECT DISTINCT `locale`, `entry_id`, `section_fk`, `page_fk`, `name`, `content_type` FROM `content_entries`")
+	if err != nil {
+		return err
+	}
+
+	defer rows.Close()
+
+	tx, err := content_db.db.Begin()
+
+	content_stmt, err := tx.PrepareContext(ctx, "INSERT INTO `content_entries` (`id`, `entry_id`, `section_fk`, `page_fk`, `locale`, `name`, `content_type`, `content_hash`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+
+	for rows.Next() {
+		var content_entry models.ContentEntry = *models.NewContentEntry()
+		var section_fk string
+		var page_id string
+		var original_locale string // we will use this to retrieve a media url when these are implemented
+
+		err = rows.Scan(&original_locale, &content_entry.EntryID, &section_fk, &page_id, &content_entry.Name, &content_entry.ContentType)
+		if err != nil {
+			return err
+		}
+
+		content_entry.Locale = locale
+		content_entry.UpdateContentHash()
+
+		_, err = content_stmt.ExecContext(ctx, content_entry.ID(), content_entry.EntryID, section_fk, page_id, locale, content_entry.Name, content_entry.ContentType, content_entry.ContentHash)
+		if err != nil {
+			echo.EchoErr(err)
+			tx.Rollback()
+			return err
+		}
+	}
+
+	err = tx.Commit()
+
+	return err
+}
+
 func (content_db *ContentSQLiteDB) GetPages(ctx context.Context) ([]models.PageMetadata, error) {
 	var pages []models.PageMetadata
 

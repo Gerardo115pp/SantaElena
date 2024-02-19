@@ -6,6 +6,7 @@ import (
 )
 
 type ContentRepository interface {
+	AddLocale(ctx context.Context, locale string) error
 	PageHasLocale(ctx context.Context, page_id string, locale string) (bool, error)
 	GetPages(ctx context.Context) ([]models.PageMetadata, error)
 	GetPageContent(ctx context.Context, page_id string, locale string) (*models.PageContent, error)

@@ -12,6 +12,11 @@
          */
         export let locale;
 
+        /**
+         * Is the locale selected
+         */
+        export let is_selected_locale = false;
+
         const dispatch = createEventDispatcher();
 
     /*=====  End of Properties  ======*/
@@ -22,6 +27,7 @@
     =============================================*/
     
         const emitLocaleSelected = () => {
+            console.debug("Emitting locale selected: ", locale);
             dispatch("locale-selected", { locale });
         } 
     
@@ -29,7 +35,7 @@
     
 </script>
 
-<button class="txy-locale-item">
+<button on:click={emitLocaleSelected} class="txy-locale-item" class:txy-selected-locale={is_selected_locale}>
     {locale}
 </button>
 
@@ -38,6 +44,19 @@
         background: var(--main-dark);
         color: var(--grey-1);
         padding: var(--spacing-1) var(--spacing-3);
+    }
+
+    button.txy-locale-item:hover {
+        background: var(--main-dark-color-5);
+    }
+
+    button.txy-locale-item:active {
+        background: var(--main-dark-color-4);
+        transition: background-color 0.1s
+    }
+
+    button.txy-locale-item.txy-selected-locale {
+        outline: 1px solid var(--success-2);
     }
 </style>
 

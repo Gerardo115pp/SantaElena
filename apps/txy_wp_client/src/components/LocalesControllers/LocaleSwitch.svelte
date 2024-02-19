@@ -29,6 +29,10 @@
     =            Methods            =
     =============================================*/
     
+        const handleLocaleSelected = event => {
+            selected_locale.set(event.detail.locale);
+        }
+
         const updateLocales = async page_id => {
             page_locales = await getLocales();
             return page_locales;
@@ -39,13 +43,13 @@
 
 <menu id="twp-locale-switch">
     {#each page_locales as locale}
-        <LocaleItem {locale} />
+        <LocaleItem {locale} is_selected_locale={$selected_locale === locale} on:locale-selected={handleLocaleSelected}/>
     {/each}
 </menu>
 
 <style>
     menu#twp-locale-switch {
         display: flex;
-        gap: 0;
+        gap: var(--spacing-1);
     }
 </style>
