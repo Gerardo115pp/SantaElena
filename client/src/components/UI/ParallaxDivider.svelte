@@ -2,7 +2,9 @@
     import ImageMultiStage from "@components/Images/ImageMultiStage.svelte";
     import { ImageResource } from "@models/MediaResources";
     import ParticleDecoration from "@components/Animations/ParticleDecoration.svelte";
+    import TxyContentEntry from "@app_modules/TxyClient/models/content_entry";
     import viewport from "@components/viewport_actions/useViewportActions";
+    import txy_repository from "@app_modules/TxyClient/txy_repository";
     import { writable, Writable } from "svelte/store";
     import { layout_images } from "@stores/layout";
     import { onDestroy, onMount } from "svelte";
@@ -54,11 +56,23 @@
          * @type {HTMLDivElement}
          */
         let parallax_divider_element;
+
+        
+        /*----------  Txy  ----------*/
+        
+            const content_id = "stehp-pds-title";
+
+            /** 
+             * The content entry for the title of the parallax divider section
+             * @type {TxyContentEntry}
+             */
+            let content_entry = txy_repository.getContentEntry(content_id);
     
     /*=====  End of Properties  ======*/
 
     onMount(() => {
         document.addEventListener("scroll", updateParallaxPosition);
+        updateContentEntry();
     });
 
     onDestroy(() => {
@@ -107,6 +121,16 @@
 
         }
 
+        const updateContentEntry = async () => {
+            let new_content_entry = await content_entry.GetFreshCopy();
+
+            if (new_content_entry !== null) {
+                content_entry = new_content_entry;
+            }
+
+            console.debug("Content entry updated", content_entry);
+        }
+
     
     /*=====  End of Methods  ======*/
     
@@ -134,7 +158,8 @@
             />
             <slot name="catch-phrase">
                 <h2 class="default-catch-phrase">
-                    Today, Tomorrow,<br/>And Beyond
+                    <!-- Today, Tomorrow,<br/>And Beyond -->
+                    {@html content_entry.Text}
                 </h2>
             </slot>
         </div>

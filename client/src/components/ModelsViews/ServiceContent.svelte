@@ -4,7 +4,7 @@
     import { ServiceData } from "@models/Services";
     import { layout_images } from "@stores/layout";
     import { createEventDispatcher, onMount } from "svelte";
-    import { LiberyHTMLPreprocessor, NodesPreprocessRule } from "@libs/LiberyHTMLpreprocessor/html_preprocessor";
+    import { LiberyHTMLPreprocessor, NodesPreprocessRule } from "@app_modules/LiberyHTMLpreprocessor/html_preprocessor";
 
     
     /*=============================================

@@ -1,5 +1,5 @@
 <script>
-    import { getPageLocales } from "@models/txy_pages";
+    import { getLocales } from "@models/txy_pages";
     import { onMount } from "svelte";
     import LocaleItem from "./LocaleItem.svelte";
     import { selected_locale } from "@stores/txy_content";
@@ -8,11 +8,6 @@
     /*=============================================
     =            Properties            =
     =============================================*/
-    
-        /**
-         * The page id of which we want to get the locales
-         */
-        export let page_id;
 
         /**
          * The locales of the page
@@ -22,7 +17,7 @@
     /*=====  End of Properties  ======*/
 
     onMount(() => {
-        updatePageLocales(page_id).then(locales => {
+        updateLocales().then(locales => {
             if (locales.length > 0) {
                 selected_locale.set(locales[0]);
             }
@@ -34,8 +29,8 @@
     =            Methods            =
     =============================================*/
     
-        const updatePageLocales = async page_id => {
-            page_locales = await getPageLocales(page_id);
+        const updateLocales = async page_id => {
+            page_locales = await getLocales();
             return page_locales;
         }
     

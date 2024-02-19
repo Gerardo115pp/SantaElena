@@ -1,33 +1,56 @@
 <script>
     import Router from 'svelte-spa-router';
     import { routes } from './routes';
+    import txy_repository from "@app_modules/TxyClient/txy_repository";
     import NotificationsPopup from '@components/Popups/NotificationsPopup.svelte';
     import Navbar from '@components/Navbar/Navbar.svelte';
     import { onMount } from 'svelte';
     import { defineLayout, layout_properties, hasChangedLayout } from '@stores/layout';
-    
-    
-    const ENABLE_DEBUG_ON_MOBILE = false;
-    if (ENABLE_DEBUG_ON_MOBILE && $layout_properties.IS_MOBILE) {
-        debugOnMobile();
-    }
 
-    onMount(() => {
+    
+    /*=============================================
+    =            Properties            =
+    =============================================*/
+    
+        const ENABLE_DEBUG_ON_MOBILE = false;
+        
+        /*----------  Init logic  ----------*/
+    
+            if (ENABLE_DEBUG_ON_MOBILE && $layout_properties.IS_MOBILE) {
+                debugOnMobile();
+            }
+    
+    
+    /*=====  End of Properties  ======*/
+
+    onMount(async () => {
         defineLayout();
+
+        txy_repository.boot();
     })
 
-    function debugOnMobile() { 
-        let script = document.createElement('script');
-        script.src="https://cdn.jsdelivr.net/npm/eruda"; 
-        document.body.append(script); 
-        script.onload = () => eruda.init();
-    }
-
-    const handleLayoutResize = () => {
-        if (hasChangedLayout()) {
-            defineLayout();
+    
+    /*=============================================
+    =            Methods            =
+    =============================================*/
+    
+        function debugOnMobile() { 
+            let script = document.createElement('script');
+            script.src="https://cdn.jsdelivr.net/npm/eruda"; 
+            document.body.append(script); 
+            script.onload = () => eruda.init();
         }
-    }
+
+        const handleLayoutResize = () => {
+            if (hasChangedLayout()) {
+                defineLayout();
+            }
+        }
+    
+    /*=====  End of Methods  ======*/
+    
+    
+
 
 </script>
 
@@ -336,6 +359,11 @@
 
     :global(small) {
         font-size: var(--font-size-p-small);
+    }
+
+    :global(strong) {
+        font-weight: 500;
+        color: var(--shade-light-8);
     }
 
     :global(ul, ol) {

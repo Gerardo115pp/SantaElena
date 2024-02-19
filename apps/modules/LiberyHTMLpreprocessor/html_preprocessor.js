@@ -1,4 +1,4 @@
-import { isHeadline } from "./html_helper_functions";
+import { isHeadline, parseHtmlText } from "./html_helper_functions";
 
 class HTMLEventListenerItem {
     /**
@@ -146,6 +146,18 @@ export class LiberyHTMLPreprocessor {
 
         return preprocessed_nodes;
     }
+
+    /**
+     * Recieves html text and returns an array of Nodes with the rules applied
+     * @param {string} html_text
+     * @returns {Node[]}
+     */
+    processText = html_text => {
+        let collection = parseHtmlText(html_text);
+        let nodes = Array.from(collection);
+        return this.processNodes(nodes);
+    }
+
 
     /**
      * Applies exact rules and meta rules to the Node

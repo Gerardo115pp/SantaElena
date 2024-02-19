@@ -63,21 +63,11 @@ func openContentSQLiteDB() (*sql.DB, error) {
 
 		echo.EchoDebug(fmt.Sprintf("Using schema file: %s", content_schema_file))
 
-		var content_directory string = path.Join(app_config.OPERATION_DATA_PATH, "content")
-
-		echo.EchoDebug(fmt.Sprintf("Using content directory: %s", content_directory))
-
-		var initial_content_insert_file string = path.Join(content_directory, app_config.DATABASE_CONTENT_FILE)
-
 		err = writeSchema(db, content_schema_file)
 		if err != nil {
 			return nil, fmt.Errorf("Error writing schema: %s", err.Error())
 		}
 
-		err = writeSchema(db, initial_content_insert_file)
-		if err != nil {
-			return nil, fmt.Errorf("Error writing initial content: %s", err.Error())
-		}
 	}
 
 	return db, nil

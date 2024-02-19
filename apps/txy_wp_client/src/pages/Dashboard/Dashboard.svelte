@@ -87,7 +87,7 @@
             </div>
             <div role="group" id="tds-th-is-controls">
                 <div class="tds-th-control">
-                    <LocaleSwitch page_id={$selected_page_id} />
+                    <LocaleSwitch />
                 </div>
             </div>
         </article>
@@ -104,7 +104,7 @@
     header#tds-top-header {
         display: grid;
         grid-template-columns: 50% 50%;
-        grid-auto-rows: 40cqh;
+        grid-auto-rows: 50dvh;
     }
 
     .tds-th-column {

@@ -1,9 +1,78 @@
 <script>
-    import SectionHeader from "@components/UI/SectionHeader.svelte";
+    import { NodesPreprocessRule } from "@app_modules/LiberyHTMLpreprocessor/html_preprocessor";
     import TwoColumnImageText from "@components/UI/Layout/TwoColumnImageText.svelte";
-    import { layout_images, navbar_transparent } from "@stores/layout";
+    import TxyMarkup from "@app_modules/TxyClient/components/TxyMarkup.svelte";
+    import TxyContentEntry from "@app_modules/TxyClient/models/content_entry";
     import viewport from "@components/viewport_actions/useViewportActions";
+    import { layout_images, navbar_transparent } from "@stores/layout";
+    import txy_repository from "@app_modules/TxyClient/txy_repository";
+    import SectionHeader from "@components/UI/SectionHeader.svelte";
+    import { onMount } from "svelte";
 
+    
+    /*=============================================
+    =            Properties            =
+    =============================================*/
+
+        
+        /*----------  Txy  ----------*/
+        
+            
+
+            const content_ids = {
+                TITLE_ONE: "stehp-as-card-one-title",
+                CONTENT_ONE: "stehp-as-card-one-content",
+                TITLE_TWO: "stehp-as-card-two-title",
+                CONTENT_TWO: "stehp-as-card-two-content"
+            }
+
+            /**
+             * The content entry for the title of the first section in the about section
+             * @type {TxyContentEntry} 
+             */
+            let title_one = txy_repository.getContentEntry(content_ids.TITLE_ONE);
+
+            /**
+             * The content entry for the content of the first section in the about section
+             * @type {TxyContentEntry} 
+             */
+            let content_one = txy_repository.getContentEntry(content_ids.CONTENT_ONE);
+
+
+            /**
+             * The content entry for the title of the second section in the about section
+             * @type {TxyContentEntry} 
+             */
+            let title_two = txy_repository.getContentEntry(content_ids.TITLE_TWO);
+
+            /**
+             * The content entry for the content of the second section in the about section
+             * @type {TxyContentEntry} 
+             */
+            let content_two = txy_repository.getContentEntry(content_ids.CONTENT_TWO);
+
+            /**
+             * The preprocess rules to apply to the content
+             * @type {NodesPreprocessRule[]}
+             */
+            const about_card_content_preprocess_rules = [
+                {
+                    tag_name: "p",
+                    classes: ["ov-paragraph"],
+                    attributes: [],
+                    event_handlers: []
+                },
+                {
+                    tag_name: "ul",
+                    classes: ["decorated-list-item"]
+                }
+            ]
+        
+    /*=====  End of Properties  ======*/
+    
+    onMount(() => {
+        updateContentEntries();
+    });
     
     /*=============================================
     =            Methods            =
@@ -11,6 +80,22 @@
     
         const handleViewportEnter = e => {
             navbar_transparent.set(false);
+        }
+
+        const updateContentEntries = async () => {
+            let new_title_one = await title_one.GetFreshCopy();
+            let new_content_one = await content_one.GetFreshCopy();
+            let new_title_two = await title_two.GetFreshCopy();
+            let new_content_two = await content_two.GetFreshCopy();
+
+            console.debug("Content one: ", new_content_one);
+
+            title_one = new_title_one !== null ? new_title_one : title_one;
+            content_one = new_content_one !== null ? new_content_one : content_one;
+            title_two = new_title_two !== null ? new_title_two : title_two;
+            content_two = new_content_two !== null ? new_content_two : content_two;
+
+            console.debug("Content one: ", content_one);
         }
     
     /*=====  End of Methods  ======*/
@@ -24,18 +109,12 @@
         <div id="our-vision-wrapper" class="about-text-content" slot="text_content">
             <div class="a-tc-description">
                 <h3 class="headline-2">
-                    Nuestra Visión
+                    {title_one.Text}
                 </h3>
-                <div class="paragraphs-wrapper">
-                    <p class="ov-paragraph">
-                        En Santa Elena, celebramos la vida.
-                    </p>
-                    <p class="ov-paragraph">
-                        Con profundo respeto y cariño, ofrecemos servicios personalizados para honrar y recordar a sus seres queridos. 
-                    </p>
-                    <p class="ov-paragraph">
-                        Desde Guadalajara, Jalisco, nos dedicamos a crear momentos de paz y recuerdo, enfatizando la alegría y el legado de cada vida.
-                    </p>
+                <div class="paragraphs-wrapper libery-scroll">
+                    {#key content_one}
+                        <TxyMarkup content_entry={content_one} wrapper_class="markdown-paragraphs" rules={about_card_content_preprocess_rules}/>
+                    {/key}
                 </div>
             </div>
             <button class="button-2 button-thin">
@@ -47,18 +126,12 @@
         <div id="our-process-wrapper" class="about-text-content" slot="text_content">
             <div class="a-tc-description">
                 <h3 class="headline-2" on:viewportEnter={handleViewportEnter} use:viewport>
-                    Nuestro Proceso
+                    {title_two.Text}
                 </h3>
                 <div class="paragraphs-wrapper">
-                    <p class="ov-paragraph">
-                        En Santa Elena, celebramos la vida.
-                    </p>
-                    <p class="ov-paragraph">
-                        Con profundo respeto y cariño, ofrecemos servicios personalizados para honrar y recordar a sus seres queridos. 
-                    </p>
-                    <p class="ov-paragraph">
-                        Desde Guadalajara, Jalisco, nos dedicamos a crear momentos de paz y recuerdo, enfatizando la alegría y el legado de cada vida.
-                    </p>
+                    {#key content_two}
+                        <TxyMarkup content_entry={content_two} wrapper_class="markdown-paragraphs" rules={about_card_content_preprocess_rules}/>
+                    {/key}
                 </div>
             </div>
             <button class="button-2 button-thin">
@@ -82,12 +155,17 @@
     }
 
     .paragraphs-wrapper {
+        overflow-y: auto;
+        max-height: 70cqh;
+    }
+
+    :global(.paragraphs-wrapper .markdown-paragraphs){
         display: flex;
         flex-direction: column;
         row-gap: var(--spacing-1);
     }
 
-    .ov-paragraph {
+    :global(.ov-paragraph) {
         font-size: var(--font-size-p);
         font-weight: 300;
         color: var(--grey-7);

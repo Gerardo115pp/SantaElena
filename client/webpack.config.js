@@ -5,6 +5,10 @@ const fs = require('fs');
 
 const APP_NAME = "Santa Elena";
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // this disables the SSL certificate check. which is okey because a webpack config is not a production server... or is it? 
+
+console.log(`APP_MODULES_PATH: ${process.env.APP_MODULES_PATH}`);
+
 const config = {
 	entry: './src/index.js',
 	// context: path.resolve(__dirname),
@@ -21,9 +25,13 @@ const config = {
 			directory: path.join(__dirname, 'public')
 		},
 		allowedHosts: "all",
-		historyApiFallback: true
+		historyApiFallback: true,
+		watchFiles: {
+			paths: ["src/**/*", "../modules/**/*"]
+		}
 	},
 	resolve: {
+		modules: [path.resolve(__dirname, 'node_modules'), 'node_modules'],
 		alias: {
 			svelte: path.resolve('node_modules', 'svelte/src/runtime'),
 			'@libs': path.resolve(__dirname, 'src/libs'),
@@ -35,6 +43,7 @@ const config = {
 			"@events": path.resolve(__dirname, 'src/events'),
 			"@stores": path.resolve(__dirname, 'src/stores'),
 			"@databases": path.resolve(__dirname, 'src/databases'),
+			"@app_modules": process.env.APP_MODULES_PATH,
 		},
 		extensions: ['.*', '.mjs', '.js', '.svelte'],
 		mainFields: ['svelte', 'browser', 'module', 'main'],
@@ -101,14 +110,30 @@ const config = {
 	]
 }
 
+const requestTxyFallback = async () => {
+	if (process.env.TXY_API === undefined) {
+		throw new Error("TXY_API is not defined");
+	}
 
-module.exports = (env, argv) => {
+	const response = await fetch(`${process.env.TXY_API}/fallbacks`);
+
+	if (!(response.status >= 200 && response.status < 300)) {
+		throw new Error(`TXY_API responded with status ${response.status}`);
+	}
+
+	return await response.json();
+}
+
+module.exports = async (env, argv) => {
 	const is_production = argv.mode === 'production';
 
 	const build_config = {
 		JD_ADDRESS: process.env.JD_ADDRESS,
 		WP_API: process.env.WP_API,
+		TXY_API: process.env.TXY_API,
 	}
+
+	const txy_fallback = await requestTxyFallback();
 
 	if (!is_production) {
 		config.devServer.https = {
@@ -117,11 +142,15 @@ module.exports = (env, argv) => {
 		}
 	}
 
+	console.log("Modules:", config.resolve.modules)
+
 	config.plugins.push(
 		new webpack.DefinePlugin({
 			"JD_ADDRESS": JSON.stringify(build_config.JD_ADDRESS),
 			"WP_API": JSON.stringify(build_config.WP_API),
+			"TXY_API": JSON.stringify(build_config.TXY_API),
 			"APP_NAME": JSON.stringify(APP_NAME),
+			"TXY_FALLBACK": JSON.stringify(txy_fallback),
 		})
 	);
 

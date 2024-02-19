@@ -119,7 +119,8 @@
   .tcit-columns-wrapper {
     width: min(100%, 1664px);
     display: flex;
-    container-type: inline-size;
+    height: 40cqw;
+    container-type: size;
     justify-content: space-between;
     align-items: center;
   }

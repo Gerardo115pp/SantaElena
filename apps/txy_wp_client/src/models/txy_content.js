@@ -1,16 +1,17 @@
-import { GetAvailableAttributesRequest } from "@app_modules/Services/HttpRequests";
+import { GetAvailableAttributesRequest, PutContentEntryRequest } from "@app_modules/Services/HttpRequests";
 
 export class TxyContentEntry {
     /**
      * @type {Object<string, string>}
      */
     #attributes;
-    constructor({ entry_id, name, content_type, attributes, content_hash }) {
+    constructor({ entry_id, name, content_type, attributes, content_hash, locale }) {
         this.entry_id = entry_id;
         this.name = name;
         this.content_type = content_type;
         this.#attributes = attributes;
         this.content_hash = content_hash;
+        this.locale = locale;
     }
 
     get Instructions() {
@@ -94,6 +95,27 @@ export class TxyContentEntry {
         const hash_hex = hash_array.map(b => b.toString(16).padStart(2, '0')).join('');
         
         return hash_hex;
+    }   
+
+    /**
+     * Saves the current content entry to the server
+     * @async
+     * @returns {Promise<boolean>}
+     */
+    PushUpdates = async () => {
+        const json_values = {
+            entry_id: this.entry_id,
+            name: this.name,
+            content_type: this.content_type,
+            attributes: this.#attributes,
+            content_hash: this.content_hash,
+            locale: this.locale
+        };
+
+        const request = new PutContentEntryRequest(json_values);
+        const response = await request.do();
+
+        return response.Ok;
     }
 }
 

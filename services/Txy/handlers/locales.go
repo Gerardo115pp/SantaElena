@@ -36,7 +36,10 @@ func getLocalesHandler(response http.ResponseWriter, request *http.Request) {
 
 	switch resource {
 	case "/locales/pages":
-		getLocalesPagesHandler(response, request)
+		response.Header().Add("Location", "/locales/available")
+		response.WriteHeader(301)
+	case "/locales/available":
+		getAvailableLocalesHandler(response, request)
 		return
 	default:
 		echo.Echo(echo.RedFG, "Resource not found: "+resource)
@@ -45,6 +48,10 @@ func getLocalesHandler(response http.ResponseWriter, request *http.Request) {
 	}
 }
 
+/*
+Deprecated: This function is deprecated in favor of getAvailableLocalesHandler. this is because all the
+pages in a txy site should have the same locales available
+*/
 func getLocalesPagesHandler(response http.ResponseWriter, request *http.Request) {
 	echo.Echo(echo.GreenFG, "Getting locales for pages")
 	var page_id string = request.URL.Query().Get("page_id")
@@ -65,6 +72,23 @@ func getLocalesPagesHandler(response http.ResponseWriter, request *http.Request)
 
 	response.Header().Add("Content-Type", "application/json")
 	response.Header().Add("Cache-Control", "max-age=600") // 10 minutes, in production this should be a lot more
+	response.WriteHeader(200)
+
+	json.NewEncoder(response).Encode(locales)
+}
+
+func getAvailableLocalesHandler(response http.ResponseWriter, request *http.Request) {
+	var locales []string
+
+	locales, err := repository.PagesContent.GetLocales(request.Context())
+	if err != nil {
+		response.WriteHeader(500)
+		return
+	}
+
+	// catch the response for 3 days
+	response.Header().Add("Content-Type", "application/json")
+	response.Header().Add("Cache-Control", "max-age=259200") // 3 days
 	response.WriteHeader(200)
 
 	json.NewEncoder(response).Encode(locales)

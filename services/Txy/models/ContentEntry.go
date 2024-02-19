@@ -43,10 +43,11 @@ func CastContentEntryAttribute(attribute string) (contentEntryAttribute, error) 
 type contentEntryType string
 
 type contentEntryTypes struct {
-	Image contentEntryType
-	Video contentEntryType
-	Text  contentEntryType
-	Html  contentEntryType
+	Image    contentEntryType
+	Video    contentEntryType
+	Text     contentEntryType
+	Html     contentEntryType
+	Markdown contentEntryType
 }
 
 func CastContentEntryType(content_type string) (contentEntryType, error) {
@@ -67,10 +68,11 @@ func CastContentEntryType(content_type string) (contentEntryType, error) {
 }
 
 var ContentEntryTypes = contentEntryTypes{
-	Image: "image",
-	Video: "video",
-	Text:  "text",
-	Html:  "html",
+	Image:    "image",
+	Video:    "video",
+	Text:     "text",
+	Html:     "html",
+	Markdown: "markdown",
 }
 
 // END of Enums
@@ -81,12 +83,19 @@ type ContentEntry struct {
 	ContentType contentEntryType                 `json:"content_type"`
 	Attributes  map[contentEntryAttribute]string `json:"attributes"`
 	ContentHash string                           `json:"content_hash"`
+	Locale      string                           `json:"locale"`
 }
 
 func NewContentEntry() *ContentEntry {
 	return &ContentEntry{
 		Attributes: make(map[contentEntryAttribute]string),
 	}
+}
+
+func (ce *ContentEntry) ID() string {
+	var hash_source string = fmt.Sprintf("%s+%s", ce.EntryID, ce.Locale)
+
+	return helpers.GenerateSha1ID(hash_source)
 }
 
 func (ce *ContentEntry) GetAttribute(attribute contentEntryAttribute) string {
@@ -104,6 +113,10 @@ func (ce *ContentEntry) UpdateContentHash() {
 
 	switch ce.ContentType {
 	case ContentEntryTypes.Text:
+		hash_source += fmt.Sprintf("+%s+%s", ce.GetAttribute(ContentEntryAttributes.Text), ce.GetAttribute(ContentEntryAttributes.Href))
+	case ContentEntryTypes.Markdown:
+		hash_source += fmt.Sprintf("+%s+%s", ce.GetAttribute(ContentEntryAttributes.Text), ce.GetAttribute(ContentEntryAttributes.Href))
+	case ContentEntryTypes.Html:
 		hash_source += fmt.Sprintf("+%s+%s", ce.GetAttribute(ContentEntryAttributes.Text), ce.GetAttribute(ContentEntryAttributes.Href))
 	default:
 		hash_source += fmt.Sprintf("+%s", ce.GetAttribute(ContentEntryAttributes.MediaUrl))

@@ -1,6 +1,9 @@
 <script>
+    import Editor from "bytemd/svelte/editor.svelte";
+    import ESLocale from "bytemd/locales/es.json";
     import { TxyContentEntry } from "@models/txy_content";
     import { onMount } from "svelte";
+    import { marked } from "marked";
 
     
     /*=============================================
@@ -53,7 +56,7 @@
             new_content = content_entry.Copy();
 
             new_instructions = content_entry.Instructions;
-            new_content_text = content_entry.Text;
+            new_content_text = content_entry.Text ?? "";
             new_content_href = content_entry.Href;
         }
 
@@ -63,19 +66,29 @@
 
         const updateContent = () => {
             new_content.Text = new_content_text;
-            console.log('the new content is: ', new_content_text);
             new_content.Href = new_content_href;
             new_content.Instructions = new_instructions;
 
-            console.log(`the new content '${new_content.Text}' vs the old content '${content_entry.Text}'`);
 
             content_updated = !(new_content.Equals(content_entry));
-            console.log(`Content updated: ${content_updated}`);
         }
 
         const saveContent = () => {
             content_entry = new_content;
+            new_content = content_entry.Copy();
+            
+            if (content_entry.content_type === "html") {
+                content_entry.Text = marked.parse(new_content_text);
+            }
+
+            content_entry.PushUpdates(); // Pushes the new content to the server
             content_updated = false;
+        }
+
+        const handleMarkdownChange = (e) => {
+            new_content_text = e.detail.value;
+
+            updateContent();
         }
     
     /*=====  End of Methods  ======*/
@@ -109,7 +122,11 @@
             {/if}
         </div>
         <div class="tcee-editor-wrapper">
-            <textarea on:keyup={updateContent} bind:value={new_content_text} class="tcee-editor"></textarea>
+            {#if content_entry.content_type === "markdown"}
+                <Editor value={new_content_text} locale={ESLocale} on:change={handleMarkdownChange} mode="split"/>
+            {:else}
+                <textarea on:change={updateContent} bind:value={new_content_text} class="tcee-editor"></textarea>
+            {/if}
         </div>
     </div>
     <div class="tcee-attributes-column">
@@ -185,6 +202,8 @@
             height: 60cqh;
             background: var(--grey-8);
             border: 2px solid var(--main-dark);
+            color: var(--main);
+            padding: var(--spacing-1);
             outline: none;
             box-shadow: none !important;
         }

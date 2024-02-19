@@ -3,6 +3,7 @@
     import Dashboard from "@pages/Dashboard/Dashboard.svelte";
     import { getAvailableAttributes } from "@models/txy_content";
     import { application_information } from "@stores/txy_content";
+    import "bytemd/dist/index.css";
     
     /*=============================================
     =            Properties            =
@@ -243,7 +244,7 @@
 =            Normalize            =
 =============================================*/
 
-:global(*) {
+    :global(*) {
         box-sizing: border-box;
     }
 
@@ -285,6 +286,7 @@
         color: var(--grey-1);
         font-weight: normal;
         margin: 0;
+        line-height: 1;
     }
 
     :global(h1) {
@@ -420,6 +422,49 @@
         line-height: .6;
         user-select: none;
     }
+
+
+/*=============================================
+=            ByteMD            =
+=============================================*/
+
+    :global(#txy-wp-plugin .bytemd.bytemd-split) {
+        font-family: var(--font-read);
+        background: var(--grey-8) !important;
+        border: .5px solid var(--main-dark);
+        border-radius: var(--border-radius);
+        color: var(--main);
+    }
+
+    :global(#txy-wp-plugin .bytemd-toolbar) {
+        background: var(--grey-8);
+        border: none;
+    }
+
+    :global(#txy-wp-plugin .CodeMirror) {
+        font-family: var(--font-read);
+        background: var(--grey-4) !important;
+        border: none;
+        color: var(--main);
+    }
+
+    :global(#txy-wp-plugin .bytemd-split .bytemd-preview) {
+        border-left: none;
+    }
+
+    :global(#txy-wp-plugin .bytemd-status) {
+        border-top: none;
+        background: var(--grey-1);
+        height: max-content;
+    }
+
+    :global(#txy-wp-plugin .bytemd p) {
+        margin: var(--spacing-1) 0;
+    }
+
+/*=====  End of ByteMD  ======*/
+
+
 
 /*=============================================
 =            Text Styles            =

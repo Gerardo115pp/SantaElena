@@ -3,7 +3,36 @@
     import MainLogo from "@components/UI/MainLogo.svelte";
     import { layout_images, layout_properties, navbar_transparent } from "@stores/layout";
     import viewport from "@components/viewport_actions/useViewportActions";
+    import txy_repository from "@app_modules/TxyClient/txy_repository";
+    import TxyContentEntry from "@app_modules/TxyClient/models/content_entry";
+    import { onMount } from "svelte";
 
+    
+    /*=============================================
+    =            Properties            =
+    =============================================*/
+    
+        
+        /*----------  Txy  ----------*/
+        
+            /**
+             * The content id of the hero section
+             * @type {string}
+             */
+            const content_id = "stehp-hero-section-subheadline";
+
+            /**
+             * The content entry of the hero section
+             * @type {TxyContentEntry}
+             */
+            let content_entry = txy_repository.getContentEntry(content_id);
+    
+    /*=====  End of Properties  ======*/
+    
+    onMount(() => {
+        updateContentEntry();
+    });
+    
     
     /*=============================================
     =            Methods            =
@@ -11,6 +40,16 @@
     
         const handleViewportEnter = e => {
             navbar_transparent.set(true);
+        }
+
+        const updateContentEntry = async () => {
+            let new_content_entry = await content_entry.GetFreshCopy();
+
+            if (new_content_entry !== null) {
+                content_entry = new_content_entry;
+            }
+
+            console.debug("Content entry updated", content_entry);
         }
     
     /*=====  End of Methods  ======*/
@@ -36,7 +75,9 @@
                 />
             </div>
             <div id="lse-hp--hs-cc-hero-headline">
-                <p>Lorem ipsum dolor sit amet consectetur. Pharetra in odio sed quisque semper nibh. Volutpat id vehicula tincidunt facilisi neque amet. Ullamcorper fermentum arcu quisque nunc nunc lacus nec blandit.</p>
+                <p>
+                    {content_entry.Text}
+                </p>
             </div>
             <div id="lse-hp-hs-cc-hero-cta-controls">
                 <button class="button-1" on:viewportEnter={handleViewportEnter} use:viewport>

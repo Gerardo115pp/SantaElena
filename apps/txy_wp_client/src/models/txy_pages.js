@@ -1,4 +1,4 @@
-import { GetPageLocalesRequest, GetExistingPagesRequest, GetPageContentRequest } from '@app_modules/Services/HttpRequests';
+import { GetLocalesRequest, GetExistingPagesRequest, GetPageContentRequest } from '@app_modules/Services/HttpRequests';
 import { TxyPageSection } from './txy_sections';
 
 /**
@@ -46,18 +46,18 @@ export class TxyPage {
     }
 }
 
-export const getPageLocales = async (page_id) => {
-    let page_locales = [];
+export const getLocales = async () => {
+    let available_locales = [];
 
-    const request = new GetPageLocalesRequest(page_id);
+    const request = new GetLocalesRequest();
   
     const response = await request.do();
 
     if (response.Ok) {
-        page_locales = response.data;
+        available_locales = response.data;
     }
 
-    return page_locales;
+    return available_locales;
 };
 
 export const getExistingPages = async () => {

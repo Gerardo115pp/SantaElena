@@ -8,6 +8,7 @@ import (
 	"io"
 	"mime/multipart"
 	"os"
+	"path/filepath"
 )
 
 func CopyFile(from_name string, to_name string) (err error) {
@@ -34,6 +35,11 @@ func IsJPEG(file multipart.File) (bool, error) {
 	}
 	file.Seek(0, 0)
 	return image_format == "jpeg", err
+}
+
+func IsFileJson(filename string) bool {
+	ext := filepath.Ext(filename)
+	return ext == ".json"
 }
 
 func ConvertToJPEG(file multipart.File) ([]byte, error) {
