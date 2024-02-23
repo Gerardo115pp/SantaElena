@@ -12,3 +12,4 @@
 /database/
 wordpress/wp_plugins/**/vendor/
 docs/
+secrets/

@@ -83,6 +83,9 @@ export function isMobile() {
     return is_mobile;
 }
 
+export const user_locale = window.navigator.language.split("-")[0] || "en";
+
+
 
 /*=============================================
 =            Layout elements            =
@@ -92,6 +95,17 @@ export function isMobile() {
  * @type {Writable<boolean>} whether the navbar is transparent or not
  */
 export const navbar_transparent = writable(true);
+
+/**
+ * @type {Writable<boolean>} whether the navbar should have a solid background
+ */
+export const navbar_solid = writable(false);
+
+navbar_solid.subscribe((value) => {
+    if (true) { 
+        navbar_transparent.set(false);
+    }
+});
 
 export const layout_images = {
     HERO_BACKGROUND: new ImageResource("hero-bg.webp", MEDIA_SIZES.EXTRA_LARGE.postfix),

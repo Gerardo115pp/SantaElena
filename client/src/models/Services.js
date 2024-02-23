@@ -5,7 +5,7 @@ import { WordpressMedia, getWordpressMediaById } from "@models/Wordpress";
 export class ServiceData {
     /**
      * The unique identifier of the Service
-     * @type {string}
+     * @type {number}
      * @readonly
      */
     #id;
@@ -43,8 +43,9 @@ export class ServiceData {
      */
     #description;
 
-    constructor({slug, image, name, price, price_range, short_description, content, next_steps}) {
-        this.id = slug;
+    constructor({id, slug, image, name, price, price_range, short_description, content, next_steps}) {
+        this.#id = id;
+        this.slug = slug;
         this.title = name;
         this.brief_description = short_description;
         this.#image = image;
@@ -91,6 +92,15 @@ export class ServiceData {
     }
 
     /**
+     * The Html content of the Service next steps instructions
+     * @returns {HTMLCollection}
+     * @readonly
+     */
+    get NextSteps() {
+        return parseHtmlText(this.#next_steps);
+    }
+
+    /**
      * Returns true if the Service has an available image associated with it. it verify this by checking if the image id is not an empty string
      * @returns {boolean}
      */
@@ -120,6 +130,11 @@ export class ServiceData {
 
 }
 
+/**
+ * Fetches all the services from the wordpress server
+ * @async
+ * @returns {Promise<ServiceData[]>}
+ */
 export const getSantaElenaServices = async () => {
     const request = new GetProductsRequest();
 

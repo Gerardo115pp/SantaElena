@@ -5,6 +5,7 @@
     import { layout_images } from "@stores/layout";
     import { createEventDispatcher, onMount } from "svelte";
     import { LiberyHTMLPreprocessor, NodesPreprocessRule } from "@app_modules/LiberyHTMLpreprocessor/html_preprocessor";
+    import { link } from "svelte-spa-router";
 
     
     /*=============================================
@@ -16,6 +17,15 @@
          * @type {ServiceData}
          */
         export let service_data;
+
+        /**
+         * The price formater
+         * @type {Intl.NumberFormat}
+         */
+        let price_formater = new Intl.NumberFormat(window.navigator.language, {
+            style: "currency",
+            currency: "MXN"
+        });
 
         /**
          * The description mount element
@@ -128,9 +138,17 @@
                 <button on:click={handleBack} class="button-1 button-thin button-secondary">
                     regresar
                 </button>
-                <button class="button-1 button-thin">
-                    Contactanos
-                </button>
+                {#if service_data.Price === undefined}
+                    <button class="button-1 button-thin">
+                        Contactanos
+                    </button>
+                {:else}
+                    <a href="/service-checkout/{service_data.Id}" use:link>
+                        <button class="button-1 button-thin button-purchase">
+                            Contratar: {price_formater.format(service_data.Price)}
+                        </button>
+                    </a>
+                {/if}
             </div>
         </aside>
     </TwoColumnImageText>
@@ -198,6 +216,11 @@
         width: 40cqh;
         display: flex;
         column-gap: var(--spacing-2);
+    }
+
+    .scd-controls:has(.button-purchase) {
+        flex-direction: column;
+        row-gap: var(--spacing-2);
     }
 
 </style>

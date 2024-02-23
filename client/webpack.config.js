@@ -80,7 +80,23 @@ const config = {
 				test: /\.css$/,
 				use: [
 					'style-loader',
-					'css-loader'
+					{
+						loader: 'css-loader',
+						options: {
+							importLoaders: 1
+						}
+					},
+					{
+						loader: 'postcss-loader',
+						options: {
+							postcssOptions: {
+								plugins: [
+									require('tailwindcss'),
+									require('autoprefixer'),
+								]
+							}
+						}
+					}
 				]	
 			},
 			{
@@ -124,6 +140,20 @@ const requestTxyFallback = async () => {
 	return await response.json();
 }
 
+const requestWordpressServices = async () => {
+	if (process.env.WP_API === undefined) {
+		throw new Error("WP_API is not defined");
+	}
+
+	const response = await fetch(`${process.env.WP_API}/santa-elena/v1/products`);
+
+	if (!(response.status >= 200 && response.status < 300)) {
+		throw new Error(`WP_API responded with status ${response.status}`);
+	}
+
+	return await response.json();
+}
+
 module.exports = async (env, argv) => {
 	const is_production = argv.mode === 'production';
 
@@ -134,6 +164,8 @@ module.exports = async (env, argv) => {
 	}
 
 	const txy_fallback = await requestTxyFallback();
+
+	const services_fallbacks = await requestWordpressServices();
 
 	if (!is_production) {
 		config.devServer.https = {
@@ -151,6 +183,7 @@ module.exports = async (env, argv) => {
 			"TXY_API": JSON.stringify(build_config.TXY_API),
 			"APP_NAME": JSON.stringify(APP_NAME),
 			"TXY_FALLBACK": JSON.stringify(txy_fallback),
+			"SERVICES_FALLBACKS": JSON.stringify(services_fallbacks),
 		})
 	);
 

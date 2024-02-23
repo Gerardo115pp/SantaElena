@@ -76,12 +76,18 @@ export const parseHtmlText = html_text => {
     let parser = new DOMParser();
     let content = null;
 
+    html_text = html_text.replace("\r\n", "<br>");
+    console.debug("HTML TEXT: ", html_text);
+
     try {
         let doc = parser.parseFromString(html_text, 'text/html');
+        console.debug("PARSED DOC: ", doc.body.innerHTML);
         content = doc.body.children;
     } catch (error) {
         console.error(error);
     }
+
+    console.debug("PARSED HTML: ", content);
 
     return content;
 }

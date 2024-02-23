@@ -1,10 +1,11 @@
 <script>
     import BurgerBtn from "@components/UI/BurgerBTN.svelte";
     import { getSVGResource } from "@libs/Services/media_loaders";
-    import { navbar_transparent, layout_properties } from "@stores/layout";
+    import { navbar_transparent, layout_properties, navbar_solid } from "@stores/layout";
     import { onMount } from "svelte";
     import { Writable, writable } from "svelte/store";
     import DropMenu from "./sub-components/DropMenu.svelte";
+    import { link } from "svelte-spa-router";
 
     
     /*=============================================
@@ -80,14 +81,14 @@
     
 </script>
 
-<nav id="santa-elena-navbar" class:glass-navbar={!$navbar_transparent && !$is_mobile_menu_opened} class:solid-navbar={$is_mobile_menu_opened}>
+<nav id="santa-elena-navbar" class:glass-navbar={!$navbar_transparent && !$is_mobile_menu_opened && !$navbar_solid} class:solid-navbar={$is_mobile_menu_opened || $navbar_solid }>
     <div id="sen-left-content">
         {#if !$layout_properties.IS_MOBILE}
-            <div id="sen-santa-elena-logo" class="sen-icon-wrapper">
+            <a href="/" id="sen-santa-elena-logo" class="sen-icon-wrapper" use:link>
                 {#if santa_elena_logo_svg !== undefined}
                     {@html santa_elena_logo_svg}
                 {/if}
-            </div>
+            </a>
         {:else}
             <div id="sen-burger-menu-btn" class="sen-icon-wrapper">
                 <BurgerBtn on:click={toggleMobileMenu} is_opened={is_mobile_menu_opened}/>
@@ -106,7 +107,7 @@
                 {/each}
             </menu>
             <div id="sen-nav-controls">
-                <button class="button-2 button-thin">
+                <button class="button-thin" class:button-1={!$navbar_transparent && !$navbar_solid} class:button-2={$navbar_transparent} class:button-3={$navbar_solid}>
                     Atencion inmediata
                 </button>
             </div>
@@ -167,7 +168,7 @@
         border-bottom: 1px solid var(--color-1);
     }
 
-    #santa-elena-navbar.solid-navbar {
+    #santa-elena-navbar.glass-navbar.solid-navbar, #santa-elena-navbar.solid-navbar {
         background: var(--dark-7);
         backdrop-filter: none;
         border-bottom: 3px solid var(--color-light-3);

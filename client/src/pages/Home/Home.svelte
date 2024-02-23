@@ -4,6 +4,20 @@
     import ParallaxDivider from "@components/UI/ParallaxDivider.svelte";
     import Services from "@pages/Home/sections/Services.svelte";
     import Footer from "@components/Footer/Footer.svelte";
+    import { navbar_solid, navbar_transparent } from "@stores/layout";
+
+    
+    /*=============================================
+    =            Setup            =
+    =============================================*/
+    
+        navbar_solid.set(false);
+        navbar_transparent.set(true);
+    
+    /*=====  End of Setup  ======*/
+    
+    
+
 </script>
 
 <main id="libery-santa-elena-home-page">
