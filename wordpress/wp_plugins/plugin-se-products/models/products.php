@@ -16,6 +16,7 @@ enum metaBoxNames: string {
 
 class Product {
     private WP_Post $post;
+    public int $id;
     public string $name;
     public ?string $image;
     public string $content;
@@ -32,6 +33,8 @@ class Product {
 
     private function populateProperties() {
         $this->name = $this->post->post_title;
+        
+        $this->id = $this->post->ID;
 
         $this->image = libery_getPostMeta($this->post->ID, metaBoxNames::PRODUCT_IMAGE->value);
         
@@ -41,7 +44,7 @@ class Product {
 
         $this->short_description = libery_getPostMeta($this->post->ID, metaBoxNames::SHORT_DESCRIPTION->value);
 
-        $this->next_steps = libery_getPostMeta($this->post->ID, metaBoxNames::NEXT_STEPS->value);
+        $this->next_steps = get_field(metaBoxNames::NEXT_STEPS->value, $this->post->ID);
 
         $raw_price = libery_getPostMeta($this->post->ID, metaBoxNames::PRICE->value);
 

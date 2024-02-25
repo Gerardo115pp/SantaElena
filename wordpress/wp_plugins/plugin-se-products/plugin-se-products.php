@@ -37,7 +37,6 @@ function santa_elena_register_products() {
         "set_featured_image" => "Establecer imagen destacada",
         "remove_featured_image" => "Eliminar imagen destacada",
         "use_featured_image" => "Usar como imagen destacada",
-        "menu_name" => "Productos Santa Elena",
         "filter_items_list" => "Filtrar listado de productos",
         "items_list_navigation" => "Navegación del listado de productos",
         "items_list" => "Listado de productos",

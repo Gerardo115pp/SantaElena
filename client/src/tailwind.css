@@ -147,7 +147,7 @@
 
             --font-size-p: var(--font-size-2);
             --font-size-p-small: var(--font-size-1);
-            --font-size-fineprint: calc(var(--font-size-1) * 0.7);
+            --font-size-fineprint: calc(var(--font-size-1) * 0.8);
 
             --font-size-h1: calc(112px); /* 112px */
             --font-size-h2: calc(0.67142 * var(--font-size-h1)); /* 64px */

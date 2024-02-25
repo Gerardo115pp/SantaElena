@@ -1,5 +1,5 @@
 import { attributesToJson, HttpResponse } from "./base";
-import { SVG_PREFIX, WORDPRESS_REST_API, TXY_SERVICE } from "./addresses";
+import { SVG_PREFIX, WORDPRESS_REST_API, TXY_SERVICE, PAYMENTS_SERVICE } from "./addresses";
 
 
 /*=============================================
@@ -242,6 +242,40 @@ import { SVG_PREFIX, WORDPRESS_REST_API, TXY_SERVICE } from "./addresses";
             }
         }
 /*=====  End of Txy  ======*/
+
+
+/*=============================================
+=            Stripe payments            =
+=============================================*/
+
+        export class GetStripeCheckoutSessionRequest {
+            constructor(product_id, customer_email, success_url, cancel_url) {
+                this.product_id = product_id;
+                this.customer_email = customer_email;
+                this.success_url = success_url;
+                this.cancel_url = cancel_url;
+            }
+
+            toJson = attributesToJson.bind(this);
+
+            /**
+             * Requests a new checkout session from the server
+             * @async
+             * @returns {Promise<HttpResponse>}
+             */
+            do = async () => {
+                const response = await fetch(`${PAYMENTS_SERVICE}/checkouts?product_id=${this.product_id}&user_email=${this.customer_email}&success_url=${this.success_url}&cancel_url=${this.cancel_url}`);
+                let data = null;
+
+                if (response.status >= 200 && response.status < 300) {
+                    data = await response.json();
+                }
+
+                return new HttpResponse(response, data);
+            }
+        }
+
+/*=====  End of Stripe payments  ======*/
 
 
 

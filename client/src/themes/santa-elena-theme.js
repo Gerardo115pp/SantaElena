@@ -12,7 +12,7 @@ export const santa_elena_theme = {
 		"--theme-font-family-heading": `var(--font-titles)`,
 		"--theme-font-color-base": "var(--body-text-color)",
 		"--theme-font-color-dark": "var(--body-text-color)",
-		"--theme-rounded-base": "9999px",
+		"--theme-rounded-base": "var(--border-radius)",
 		"--theme-rounded-container": "var(--border-radius)",
 		"--theme-border-base": "1px",
 		// =~= Theme On-X Colors =~=

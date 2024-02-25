@@ -1,14 +1,15 @@
 <script>
-    import { services_fallbacks } from "@databases/prefetch_services";
-    import { ServiceData } from "@models/Services";
-    import { selected_service } from "@stores/services";
-    import { navbar_solid } from "@stores/layout";
-    import { getSantaElenaServices } from "@models/Services";
-    import { onMount } from "svelte";
-    import { InputChip } from "@skeletonlabs/skeleton";
-    import { user_agent_price_formatter } from "@stores/services";
     import { LiberyHTMLPreprocessor } from "@app_modules/LiberyHTMLpreprocessor/html_preprocessor";
+    import { createCheckoutSession } from "@app_modules/LiberyPayments/models/payments";
+    import { services_fallbacks } from "@databases/prefetch_services";
+    import { user_agent_price_formatter } from "@stores/services";
+    import { getSantaElenaServices } from "@models/Services";
+    import { selected_service } from "@stores/services";
+    import { isValidEmail } from "@app_modules/utils";
+    import { ServiceData } from "@models/Services";
+    import { navbar_solid } from "@stores/layout";
     import { pop } from "svelte-spa-router";
+    import { onMount } from "svelte";
 
     
     /*=============================================
@@ -18,16 +19,12 @@
         navbar_solid.set(true);
     
     /*=====  End of setup  ======*/
-    
-    
 
     /*=============================================
     =            Properties            =
     =============================================*/
     
         export let params = {};
-        
-        let test_data = ['hola', 'adios'];
 
         /*----------  Service data recollection  ----------*/
                 
@@ -81,6 +78,26 @@
              */
             const service_checkout_preprocessor = new LiberyHTMLPreprocessor();
 
+        /*----------  Customer details ----------*/
+
+            /**
+             * The customer's name. bound to the input element that collects this information
+             * @type {string}
+             */
+            let customer_name = "";
+
+            /**
+             * The customer's email. bound to the input element that collects this information
+             * @type {string}
+             */
+            let customer_email = "";
+
+            /**
+             * Whether the data is valid or not
+             * @type {boolean}
+             */
+            let is_customer_data_valid = false;
+
         const description_article_id = "service-description";
         
         const next_steps_article_id = "next-steps";
@@ -96,7 +113,6 @@
             renderServiceData(service_data);
         }
     });
-
     
     /*=============================================
     =            Methods            =
@@ -118,6 +134,15 @@
 
         const handleBack = () => {
             pop();
+        }
+
+        const handleServicePurchase = async () => {
+            const success_url = "https://dev-santa-elena.mx/";
+            const cancel_url = "https://dev-santa-elena.mx/";
+
+            const session = await createCheckoutSession(service_data.Id, customer_email, success_url, cancel_url);
+
+            session.redirect();
         }
 
         /**
@@ -172,6 +197,10 @@
         const updateServicesCheckoutPreprocessorRules = rules => {
             service_checkout_preprocessor.setRules(rules);
         }
+
+        const validateCustomerData = () => {
+            is_customer_data_valid = isValidEmail(customer_email) && customer_name.length > 1;
+        }
     
     /*=====  End of Methods  ======*/
     
@@ -199,6 +228,26 @@
                 <article id="{next_steps_article_id}" class="checkout-box"></article>
             </div>
             <div id="spp-spanel-purchase-checkout">
+                <div id="spp-spanel-pc-customer-information" role="group">
+                    <legend>
+                        <h2 class="headline-3">
+                            Información de contacto
+                        </h2>
+                        <p>Esta información sera usada para contactarte y hacerte llegar tus datos de seguimiento.</p>
+                    </legend>
+                    <label class="label">
+                        <span>
+                            Tu nombre
+                        </span>
+                        <input bind:value={customer_name} on:keyup={validateCustomerData} type="text" class="input" placeholder="Helario Jimenez...">
+                    </label>
+                    <label class="label">
+                        <span>
+                            Tu correo
+                        </span>
+                        <input bind:value={customer_email} on:keyup={validateCustomerData} type="email" class="input" placeholder="tu_nombre@example.com">
+                    </label>
+                </div>
                 <details open>
                     <summary>
                         Balance
@@ -218,7 +267,7 @@
                     <button on:click={handleBack} class="button-2 button-thin">
                         Regresar
                     </button>
-                    <button class="button-thin stripe-button">
+                    <button on:click={handleServicePurchase} class="button-thin stripe-button" disabled={!is_customer_data_valid}>
                         Contratar
                         <svg viewBox="0 0 32.334 13.571">
                             <g id="SVGRepo_iconCarrier" transform="matrix(0.9942049980163574, 0, 0, 0.9831390380859375, 0.1483490020036693, -9.07441520690918)" style="">
@@ -278,9 +327,11 @@
     =============================================*/
     
         aside#service-purchase-panel {
+            box-sizing: border-box;
             position: fixed;
             display: flex;
             container-type: size;
+            overflow: auto;
             width: 30%;
             height: calc(100vh - var(--navbar-height));
             background: var(--dark-8);
@@ -289,13 +340,13 @@
             flex-direction: column;
             color: var(--color-light-1);
             padding: var(--spacing-3);
-            row-gap: var(--spacing-4);
+            row-gap: var(--spacing-3);
         }
 
-        :global(aside#service-purchase-panel .headline-2) {
+        :global(aside#service-purchase-panel .headline-2, aside#service-purchase-panel .headline-3) {
             color: var(--color-light-5);
         }
-
+        
         :global(#spp-spanel-next-steps) {
             display: flex;
             flex-direction: column;
@@ -304,14 +355,16 @@
 
         :global(#spp-spanel-next-steps > article) {
             display: flex;
-            height: 50cqh;
+            height: 30cqh;
             overflow: auto;
             flex-direction: column;
-            row-gap: var(--spacing-2);
+            row-gap: var(--spacing-1);
+            border-bottom: 1px solid var(--color-light-2);
         }
-
+        
         :global(#spp-spanel-next-steps > article .headline-2) {
-            margin-top: var(--spacing-3);
+            margin-top: var(--spacing-1);
+            font-size: var(--font-size-4);
         }
 
         :global(#spp-spanel-next-steps > article .headline-3) {
@@ -321,6 +374,58 @@
         :global(#spp-spanel-next-steps > article strong) {
             color: var(--color-light-7);
         }
+
+        :global(#spp-spanel-next-steps > article p) {
+            font-size: var(--font-size-p-small);
+        }
+
+        :global(#spp-spanel-next-steps > article ul.decorated-list-item) {
+            display: flex;
+            flex-direction: column;
+            row-gap: var(--spacing-1);
+        }
+
+        :global(#spp-spanel-next-steps > article ul.decorated-list-item li) {
+            font-size: var(--font-size-p-small);
+            line-height: 1.3;
+        }
+
+        
+        /*----------  Customer Details  ----------*/
+
+            #spp-spanel-pc-customer-information {
+                display: flex;
+                flex-direction: column;
+                row-gap: var(--spacing-2);
+            }
+
+            #spp-spanel-pc-customer-information legend {
+                display: flex;
+                flex-direction: column;
+                row-gap: var(--spacing-1);
+            }
+
+            #spp-spanel-pc-customer-information legend h2 {
+                color: var(--color-light-3);
+                font-size: var(--font-size-h5);
+            }
+            
+            #spp-spanel-pc-customer-information legend p {
+                font-size: var(--font-size-fineprint);
+                line-height: 1;
+            }
+
+            #spp-spanel-pc-customer-information label.label span {
+                font-size: var(--font-size-fineprint);
+            }
+
+            #spp-spanel-pc-customer-information input.input {
+                padding: calc(0.25 * var(--spacing-1)) var(--spacing-1);
+                
+            }
+                
+        
+
 
         
         /*----------  Stripe checkout details  ----------*/

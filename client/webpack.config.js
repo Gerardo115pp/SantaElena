@@ -157,10 +157,13 @@ const requestWordpressServices = async () => {
 module.exports = async (env, argv) => {
 	const is_production = argv.mode === 'production';
 
+	const base_domain = process.env.BASE_DOMAIN;
+
 	const build_config = {
 		JD_ADDRESS: process.env.JD_ADDRESS,
 		WP_API: process.env.WP_API,
 		TXY_API: process.env.TXY_API,
+		PAYMENTS_API: `https://${base_domain}${process.env.PAYMENTS_API}`,
 	}
 
 	const txy_fallback = await requestTxyFallback();
@@ -181,6 +184,7 @@ module.exports = async (env, argv) => {
 			"JD_ADDRESS": JSON.stringify(build_config.JD_ADDRESS),
 			"WP_API": JSON.stringify(build_config.WP_API),
 			"TXY_API": JSON.stringify(build_config.TXY_API),
+			"PAYMENTS_API": JSON.stringify(build_config.PAYMENTS_API),
 			"APP_NAME": JSON.stringify(APP_NAME),
 			"TXY_FALLBACK": JSON.stringify(txy_fallback),
 			"SERVICES_FALLBACKS": JSON.stringify(services_fallbacks),

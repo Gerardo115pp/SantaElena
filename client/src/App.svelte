@@ -267,6 +267,7 @@
 /*=============================================
 =            Buttons            =
 =============================================*/
+
     :global(button, .button-1, .button-2) {
         font-family: var(--font-read);
         border-radius: var(--border-radius);
@@ -314,6 +315,12 @@
         font-weight: 500;
     }
 
+    :global(button:disabled) {
+        filter: grayscale(0.9);
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
     @media (pointer: fine) {
         :global(button:hover, .button-1:hover, .button-2:hover) {
             filter: saturate(1) brightness(1.1);
@@ -323,6 +330,18 @@
             filter: saturate(.7) brightness(1.1);
         }
     }
+
+
+/*=============================================
+=            Forms            =
+=============================================*/
+
+    :global(input.input) {
+        padding: var(--spacing-1);
+        outline: none;
+    }
+
+
 
 
 /*=============================================

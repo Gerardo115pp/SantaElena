@@ -3,6 +3,7 @@ namespace SantaElenaHandlers;
 
 use WP_Error;
 use WP_REST_Controller;
+use WP_REST_Request;
 use register_rest_route;
 use get_posts;
 
@@ -20,6 +21,12 @@ class SeProductsHandler extends WP_REST_Controller {
         ]);
     }
 
+    /**
+     * Authorize request based on the request method
+     *
+     * @param WP_REST_Request $request
+     * @return mixed
+     */
     public function authorizeRequest($request) {
         $request_method = $request->get_method();
 
@@ -30,7 +37,46 @@ class SeProductsHandler extends WP_REST_Controller {
         return true;
     }
 
+    /**
+     * Hub function to the products endpoint with the GET method
+     * If the request doens't include any query parameters, it will return all the products. if a product_id list is included, it will return the products that match the ids
+     *
+     * @param WP_REST_Request $request
+     * @return \SantaElenaModels\Product[]|WP_Error
+     */
     public function getProducts($request) {
+        $query_parameters = $request->get_params();
+        $product_ids = [];
+        
+        if (isset($query_parameters["product_id"])) {
+            $product_ids = explode(",", $query_parameters["product_id"]);   
+            $product_ids = array_map(function($item) {
+                return (int) $item;
+            }, $product_ids);
+        }
+
+        $products = [];
+
+        switch (true) {
+            case empty($product_ids):
+                $products = $this->getAllProducts();
+                break;
+            default:
+                $products = $this->getProductsByIds($product_ids);
+                break;
+        }
+
+        header("Content-Type: application/json");
+
+        // return json_encode($products);
+        return $products;
+    }    
+
+    /**
+     * Returns all the products
+     * @return \SantaElenaModels\Product[]|WP_Error
+     */
+    public function getAllProducts() {
         $args = [
             "post_type" => "santa-elena-products",
             "post_status" => "publish",
@@ -43,9 +89,29 @@ class SeProductsHandler extends WP_REST_Controller {
             return new \SantaElenaModels\Product($product);
         }, $products);
 
-        header("Content-Type: application/json");
-
-        // return json_encode($products);
         return $products;
-    }    
+    }
+
+    /**
+     * Returns the products that match the ids
+     * @param array $product_ids
+     * @return \SantaElenaModels\Product[]|WP_Error
+     */
+    public function getProductsByIds($product_ids) {    
+
+        $args = [
+            "post_type" => "santa-elena-products",
+            "include" => $product_ids,
+            "post_status" => "publish",
+            "posts_per_page" => -1
+        ];
+
+        $products = get_posts($args);
+
+        $products = array_map(function($product) {
+            return new \SantaElenaModels\Product($product);
+        }, $products);
+
+        return $products;
+    }
 }

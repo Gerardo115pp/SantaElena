@@ -29,7 +29,6 @@ export const createUnsecureJWT = payload => {
     return `${encoded_headers}.${encoded_payload}.`;
 }
 
-
 export const getUrlPARAM = key => {
     let url_string = window.location.href; 
     url_string = url_string.replace(/\/.{0,3}#/, ""); // remove #
@@ -61,6 +60,15 @@ export const isUrlImage = media_url => {
 
 export const isUrlMediaFile = media_url => {
     return isUrlVideo(media_url) || isUrlImage(media_url);
+}
+
+export const isValidEmail = email => {
+    const email_input = document.createElement('input');
+    email_input.type = 'email';
+    email_input.required = true;
+    email_input.value = email;
+
+    return email_input.checkValidity();
 }
 
 export const getMediaFilename = media_url => {
