@@ -121,6 +121,7 @@ module.exports = (env, argv) => {
 			"WP_API": JSON.stringify(build_config.WP_API),
 			"APP_NAME": JSON.stringify(APP_NAME),
 			"TXY_API": JSON.stringify(build_config.TXY_API),
+			"PAYMENTS_API": JSON.stringify(`https://${process.env.BASE_DOMAIN}${process.env.PAYMENTS_API}`),
 		})
 	);
 

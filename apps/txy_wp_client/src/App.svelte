@@ -238,6 +238,7 @@
             --border-radius-2: 19px;
             --page-content-width: 90.41%;
             --page-lateral-spacing: calc(calc(100vw - var(--page-content-width)) / 2);
+            --boxes-shadow: 0px 0px 10px 0px hsla(0, 0%, 0%, .3);
     }
 
 /*=============================================

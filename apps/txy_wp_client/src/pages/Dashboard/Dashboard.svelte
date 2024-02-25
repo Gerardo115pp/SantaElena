@@ -1,5 +1,6 @@
 <script>
     import LiberyHeadline from "@app_modules/components/LiberyUI/LiberyHeadline.svelte";
+    import TxyContextMenu from "@components/contextmenu/TxyContextMenu.svelte";
     import PagesSelector from "@components/PagesControllers/PagesSelector.svelte";
     import LocaleSwitch from "@components/LocalesControllers/LocaleSwitch.svelte";
     import { getPageContent, TxyPage } from "@models/txy_pages";
@@ -28,9 +29,21 @@
          */
         let page_sections = [];
 
+        /**
+         * The position where to show the context menu
+         */
+        let context_menu_position = null;
+
+        /**
+         * The dashboard element
+         * @type {HTMLDivElement}
+         */
+        let dashboard_element;
+
         selected_page_id.set(home_page_id);
 
         let locale_selected_unsubscribe;
+        
 
     /*=====  End of Properties  ======*/
 
@@ -43,6 +56,28 @@
     /*=============================================
     =            Methods            =
     =============================================*/
+
+        /**
+         * Handles the context menu event
+         * @param {MouseEvent} e
+         */
+        const handleContextMenu = e => {
+            e.preventDefault();
+
+            if (context_menu_position !== null) {
+                context_menu_position = null;
+                return;
+            }
+
+            let body_rect = document.body.getBoundingClientRect();
+            let dashboard_rect = dashboard_element.getBoundingClientRect();
+
+            let x = e.clientX - (body_rect.width - dashboard_rect.width);
+            let y = e.clientY - dashboard_rect.top;
+
+            console.debug("Context menu position: ", { x, y });
+            context_menu_position = { x, y };
+        }
 
         const loadPageContent = async (page_id, locale) => {
             if (page_id === "" || locale === "") return;
@@ -80,8 +115,9 @@
     
 </script>
 
-<div id="txy-dashboard-screen">
-    <header id="tds-top-header" class:adebug={false}>
+<div bind:this={dashboard_element} id="txy-dashboard-screen">
+    <TxyContextMenu bind:position={context_menu_position} />
+    <header id="tds-top-header" class:adebug={false} on:contextmenu={handleContextMenu} role="menubar" tabindex="0">
         <article id="tds-th-informational-section" class="tds-th-column">
             <div id="tds-th-text-content-wrapper">
                 <LiberyHeadline headline_text="Txy Content Manager" forced_font_size="var(--font-size-h3)" headline_color="var(--grey-1)"/>
@@ -107,6 +143,10 @@
 </div>
 
 <style>
+    #txy-dashboard-screen {
+        position: relative;
+    }
+
     header#tds-top-header {
         display: grid;
         grid-template-columns: 50% 50%;
