@@ -137,10 +137,15 @@
         }
 
         const handleServicePurchase = async () => {
-            const success_url = "https://dev-santa-elena.mx/";
-            const cancel_url = "https://dev-santa-elena.mx/";
+            let success_url = "https://dev-santa-elena.mx/#/verify-purchase";
+            let cancel_url = "https://dev-santa-elena.mx/";
 
-            const session = await createCheckoutSession(service_data.Id, customer_email, success_url, cancel_url);
+            success_url = encodeURIComponent(success_url);
+            cancel_url = encodeURIComponent(cancel_url);
+
+            const tracking_id = crypto.randomUUID();
+
+            const session = await createCheckoutSession(tracking_id, service_data.Id, customer_name, customer_email, success_url, cancel_url);
 
             session.redirect();
         }
@@ -154,7 +159,6 @@
             renderServiceDescription(service_data);
             renderNextSteps(service_data);
         }
-
 
         /**
          * Renders the service description

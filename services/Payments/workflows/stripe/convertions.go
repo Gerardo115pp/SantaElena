@@ -2,23 +2,28 @@ package stripe_workflows
 
 import (
 	app_config "libery_payments_service/Config"
+	"libery_payments_service/helpers"
 	"libery_payments_service/models"
 
 	"github.com/stripe/stripe-go/v76"
 	"github.com/stripe/stripe-go/v76/checkout/session"
 )
 
-func CreateCheckoutSession(products []models.Product, customer_email string, success_url string, cancel_url string) (*stripe.CheckoutSession, error) {
+func CreateCheckoutSession(products []models.Product, customer_email string, success_url string, cancel_url string, tracking_id string) (*stripe.CheckoutSession, error) {
 	stripe.Key = app_config.STRIPE_SECRET_KEY
 
 	var line_items []*stripe.CheckoutSessionLineItemParams = convertProductsToLineItems(products)
 
+	success_url = helpers.AddQueryParamToURL(success_url, "tracking_id", tracking_id)
+	cancel_url = helpers.AddQueryParamToURL(cancel_url, "tracking_id", tracking_id)
+
 	params := &stripe.CheckoutSessionParams{
-		SuccessURL:    stripe.String(success_url),
-		LineItems:     line_items,
-		CustomerEmail: stripe.String(customer_email),
-		Mode:          stripe.String("payment"),
-		CancelURL:     stripe.String(cancel_url),
+		SuccessURL:        stripe.String(success_url),
+		LineItems:         line_items,
+		CustomerEmail:     stripe.String(customer_email),
+		Mode:              stripe.String("payment"),
+		CancelURL:         stripe.String(cancel_url),
+		ClientReferenceID: stripe.String(tracking_id),
 	}
 
 	session, err := session.New(params)

@@ -53,3 +53,8 @@ func ConvertToJPEG(file multipart.File) ([]byte, error) {
 
 	return buf.Bytes(), nil
 }
+
+func FileExists(path string) bool {
+	_, err := os.Stat(path)
+	return !os.IsNotExist(err)
+}

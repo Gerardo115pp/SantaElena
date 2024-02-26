@@ -249,11 +249,14 @@ import { SVG_PREFIX, WORDPRESS_REST_API, TXY_SERVICE, PAYMENTS_SERVICE } from ".
 =============================================*/
 
         export class GetStripeCheckoutSessionRequest {
-            constructor(product_id, customer_email, success_url, cancel_url) {
+            constructor(tracking_id, product_id, customer_name, customer_email, success_url, cancel_url) {
+                this.tracking_id = tracking_id;
                 this.product_id = product_id;
                 this.customer_email = customer_email;
+                this.customer_name = customer_name;
                 this.success_url = success_url;
                 this.cancel_url = cancel_url;
+                this.locale = (window.navigator.language).split('-')[0];
             }
 
             toJson = attributesToJson.bind(this);
@@ -264,7 +267,9 @@ import { SVG_PREFIX, WORDPRESS_REST_API, TXY_SERVICE, PAYMENTS_SERVICE } from ".
              * @returns {Promise<HttpResponse>}
              */
             do = async () => {
-                const response = await fetch(`${PAYMENTS_SERVICE}/checkouts?product_id=${this.product_id}&user_email=${this.customer_email}&success_url=${this.success_url}&cancel_url=${this.cancel_url}`);
+                console.debug(this.toJson());
+
+                const response = await fetch(`${PAYMENTS_SERVICE}/checkouts?product_id=${this.product_id}&user_email=${this.customer_email}&user_name=${this.customer_name}&success_url=${this.success_url}&cancel_url=${this.cancel_url}&locale=${this.locale}&tracking_id=${this.tracking_id}`);
                 let data = null;
 
                 if (response.status >= 200 && response.status < 300) {
@@ -273,6 +278,40 @@ import { SVG_PREFIX, WORDPRESS_REST_API, TXY_SERVICE, PAYMENTS_SERVICE } from ".
 
                 return new HttpResponse(response, data);
             }
+        }
+
+        export class PatchPurchaseVerificationRequest {
+            constructor(tracking_id="", send_email=true) {
+                this.tracking_id = tracking_id;
+                this.send_email = send_email;
+            }
+
+            toJson = attributesToJson.bind(this);
+
+            /**
+             * Sends a request to the server to verify a purchase and returns the tracking id as "tracking_id" and "paid" as a boolean that indicates if the purchase is paid
+             * @async
+             * @returns {Promise<HttpResponse>}
+             */
+            do = async () => {
+                const response = await fetch(`${PAYMENTS_SERVICE}/orphan-orders/verify`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: "same-origin", 
+                    body: this.toJson()
+                });
+
+                let data = null;
+
+                if (response.status >= 200 && response.status < 300) {
+                    data = await response.json();
+                }
+
+                return new HttpResponse(response, data);
+            }
+                
         }
 
 /*=====  End of Stripe payments  ======*/

@@ -15,6 +15,7 @@ require (
 )
 
 require (
+	github.com/mattn/go-sqlite3 v1.14.22 // indirect
 	github.com/stripe/stripe-go/v76 v76.18.0 // indirect
 	golang.org/x/sys v0.11.0 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect

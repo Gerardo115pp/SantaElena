@@ -6,6 +6,7 @@ import (
 	app_config "libery_payments_service/Config"
 	"libery_payments_service/databases"
 	"libery_payments_service/handlers"
+	"libery_payments_service/middlewares"
 	"libery_payments_service/repositories"
 	"libery_payments_service/server"
 
@@ -16,10 +17,12 @@ import (
 func BinderRoutes(server server.Server, router *patriot_router.Router) {
 	router.RegisterRoute(patriot_router.NewRoute("/alive", true), handlers.AliveHandler(server))
 	router.RegisterRoute(patriot_router.NewRoute("/checkouts", true), handlers.CheckoutsHandler(server))
+	router.RegisterRoute(patriot_router.NewRoute("/orphan-orders(/.+)?$", false), middlewares.CheckTrackingCookie(handlers.OrphanOrdersHandler(server)))
 }
 
 func setRepositories() {
 	var products_implementation repositories.ProductsRepository
+	var trades_implementation repositories.TradesRepository
 
 	if app_config.USE_WORDPRESS {
 		products_implementation = databases.NewWpProductsConn()
@@ -27,7 +30,13 @@ func setRepositories() {
 		echo.EchoFatal(fmt.Errorf("No valid products database engine was set"))
 	}
 
+	trades_implementation, err := databases.NewTradesSQLiteDB()
+	if err != nil {
+		echo.EchoFatal(err)
+	}
+
 	repositories.SetProductsRepository(products_implementation)
+	repositories.SetTradesRepository(trades_implementation)
 }
 
 func main() {
