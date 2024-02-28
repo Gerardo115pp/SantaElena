@@ -43,7 +43,9 @@
 
 <menu id="pages-selection">
     {#each $existing_pages_metadata as page}
-        <li on:click={() => handlePageSelected(page)} role="navigation" class="ps-page-available-li">{page.name}</li>
+        <li on:click={() => handlePageSelected(page)} role="navigation" class="ps-page-available-li" class:is-selected-page={page.page_id === $selected_page_id}>
+            {page.name}
+        </li>
     {/each}
 </menu>
 
@@ -66,6 +68,10 @@
         justify-content: center;
         align-items: center;
         transition: all 0.1s ease-in;
+    }
+
+    .ps-page-available-li.is-selected-page {
+        background: var(--main-dark-color-9);
     }
 
     .ps-page-available-li:not(:first-child) {
