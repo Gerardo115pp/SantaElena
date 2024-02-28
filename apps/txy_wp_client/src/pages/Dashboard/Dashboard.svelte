@@ -10,8 +10,8 @@
     import { getPageContent, TxyPage } from "@models/txy_pages";
     import { TxyPageSection } from "@models/txy_sections";
     import { onDestroy, onMount } from "svelte";
-    import { blur } from "svelte/transition";
-    import { circIn } from "svelte/easing";
+    import { slide } from "svelte/transition";
+    import { circIn, backInOut } from "svelte/easing";
 
     /*=============================================
     =            Properties            =
@@ -238,7 +238,7 @@
     </header>
     <PagesSelector />
     {#key page_sections}
-        <div in:blur={{delay: 200, opacity: 0, duration: 1000, easing: circIn }} class="page-editor-wrapper">
+        <div in:slide={{delay: 0, opacity: 0.2, duration: 500, easing: backInOut, axis: 'y'}} class="page-editor-wrapper">
             <PageEditor {page_sections} />
         </div>
     {/key}
