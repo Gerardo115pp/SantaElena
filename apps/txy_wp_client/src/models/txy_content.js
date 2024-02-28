@@ -1,4 +1,4 @@
-import { GetAvailableAttributesRequest, PutContentEntryRequest, PostNewLocaleRequest } from "@app_modules/Services/HttpRequests";
+import { GetAvailableAttributesRequest, GetAvailableContentTypesRequest, PutContentEntryRequest, PostNewLocaleRequest, PostNewContentEntryRequest } from "@app_modules/Services/HttpRequests";
 
 export class TxyContentEntry {
     /**
@@ -134,6 +134,25 @@ export const getAvailableAttributes = async () => {
 }
 
 /**
+ * Retrieves all the available content types for content entries.
+ * @async
+ * @returns {Promise<Object<string, string>>}
+ */
+export const getAvailableContentTypes = async () => {
+    let content_types = {};
+
+    const request = new GetAvailableContentTypesRequest();
+
+    const response = await request.do();
+
+    if (response.Ok) {
+        content_types = response.data;
+    }
+
+    return content_types;
+}
+
+/**
  * Creates a new locale on the server
  * @async
  * @param {string} locale
@@ -145,4 +164,32 @@ export const createNewLocale = async locale => {
     const response = await request.do();
 
     return response.Created;
+}
+
+/**
+ * @typedef {Object} NewContentEntryParams  
+ * @property {string} entry_id
+ * @property {string} name
+ * @property {string} content_type
+ * @property {string} section_id
+ * @property {string} page_id
+ */
+
+/**
+ * Creates a new content entry on the server. It returns the content_hash of the page where the content entry was created. which considers the new content entry.
+ * @async
+ * @param {NewContentEntryParams} params
+ * @returns {Promise<string>}
+ */
+export const createNewContentEntry = async params => {
+    let new_content_hash = "";
+    const request = new PostNewContentEntryRequest(params.entry_id, params.name, params.content_type, params.section_id, params.page_id);
+
+    const response = await request.do();
+
+    if (response.Created) {
+        new_content_hash = response.data?.content_hash;
+    }
+
+    return new_content_hash;    
 }

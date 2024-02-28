@@ -36,4 +36,5 @@ export const existing_pages_metadata = writable([]);
 
 export const application_information = {
     content_attributes: {},
+    content_types: {}
 }

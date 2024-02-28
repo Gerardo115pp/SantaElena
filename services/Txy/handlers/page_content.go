@@ -129,6 +129,86 @@ func postPageContentHandler(response http.ResponseWriter, request *http.Request)
 	}
 }
 
+func patchPageContentHandler(response http.ResponseWriter, request *http.Request) {
+	response.WriteHeader(http.StatusMethodNotAllowed)
+	return
+}
+func deletePageContentHandler(response http.ResponseWriter, request *http.Request) {
+	response.WriteHeader(http.StatusMethodNotAllowed)
+	return
+}
+func putPageContentHandler(response http.ResponseWriter, request *http.Request) {
+	var resource string = request.URL.Path
+
+	switch resource {
+	case "/pages-content/entry":
+		updateContentEntryHandler(response, request)
+		return
+	default:
+		echo.Echo(echo.RedBG, fmt.Sprintf("Resource not found: %s", resource))
+		response.WriteHeader(404)
+		return
+	}
+}
+
+func updateContentEntryHandler(response http.ResponseWriter, request *http.Request) {
+	var new_content_entry *models.ContentEntry = new(models.ContentEntry)
+
+	err := json.NewDecoder(request.Body).Decode(new_content_entry)
+	if err != nil {
+		echo.Echo(echo.RedBG, fmt.Sprintf("Error while decoding request: %s", err))
+		response.WriteHeader(400)
+		return
+	}
+
+	new_content_entry.UpdateContentHash() // Necessary step so the frontend can know it needs to pull the new content
+
+	err = repository.PagesContent.UpdateContentEntry(request.Context(), new_content_entry)
+	if err != nil {
+		echo.Echo(echo.RedBG, fmt.Sprintf("Error while updating content entry: %v", err))
+		response.WriteHeader(500)
+		return
+	}
+
+	err = repository.PagesContent.UpdateContentEntryContent(request.Context(), new_content_entry, nil)
+	if err != nil {
+		echo.Echo(echo.RedBG, fmt.Sprintf("Error while updating content entry content: %v", err))
+		response.WriteHeader(500)
+		return
+	}
+
+	response.WriteHeader(200)
+}
+
+func getPageUpdatedResponse(ctx context.Context, page_id string) (*PageContentUpdatedResponse, error) {
+	locales, err := repository.PagesContent.GetLocales(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	existing_locale := app_config.INITIAL_LOCALE // we need a locale to get the page content but we don't care which one, just that it exists. because pages must have the same content for all locales
+
+	if locales != nil && len(locales) > 0 {
+		existing_locale = locales[0]
+	}
+
+	// We need to get the page content to calculate the hash that is send back to the client
+	page_content, err := repository.PagesContent.GetPageContent(ctx, page_id, existing_locale)
+	if err != nil {
+		return nil, err
+	}
+
+	page_content.CalculateHash()
+
+	new_content_entry_response := &PageContentUpdatedResponse{
+		ContentHash: page_content.ContentHash,
+	}
+
+	return new_content_entry_response, nil
+}
+
+// ----- Resource handlers -----
+
 func addPageSectionHandler(response http.ResponseWriter, request *http.Request) {
 	new_section_request := &struct {
 		SectionID   string `json:"section_id"`
@@ -219,82 +299,4 @@ func addContentEntryHandler(response http.ResponseWriter, request *http.Request)
 	response.Header().Add("Content-Type", "application/json")
 	response.WriteHeader(201)
 	json.NewEncoder(response).Encode(response_body)
-}
-
-func patchPageContentHandler(response http.ResponseWriter, request *http.Request) {
-	response.WriteHeader(http.StatusMethodNotAllowed)
-	return
-}
-func deletePageContentHandler(response http.ResponseWriter, request *http.Request) {
-	response.WriteHeader(http.StatusMethodNotAllowed)
-	return
-}
-func putPageContentHandler(response http.ResponseWriter, request *http.Request) {
-	var resource string = request.URL.Path
-
-	switch resource {
-	case "/pages-content/entry":
-		updateContentEntryHandler(response, request)
-		return
-	default:
-		echo.Echo(echo.RedBG, fmt.Sprintf("Resource not found: %s", resource))
-		response.WriteHeader(404)
-		return
-	}
-}
-
-func updateContentEntryHandler(response http.ResponseWriter, request *http.Request) {
-	var new_content_entry *models.ContentEntry = new(models.ContentEntry)
-
-	err := json.NewDecoder(request.Body).Decode(new_content_entry)
-	if err != nil {
-		echo.Echo(echo.RedBG, fmt.Sprintf("Error while decoding request: %s", err))
-		response.WriteHeader(400)
-		return
-	}
-
-	new_content_entry.UpdateContentHash() // Necessary step so the frontend can know it needs to pull the new content
-
-	err = repository.PagesContent.UpdateContentEntry(request.Context(), new_content_entry)
-	if err != nil {
-		echo.Echo(echo.RedBG, fmt.Sprintf("Error while updating content entry: %v", err))
-		response.WriteHeader(500)
-		return
-	}
-
-	err = repository.PagesContent.UpdateContentEntryContent(request.Context(), new_content_entry, nil)
-	if err != nil {
-		echo.Echo(echo.RedBG, fmt.Sprintf("Error while updating content entry content: %v", err))
-		response.WriteHeader(500)
-		return
-	}
-
-	response.WriteHeader(200)
-}
-
-func getPageUpdatedResponse(ctx context.Context, page_id string) (*PageContentUpdatedResponse, error) {
-	locales, err := repository.PagesContent.GetLocales(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	existing_locale := app_config.INITIAL_LOCALE // we need a locale to get the page content but we don't care which one, just that it exists. because pages must have the same content for all locales
-
-	if locales != nil && len(locales) > 0 {
-		existing_locale = locales[0]
-	}
-
-	// We need to get the page content to calculate the hash that is send back to the client
-	page_content, err := repository.PagesContent.GetPageContent(ctx, page_id, existing_locale)
-	if err != nil {
-		return nil, err
-	}
-
-	page_content.CalculateHash()
-
-	new_content_entry_response := &PageContentUpdatedResponse{
-		ContentHash: page_content.ContentHash,
-	}
-
-	return new_content_entry_response, nil
 }

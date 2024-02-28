@@ -8,7 +8,7 @@ export const libery_labs_theme = {
 		"--theme-font-family-heading": `var(--font-titles)`,
 		"--theme-font-color-base": "var(--color-secondary-500)",
 		"--theme-font-color-dark": "var(--color-primary-300)",
-		"--theme-rounded-base": "19px",
+		"--theme-rounded-base": "4px",
 		"--theme-rounded-container": "4px",
 		"--theme-border-base": "1px",
 		// =~= Theme On-X Colors =~=

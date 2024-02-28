@@ -203,7 +203,30 @@ import { SVG_PREFIX, WORDPRESS_REST_API, TXY_SERVICE, PAYMENTS_SERVICE } from ".
              * @returns {Promise<HttpResponse>}
              */
             do = async () => {
-                const response = await fetch(`${TXY_SERVICE}/content/attributes`);
+                const response = await fetch(`${TXY_SERVICE}/content-metadata/attributes`);
+
+                let data = null;
+
+                if (response.status >= 200 && response.status < 300) {
+                    data = await response.json();
+                }
+
+                return new HttpResponse(response, data);
+            }
+        }
+
+        export class GetAvailableContentTypesRequest {
+            constructor() {}
+
+            toJson = attributesToJson.bind(this);
+
+            /**
+             * Gets a map of all the valid content types for the content of a page. The key is a human readable name and the value is the content type name
+             * @async
+             * @returns {Promise<HttpResponse>}
+             */
+            do = async () => {
+                const response = await fetch(`${TXY_SERVICE}/content-metadata/types`);
 
                 let data = null;
 
@@ -331,6 +354,47 @@ import { SVG_PREFIX, WORDPRESS_REST_API, TXY_SERVICE, PAYMENTS_SERVICE } from ".
                 });
 
                 return new HttpResponse(response, null);
+            }
+        }
+
+        export class PostNewContentEntryRequest {
+            constructor(entry_id, name, content_type, section_id, page_id) {
+                this.entry_id = entry_id;
+                this.name = name;
+                this.content_type = content_type;
+                this.section_id = section_id;
+                this.page_id = page_id;
+            }
+
+            toJson = attributesToJson.bind(this);
+
+            /**
+             * @typedef {Object} ContentUpdatedResponse
+             * @property {string} content_hash
+            */
+
+            /**
+             * Sends a request to the server to create a new content entry
+             * @async
+             * @returns {Promise<HttpResponse<ContentUpdatedResponse>>}
+             */
+            do = async () => {
+                const response = await fetch(`${TXY_SERVICE}/pages-content/entry`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: this.toJson()
+                });
+
+                /** @type {ContentUpdatedResponse} */
+                let data = null;
+
+                if (response.status === 201) {
+                    data = await response.json();
+                }
+
+                return new HttpResponse(response, data);
             }
         }
 /*=====  End of Txy  ======*/

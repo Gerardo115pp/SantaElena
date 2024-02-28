@@ -64,7 +64,7 @@
 {/if}
 
 <style>
-    :global(:has(#txy-content-ctx-menu)) {
+    :global(:has(> #txy-content-ctx-menu)) {
         position: relative;
     }
 

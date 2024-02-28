@@ -1,16 +1,17 @@
 <script>
+    import { calculateContextMenuPosition } from "@components/contextmenu/txy_context_menu_controllers";
+    import { selected_locale, selected_page_id, selected_page_content_hash } from "@stores/txy_content";
     import LiberyHeadline from "@app_modules/components/LiberyUI/LiberyHeadline.svelte";
+    import { getModalStore, ModalStore, ModalSettings } from "@skeletonlabs/skeleton";
     import TxyContextMenu from "@components/contextmenu/TxyContextMenu.svelte";
     import PagesSelector from "@components/PagesControllers/PagesSelector.svelte";
     import LocaleSwitch from "@components/LocalesControllers/LocaleSwitch.svelte";
-    import { selected_locale, selected_page_id, selected_page_content_hash } from "@stores/txy_content";
-    import { getModalStore, ModalStore, ModalSettings } from "@skeletonlabs/skeleton";
     import PageEditor from "./sub-components/PageEditor.svelte";
     import { getPageContent, TxyPage } from "@models/txy_pages";
     import { TxyPageSection } from "@models/txy_sections";
+    import { onDestroy, onMount } from "svelte";
     import { blur } from "svelte/transition";
     import { circIn } from "svelte/easing";
-    import { onDestroy, onMount } from "svelte";
 
     /*=============================================
     =            Properties            =
@@ -160,18 +161,10 @@
             e.preventDefault();
 
             if (context_menu_position !== null) {
-                context_menu_position = null;
-                return;
+                return closeContextMenu();
             }
 
-            let body_rect = document.body.getBoundingClientRect();
-            let dashboard_rect = dashboard_element.getBoundingClientRect();
-
-            let x = e.clientX - (body_rect.width - dashboard_rect.width);
-            let y = e.clientY - dashboard_rect.top;
-
-            console.debug("Context menu position: ", { x, y });
-            context_menu_position = { x, y };
+            context_menu_position = calculateContextMenuPosition(dashboard_element, { x: e.clientX, y: e.clientY });
         }
 
         const handlePageContentHashUpdated = new_hash => {

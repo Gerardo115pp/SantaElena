@@ -3,7 +3,7 @@
     import { application_information } from "@stores/txy_content";
     import { onMount } from "svelte";
     import Dashboard from "@pages/Dashboard/Dashboard.svelte";
-    import { getAvailableAttributes } from "@models/txy_content";
+    import { getAvailableAttributes, getAvailableContentTypes } from "@models/txy_content";
     import { initializeStores } from '@skeletonlabs/skeleton';
     import { Modal } from "@skeletonlabs/skeleton";
     import "bytemd/dist/index.css";
@@ -13,7 +13,7 @@
     =            Setup            =
     =============================================*/
     
-        initializeStores();
+        initializeStores(); // Initialize the skeleton ui stores
     
     /*=====  End of Setup  ======*/
     
@@ -40,8 +40,10 @@
     
         const loadApplicationInformation = async () => {
             let content_attributes = await getAvailableAttributes();
+            let content_types = await getAvailableContentTypes();
 
             application_information.content_attributes = content_attributes;
+            application_information.content_types = content_types;
 
             application_loaded = true;
         }    

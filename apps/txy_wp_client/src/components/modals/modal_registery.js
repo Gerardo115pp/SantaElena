@@ -1,6 +1,7 @@
 import CreateNewLocaleModal from './CreateNewLocaleModal.svelte';
 import CreateNewPageModal from './CreateNewPageModal.svelte';
 import CreateNewSectionModal from "./CreateNewSectionModal.svelte";
+import CreateNewContentEntryModal from "./CreateNewContentEntryModal.svelte";
 
 export const modal_registry = {
     CreateNewPageModal: {
@@ -11,6 +12,9 @@ export const modal_registry = {
     },
     CreateNewLocaleModal: {
         ref: CreateNewLocaleModal,
+    },
+    CreateNewContentEntryModal: {
+        ref: CreateNewContentEntryModal,
     }
 }
 
