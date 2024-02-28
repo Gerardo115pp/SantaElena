@@ -44,6 +44,7 @@ const config = {
 			"@stores": path.resolve(__dirname, 'src/stores'),
 			"@databases": path.resolve(__dirname, 'src/databases'),
 			"@app_modules": process.env.APP_MODULES_PATH,
+			"@themes": path.resolve(__dirname, 'src/themes'),
 		},
 		extensions: ['.*', '.mjs', '.js', '.svelte'],
 		mainFields: ['svelte', 'browser', 'module', 'main'],

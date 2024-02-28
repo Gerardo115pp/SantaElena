@@ -1,6 +1,6 @@
 import { GetProductsRequest } from "@libs/Services/HttpRequests";
 import { parseHtmlText } from "@libs/utils";
-import { WordpressMedia, getWordpressMediaById } from "@models/Wordpress";
+import { WordpressMedia, getWordpressMediaById } from "@models/Wordpress/media";
 
 export class ServiceData {
     /**

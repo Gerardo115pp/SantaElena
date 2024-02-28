@@ -43,6 +43,7 @@
     /*=====  End of Properties  ======*/
     
     onMount(() => {
+        console.debug("TxyMarkup content entry: ", content_entry);
         updatePreprocessorRules(rules);
         renderContentEntry(content_entry);
     })

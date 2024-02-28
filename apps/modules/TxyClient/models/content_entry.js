@@ -23,7 +23,7 @@ export class TxyContentEntry {
     }
 
     get Text() {
-        return this.#attributes.text;
+        return this.#attributes.text ?? "";
     }
 
     set Text(value) {
@@ -44,6 +44,15 @@ export class TxyContentEntry {
 
     set MediaUrl(value) {
         this.#attributes.media_url = value;
+    }
+
+    /**
+     * The attributes of the content entry
+     * @type {Object<string, string>}
+     * @readonly
+     */
+    get Attributes() {
+        return this.#attributes;
     }
 
     /**

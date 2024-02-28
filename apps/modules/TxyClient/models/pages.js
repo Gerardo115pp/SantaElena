@@ -28,10 +28,33 @@ export class TxyPage {
         this.#loadLocalesContent(locales_content);
     }
 
+    /**
+     * Tries to load content for a given locale. On failure returns an error
+     * @param {string} locale 
+     * @returns {Promise<Error|void>}
+     */
     addNewLocale = async locale => {
+        let error = null;
+
         const page_content = await getPageContent(this.page_id, locale);
 
+        if (page_content == null) {
+            error = new Error('Page content not found');
+            return error;
+        }
+
         this.locales_content[locale] = page_content.locales_content[locale];
+
+        return error;
+    }
+
+    /**
+     * Returns whether the page has content for a given locale
+     * @param {string} locale
+     * @returns {boolean}
+     */
+    hasLocaleContent = locale => {
+        return this.locales_content[locale] !== undefined;
     }
 
     /**

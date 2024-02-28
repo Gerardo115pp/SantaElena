@@ -114,6 +114,26 @@ class TxyRepository {
         return this.#current_locale;
     }
 
+    /**
+     * The current set page
+     * @returns {string}
+     * @readonly
+     * @see setCurrentPageAndLocale - if you want to change the current page and locale
+     */
+    get CurrentPageID() {
+        return this.#current_page_id;
+    }
+
+    /**
+     * The current page object
+     * @returns {TxyPage}
+     * @readonly
+     */
+    get CurrentPage() {
+        return this.#txy_pages[this.#current_page_id];
+    }
+
+
     async boot() {
         await this.#loadSiteLocales();
 
@@ -166,6 +186,15 @@ class TxyRepository {
     pageExists(page_id) {
         let page = this.#existing_pages?.find(p => p.page_id === page_id);
         return page != null;
+    }
+
+    /**
+     * Returns whether the page_id exists and is loaded in the repository
+     * @param {string} page_id
+     * @returns {boolean}
+     */
+    pageIsLoaded(page_id) {
+        return this.#txy_pages[page_id] !== undefined;
     }
 
     /**
@@ -227,7 +256,7 @@ class TxyRepository {
      * Repopulates the sections map with the sections of the current page and locale
      * @returns {void}
      */
-    #populateSectionsMap() {
+        #populateSectionsMap() {
         this.#sections_map = new Map();
 
         let sections = this.#txy_pages[this.#current_page_id].locales_content[this.#current_locale];
@@ -284,6 +313,11 @@ class TxyRepository {
      * @returns {Promise<void>}
      * @private
      */
+    async refreshSiteLocales() {
+        let fresh_locales = await this.#requestSiteLocales();
+
+        this.#site_locales = fresh_locales;
+    }
 
 
 
@@ -291,9 +325,33 @@ class TxyRepository {
      * Sets the current page and locale to the given values. if any of the values is null, the current values will be used.
      * @param {string|null} page_id
      * @param {string|null} locale
+     * @returns {Promise<Error|void>}
      */
-    setCurrentPageAndLocale(page_id, locale) {
-        if (page_id === null && locale === null) return;
+    async setCurrentPageAndLocale(page_id, locale) {
+        /** @type {Error} */
+        let err = null;
+        if (page_id === null && locale === null) return new Error('Both page_id and locale are null');
+
+        let page_id_ready = this.pageIsLoaded(page_id);
+        if (!page_id_ready) {
+            await this.#loadPage(page_id, locale);
+        }
+
+        /** @type {TxyPage} */
+        let page = this.#txy_pages[page_id];
+        if (page === undefined) {
+            console.error('Page not found:', page_id);
+            return new Error('Page not found');
+        }
+
+        if (!page_id_ready || !page.hasLocaleContent(locale)) {
+            err = await page.addNewLocale(locale);
+            if (err != null) {
+                console.error('Error loading page content:', err.message);
+                return err;
+            }
+        }
+
 
         this.#current_page_id = page_id ?? this.#current_page_id;
         this.#current_locale = locale ?? this.#current_locale;

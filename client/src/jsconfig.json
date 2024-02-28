@@ -12,6 +12,7 @@
         "@app_modules/*": ["../../apps/modules/*"],
         "@stores/*": ["stores/*"],
         "@databases/*": ["databases/*"],
+        "@themes/*": ["themes/*"],
       }
     },
     "exclude": ["node_modules", "**/node_modules/*"]
