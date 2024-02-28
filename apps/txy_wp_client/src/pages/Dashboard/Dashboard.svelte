@@ -199,8 +199,6 @@
                 await selected_page.addNewLocale(locale);
             }
 
-            console.debug("Selected page: ", selected_page);
-
             selected_page_content_hash.set(selected_page.ContentHash);
 
             page_sections = selected_page.locales_content[locale];

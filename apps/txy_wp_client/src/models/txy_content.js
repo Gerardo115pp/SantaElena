@@ -14,6 +14,14 @@ export class TxyContentEntry {
         this.locale = locale;
     }
 
+    /**
+     * @returns {Object<string, string>}
+     * @readonly
+     */
+    get Attributes() {
+        return this.#attributes;
+    }
+
     get Instructions() {
         return this.#attributes.instructions;
     }
@@ -53,13 +61,26 @@ export class TxyContentEntry {
      */
     Equals(other)  {
         let are_equal = this.entry_id === other.entry_id;
+        // console.debug("Entry ID is equal: ", are_equal)
 
         are_equal = are_equal && this.name === other.name;
+        // console.debug("Name is equal: ", are_equal)
         are_equal = are_equal && this.content_type === other.content_type;
+        // console.debug("Content type is equal: ", are_equal)
         are_equal = are_equal && this.Text === other.Text;
+        // console.debug("Text is equal: ", are_equal)
         are_equal = are_equal && this.Href === other.Href;
+        // console.debug("Href is equal: ", are_equal)
         are_equal = are_equal && this.MediaUrl === other.MediaUrl;
+        // console.debug("Media URL is equal: ", are_equal)
         are_equal = are_equal && this.Instructions === other.Instructions;
+        // console.debug("Instructions are equal: ", are_equal)
+
+        // console.log("This: ", JSON.stringify(this, null, 4));
+        // console.log("Other: ", JSON.stringify(other, null, 4));
+
+        // console.debug("This.Attributes: ", JSON.stringify(this.#attributes, null, 4));
+        // console.debug("Other.Attributes: ", JSON.stringify(other.Attributes, null, 4));
 
         return are_equal;
     }
@@ -74,28 +95,18 @@ export class TxyContentEntry {
     }
 
     /**
-     * Generates a new content hash based on the current content states.
-     * it does this by concatenating entry_id, name. if it's a text content, it also concatenates the text + href.
-     * if it's any other type, it concatenates the media_url. strings are joined by a '+' character.
-     * @returns {Promise<string>}
-     * @deprecated
+     * Overwrites the current content entry with the values of another content entry
+     * @param {TxyContentEntry} other
+     * @returns {void}
      */
-    #updateContentHash = async () => {
-        let new_hash = `${this.entry_id}+${this.name}`;
-
-        if (this.content_type === "text") {
-            new_hash += `+${this.#attributes.text}+${this.#attributes.href}`;
-        } else {
-            new_hash += `+${this.#attributes.media_url}`;
-        }
-
-        const msg_uint8 = new TextEncoder().encode(new_hash);
-        const hash_buffer = await crypto.subtle.digest('SHA-1', msg_uint8);
-        const hash_array = Array.from(new Uint8Array(hash_buffer));
-        const hash_hex = hash_array.map(b => b.toString(16).padStart(2, '0')).join('');
-        
-        return hash_hex;
-    }   
+    OverwriteWith(other) {
+        this.entry_id = other.entry_id;
+        this.name = other.name;
+        this.content_type = other.content_type;
+        this.#attributes = { ...other.Attributes };
+        this.content_hash = other.content_hash;
+        this.locale = other.locale;
+    }
 
     /**
      * Saves the current content entry to the server

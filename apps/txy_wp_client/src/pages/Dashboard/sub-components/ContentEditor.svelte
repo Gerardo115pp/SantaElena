@@ -49,7 +49,17 @@
                 return toggleEditingInstructions();
             }
 
-            updateContent();
+            // console.debug("Key pressed: ", e.key);
+            // console.debug("Instructions: ", new_instructions);
+            // console.debug("Editing instructions: ", editing_instructions);
+            // console.debug("e.target.value: ", e.target.value);
+            // queueMicrotask(() => {
+            //     console.debug("Instructions after handler return: ", new_instructions);
+            // });
+
+
+
+            return updateContent();
         }
 
         const setupEditor = () => {
@@ -71,18 +81,32 @@
 
 
             content_updated = !(new_content.Equals(content_entry));
+            console.debug("Content updated: ", content_updated);
+        }
+
+        const resetContent = () => {
+            new_content = content_entry.Copy();
+            new_instructions = content_entry.Instructions;
+            new_content_text = content_entry.Text;
+            new_content_href = content_entry.Href;
+
+            editing_instructions = false;
+            content_updated = false;
         }
 
         const saveContent = () => {
-            content_entry = new_content;
-            new_content = content_entry.Copy();
+            content_entry.OverwriteWith(new_content);
             
             if (content_entry.content_type === "html") {
                 content_entry.Text = marked.parse(new_content_text);
             }
 
+            if (content_entry.content_type === "markdown") {
+                content_entry.Text = new_content_text;
+            }
+
             content_entry.PushUpdates(); // Pushes the new content to the server
-            content_updated = false;
+            resetContent();
         }
 
         const handleMarkdownChange = (e) => {
@@ -109,23 +133,22 @@
                  <p class="tcee-instructions">
                     {content_entry.Instructions}
                  </p>
-            {:else} 
-                 {#if editing_instructions}
-                        <textarea on:keydown={handleInstructionsKeydown} bind:value={new_instructions} class="tcee-editor"></textarea>
-                 {:else}
-                    <div class="edit-instructions-wrapper">
-                        <button on:click={toggleEditingInstructions} class="button-1 button-thin">
-                            Añadir instrucciones
-                        </button>
-                    </div>
-                 {/if}
+            {/if}
+            {#if editing_instructions}
+                <textarea bind:value={new_instructions} on:keyup={handleInstructionsKeydown} class="tcee-editor"></textarea>
+            {:else}
+                <div class="edit-instructions-wrapper">
+                    <button on:click={toggleEditingInstructions} class="button-1 button-thin">
+                        Editar instrucciones
+                    </button>
+                </div>
             {/if}
         </div>
         <div class="tcee-editor-wrapper">
             {#if content_entry.content_type === "markdown"}
                 <Editor value={new_content_text} locale={ESLocale} on:change={handleMarkdownChange} mode="split"/>
             {:else}
-                <textarea on:change={updateContent} bind:value={new_content_text} class="tcee-editor"></textarea>
+                <textarea on:keyup={updateContent} bind:value={new_content_text} class="tcee-editor"></textarea>
             {/if}
         </div>
     </div>
@@ -145,7 +168,7 @@
     <div class="tcee-controls-bar">
         {#if content_updated}
             <button on:click={saveContent} class="button-2 button-thin">Guardar</button>
-            <button class="button-1 button-thin">Cancelar</button>
+            <button on:click={resetContent} class="button-1 button-thin">Cancelar</button>
         {/if}
     </div>
 </li>
