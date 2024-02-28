@@ -97,15 +97,32 @@ class TxyRepository {
         this.setCurrentPageAndLocale(metadata.default_page_id, metadata.default_locale);
     }
 
+    /**
+     * Returns all the existing pages for this site
+     * @returns {PageMetadata[]}
+     * @readonly    
+     */
+    get ExistingPages() {
+        return this.#existing_pages;
+    }
+
+    /**
+     * The current set locale
+     * @returns {string}
+     */
+    get CurrentLocale() {
+        return this.#current_locale;
+    }
+
     async boot() {
+        await this.#loadSiteLocales();
+
+        await this.#loadExistingPages();
+
         if (this.#booted) {
             console.debug('TxyRepository already booted');
             return;
         }
-
-        this.#site_locales = await this.#requestSiteLocales();
-
-        this.#existing_pages = await this.#requestExistingPages();
 
         await this.#loadPage(this.#metadata.default_page_id, this.#metadata.default_locale);
 
@@ -118,6 +135,10 @@ class TxyRepository {
 
         return this.#booted;
     }
+
+    /**
+     * 
+     */
 
     /**
      * Returns all the data in the txy section for the current page and locale.
@@ -138,6 +159,36 @@ class TxyRepository {
     }
 
     /**
+     * Returns whether the page_id exists in site
+     * @param {string} page_id
+     * @returns {boolean}
+     */
+    pageExists(page_id) {
+        let page = this.#existing_pages?.find(p => p.page_id === page_id);
+        return page != null;
+    }
+
+    /**
+     * Returns a txy page by its id. if it's not loaded, checks in #existing_pages and if it's there, loads it.
+     * if not, returns undefined
+     * @param {string} page_id
+     * @returns {Promise<TxyPage>}
+     */
+    async getPage(page_id) {
+        let target_page = this.#txy_pages[page_id];
+
+        if (target_page === undefined) {
+            let page_metadata = this.#existing_pages.find(p => p.page_id === page_id);
+            if (page_metadata !== undefined) {
+                await this.#loadPage(page_id, this.#current_locale);
+                target_page = this.#txy_pages[page_id];
+            }
+        }
+
+        return target_page;
+    }
+
+    /**
      * Loads a page from the TXY API with the given page_id and locale
      * @param {string} page_id 
      * @param {string} locale 
@@ -149,20 +200,27 @@ class TxyRepository {
         this.#txy_pages[page_id] = page_content;
     }
 
+
     /**
-     * Requests the available locales for the site
-     * @returns {Promise<string[]>}
+     * loads the existing pages for this site
+     * @returns {Promise<void>}
+     * @private
      */
-    async #requestSiteLocales() {
-        return getLocales();        
+    async #loadExistingPages() {
+        if (this.#existing_pages != null) return;
+
+        this.#existing_pages = await this.#requestExistingPages();
     }
 
     /**
-     * Returns the existing pages for this site
-     * @returns {Promise<PageMetadata[]>}
+     * loads the site locales
+     * @returns {Promise<void>}
+     * @private
      */
-    async #requestExistingPages() {
-        return getExistingPages();
+    async #loadSiteLocales() {
+        if (this.#site_locales != null) return;
+
+        this.#site_locales = await this.#requestSiteLocales();
     }
 
     /**
@@ -194,6 +252,40 @@ class TxyRepository {
             }
         }
     }
+
+    /**
+     * Requests the available locales for the site
+     * @returns {Promise<string[]>}
+     */
+    async #requestSiteLocales() {
+        return getLocales();        
+    }
+
+    /**
+     * Returns the existing pages for this site
+     * @returns {Promise<PageMetadata[]>}
+     */
+    async #requestExistingPages() {
+        return getExistingPages();
+    }
+
+    /**
+     * Refreshes the existing pages for this site
+     * @returns {Promise<void>}
+     */
+    async refreshExistingPages() {
+        let fresh_pages = await this.#requestExistingPages();
+
+        this.#existing_pages = fresh_pages;
+    }
+
+    /**
+     * Refreshes the site locales
+     * @returns {Promise<void>}
+     * @private
+     */
+
+
 
     /**
      * Sets the current page and locale to the given values. if any of the values is null, the current values will be used.

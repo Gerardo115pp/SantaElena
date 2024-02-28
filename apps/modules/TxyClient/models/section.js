@@ -26,17 +26,39 @@ export class TxySection {
     }
 
     /**
+     * The id of the section
+     * @type {string}
+     * @readonly
+     */
+    get SectionId() {
+        return this.#section_id;
+    }
+
+    /**
+     * The name of the section
+     * @type {string}
+     * @readonly
+     */
+    get Name() {
+        return this.#name;
+    }
+    
+    /**
+     * The content entries for this section
+     * @type {TxyContentEntry[]}
+     * @readonly
+     */
+    get ContentEntries() {
+        let content_entries = Object.values(this.#content_entries);
+        return content_entries;
+    }
+
+    /**
      * Returns a content entry by its id or undefined if it does not exist
      * @param {string} entry_id 
      * @returns {TxyContentEntry}
      */
     getContentEntry(entry_id) {
         return this.#content_entries[entry_id];
-    }
-
-    get ContentEntries() {
-        let content_entries = Object.values(this.#content_entries);
-        console.debug('content_entries:', content_entries);
-        return content_entries;
     }
 }

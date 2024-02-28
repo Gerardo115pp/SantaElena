@@ -6,11 +6,25 @@
     import { Writable, writable } from "svelte/store";
     import DropMenu from "./sub-components/DropMenu.svelte";
     import { link } from "svelte-spa-router";
+    import txy_repository from "@app_modules/TxyClient/txy_repository";
+    import TxyContentEntry from "@app_modules/TxyClient/models/content_entry";
 
     
     /*=============================================
     =            Properties            =
     =============================================*/
+
+        /**
+         * The id of the txy page where the navigation information is stored
+         * @type {string}
+         */
+        const navigation_page_id = "santa-elena-navigation-options";
+
+        /**
+         * Navoptions section id
+         * @type {string}
+         */
+        const navoptions_section_id = "seno-navbar-options";
     
         /**
          * The santa elena logo svg
@@ -26,7 +40,7 @@
         */
 
         /** @type {NavbarSections[]} */
-        const dropdown_sections = [
+        let dropdown_sections = [
             {
                 name: "About",
                 href: "/",
@@ -54,7 +68,9 @@
 
     onMount(() => {
         loadSantaElenaLogo();
-    })
+
+        getNavigationOptions();
+    });
     
     
     /*=============================================
@@ -68,6 +84,48 @@
         const loadSantaElenaLogo = async () => {
             santa_elena_logo_svg = await getSVGResource("santa_elena_logo.svg");
         }
+
+        /**
+         * Retrieves the navigation options from the txy page
+         * @return {Promise<NavbarSections[]>}
+         */
+        const getNavigationOptions = async () => {
+            if (!txy_repository.pageExists(navigation_page_id)) {
+                await txy_repository.refreshExistingPages();
+                if (!txy_repository.pageExists(navigation_page_id)) {
+                    console.error(`The navigation page with id '${navigation_page_id}' does not exist`);
+                    return [];
+                }
+            }
+            const current_locale = txy_repository.CurrentLocale;
+            const navigation_page = await txy_repository.getPage(navigation_page_id);
+            const sections = navigation_page.locales_content[current_locale];
+
+            // Get nav options part
+
+            const navoptions_section = sections.find(section => section.SectionId === navoptions_section_id);
+
+            const nav_options = parseContentEntries(navoptions_section.ContentEntries);
+            
+            if (nav_options.length > 0) {
+                dropdown_sections = nav_options;
+            }
+        }
+
+        /**
+         * Parses txy content entries into navbar sections
+         * @param {TxyContentEntry[]} content_entries
+         * @return {NavbarSections[]}
+         */
+        const parseContentEntries = content_entries => {
+            return content_entries.map(content_entry => {
+                return {
+                    name: content_entry.Text !== "" ? content_entry.Text : content_entry.name,
+                    href: content_entry.Href ?? "#",
+                }
+            });
+        }
+        
 
         /**
          * Toggles the mobile menu
@@ -215,6 +273,7 @@
     #sen-nav-options .sen-nav-option a {
         color: var(--shade-1);
         font-size: var(--font-size-2);
+        text-transform: capitalize;
         font-weight: 500;
         text-decoration: none;
     }
