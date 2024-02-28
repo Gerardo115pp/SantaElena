@@ -2,17 +2,12 @@
     import { getLocales } from "@models/txy_pages";
     import { onMount } from "svelte";
     import LocaleItem from "./LocaleItem.svelte";
-    import { selected_locale } from "@stores/txy_content";
+    import { selected_locale, existing_locales  } from "@stores/txy_content";
 
     
     /*=============================================
     =            Properties            =
     =============================================*/
-
-        /**
-         * The locales of the page
-         */
-        let page_locales = [];
 
     /*=====  End of Properties  ======*/
 
@@ -34,15 +29,18 @@
         }
 
         const updateLocales = async page_id => {
-            page_locales = await getLocales();
-            return page_locales;
+            let recovered_locales = await getLocales();
+
+            existing_locales.set(recovered_locales);
+
+            return recovered_locales;
         }
     
     /*=====  End of Methods  ======*/
 </script>
 
 <menu id="twp-locale-switch">
-    {#each page_locales as locale}
+    {#each $existing_locales as locale}
         <LocaleItem {locale} is_selected_locale={$selected_locale === locale} on:locale-selected={handleLocaleSelected}/>
     {/each}
 </menu>

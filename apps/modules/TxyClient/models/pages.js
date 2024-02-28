@@ -41,7 +41,7 @@ export class TxyPage {
      */
     #loadLocalesContent = json_locales_content => {
         for (const locale in json_locales_content) {
-            this.locales_content[locale] = json_locales_content[locale].map(section => new TxySection(section));
+            this.locales_content[locale] = json_locales_content[locale]?.map(section => new TxySection(section));
         }
     }
 }

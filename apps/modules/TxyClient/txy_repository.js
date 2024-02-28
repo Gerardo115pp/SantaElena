@@ -80,6 +80,8 @@ class TxyRepository {
 
         // convert the fallback data into Object<pages_id, TxyPage>
         for (let page_id in metadata.fallback) {
+            console.debug('Creating TxyPage for page_id:', page_id);
+            console.debug('Page data:', metadata.fallback[page_id]);
             this.#txy_pages[page_id] = new TxyPage(metadata.fallback[page_id]);
         }
 

@@ -1,10 +1,24 @@
 <script>
+    import modal_registry from "@components/modals/modal_registery";
+    import { application_information } from "@stores/txy_content";
     import { onMount } from "svelte";
     import Dashboard from "@pages/Dashboard/Dashboard.svelte";
     import { getAvailableAttributes } from "@models/txy_content";
-    import { application_information } from "@stores/txy_content";
+    import { initializeStores } from '@skeletonlabs/skeleton';
+    import { Modal } from "@skeletonlabs/skeleton";
     import "bytemd/dist/index.css";
     
+    
+    /*=============================================
+    =            Setup            =
+    =============================================*/
+    
+        initializeStores();
+    
+    /*=====  End of Setup  ======*/
+    
+    
+
     /*=============================================
     =            Properties            =
     =============================================*/
@@ -43,7 +57,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Permanent+Marker&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500;1,600&display=swap" rel="stylesheet">
 </svelte:head>
-<main id="txy-wp-plugin">
+<Modal 
+    components={modal_registry}
+/>
+<main id="txy-wp-plugin" >
     {#if application_loaded}
         <Dashboard />
     {/if}

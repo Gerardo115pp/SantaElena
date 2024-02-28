@@ -1,4 +1,4 @@
-import { GetLocalesRequest, GetExistingPagesRequest, GetPageContentRequest } from '@app_modules/Services/HttpRequests';
+import { GetLocalesRequest, GetExistingPagesRequest, GetPageContentRequest, PostNewPageRequest } from '@app_modules/Services/HttpRequests';
 import { TxyPageSection } from './txy_sections';
 
 /**
@@ -16,16 +16,32 @@ export class TxyPage {
      * @type {string}
      */
     name;
+
+    /**
+     * @type {string}
+     */
+    #content_hash;
+
     /**
      * @type {Object<string, TxyPageSection[]>}
      */
     locales_content;
 
-    constructor({ page_id, name, locales_content }) {
+    constructor({ page_id, name, content_hash, locales_content }) {
         this.page_id = page_id;
         this.name = name;
+        this.#content_hash = content_hash;
         this.locales_content = {};
         this.#loadLocalesContent(locales_content);
+    }
+
+    /**
+     * The content hash of the page. this hash considers the page_id, the page_name, all the locales, and the content of those locales.
+     * @type {string}
+     * @readonly
+     */
+    get ContentHash() {
+        return this.#content_hash;
     }
 
     addNewLocale = async locale => {
@@ -41,7 +57,7 @@ export class TxyPage {
      */
     #loadLocalesContent = json_locales_content => {
         for (const locale in json_locales_content) {
-            this.locales_content[locale] = json_locales_content[locale].map(section => new TxyPageSection(section));
+            this.locales_content[locale] = json_locales_content[locale]?.map(section => new TxyPageSection(section));
         }
     }
 }
@@ -93,3 +109,17 @@ export const getPageContent = async (page_id, locale) => {
 
     return content;
 };
+
+/**
+ * creates a new page with the given name and page_id
+ * @param {string} page_id
+ * @param {string} page_name
+ * @returns {Promise<boolean>}
+ */
+export const createNewPage = async (page_id, page_name) => {
+    const request = new PostNewPageRequest(page_id, page_name);
+
+    const response = await request.do();
+
+    return response.Created;
+}

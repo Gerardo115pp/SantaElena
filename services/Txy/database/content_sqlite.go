@@ -14,7 +14,8 @@ import (
 )
 
 type ContentSQLiteDB struct {
-	db *sql.DB
+	db            *sql.DB
+	locales_cache []string
 }
 
 func NewContentSQLiteDB() (*ContentSQLiteDB, error) {
@@ -47,16 +48,89 @@ func NewContentSQLiteDB() (*ContentSQLiteDB, error) {
 		}
 	}
 
+	site_locales, err := content_db.GetLocales(context.Background())
+	if err != nil {
+		return nil, err
+	}
+
+	content_db.locales_cache = site_locales
+
+	if len(site_locales) == 0 {
+		content_db.locales_cache = append(content_db.locales_cache, app_config.INITIAL_LOCALE)
+	}
+
 	return content_db, nil
 }
 
 // Only use prepared statements in methods that are public and receive user input
-
-// TODO: If you ever add an Insert method to the interface, decompose this method to create the insert methods for each table
 func (content_db *ContentSQLiteDB) addPageContent(ctx context.Context, page_content *models.PageContent) error {
 	tx, err := content_db.db.Begin()
 	if err != nil {
 		return err
+	}
+
+	err = content_db.AddPage(ctx, page_content.PageID, page_content.Name, tx)
+	if err != nil {
+		echo.Echo(echo.RedBG, fmt.Sprintf("Error while adding page %s: %s", page_content.PageID, err))
+		tx.Rollback()
+		return err
+	}
+
+	if content_db.locales_cache == nil {
+		content_db.locales_cache = make([]string, 0)
+		for locale := range page_content.LocalesContent {
+			content_db.locales_cache = append(content_db.locales_cache, locale)
+		}
+	}
+
+	echo.EchoDebug(fmt.Sprintf("locales_cache: %+v", content_db.locales_cache))
+
+	if len(content_db.locales_cache) == 0 {
+		tx.Commit()
+		return nil
+	}
+
+	sections := page_content.LocalesContent[content_db.locales_cache[0]]
+
+	for _, section := range *sections {
+		err = content_db.AddSection(ctx, section.SectionID, section.Name, page_content.PageID, tx)
+		if err != nil {
+			echo.Echo(echo.RedBG, fmt.Sprintf("Error while adding section %s: %s", section.SectionID, err))
+			tx.Rollback()
+		}
+
+		for _, content_entry := range section.Content {
+			err = content_db.AddContentToSection(ctx, &content_entry, section.SectionID, page_content.PageID, tx)
+			if err != nil {
+				echo.Echo(echo.RedBG, fmt.Sprintf("Error while adding content '%s' to section %s: %s", content_entry.EntryID, section.SectionID, err))
+				tx.Rollback()
+			}
+
+			// Adds the content entry attributes
+			err = content_db.UpdateContentEntryContent(ctx, &content_entry, tx)
+			if err != nil {
+				echo.Echo(echo.RedBG, fmt.Sprintf("Error while adding content entry attributes: %s", err))
+				tx.Rollback()
+			}
+		}
+
+	}
+
+	err = tx.Commit()
+
+	return err
+}
+
+func (content_db *ContentSQLiteDB) AddPage(ctx context.Context, page_id string, name string, tx *sql.Tx) error {
+	var err error
+	var tx_passed bool = tx != nil
+
+	if !tx_passed {
+		echo.EchoDebug("AddPage: No transaction passed, starting new one")
+		tx, err = content_db.db.Begin()
+		if err != nil {
+			return err
+		}
 	}
 
 	page_stmt, err := tx.PrepareContext(ctx, "INSERT INTO `pages` (`page_id`, `name`) VALUES (?, ?)")
@@ -64,58 +138,109 @@ func (content_db *ContentSQLiteDB) addPageContent(ctx context.Context, page_cont
 		return err
 	}
 
-	_, err = page_stmt.ExecContext(ctx, page_content.PageID, page_content.Name)
+	_, err = page_stmt.ExecContext(ctx, page_id, name)
 	if err != nil {
 		return err
 	}
 
 	page_stmt.Close()
 
-	section_stmt, err := tx.PrepareContext(ctx, "INSERT INTO `sections` (`section_id`, `name`, `page_fk`) VALUES (?, ?, ?)")
-	content_stmt, err := tx.PrepareContext(ctx, "INSERT INTO `content_entries` (`id`, `entry_id`, `section_fk`, `page_fk`, `locale`, `name`, `content_type`, `content_hash`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
-	attribute_stmt, err := tx.PrepareContext(ctx, "INSERT INTO `entry_attributes` (`entry_fk`, `attribute_name`, `attribute_value`) VALUES (?, ?, ?)")
-
-	for locale, sections := range page_content.LocalesContent {
-		for _, section := range *sections {
-			_, err = section_stmt.ExecContext(ctx, section.SectionID, section.Name, page_content.PageID)
-			if err != nil {
-				echo.EchoErr(err)
-				tx.Rollback()
-				return err
-			}
-
-			for _, content_entry := range section.Content {
-				_, err = content_stmt.ExecContext(ctx, content_entry.ID(), content_entry.EntryID, section.SectionID, page_content.PageID, locale, content_entry.Name, content_entry.ContentType, content_entry.ContentHash)
-				if err != nil {
-					echo.EchoErr(err)
-					tx.Rollback()
-					return err
-				}
-
-				for attribute, value := range content_entry.Attributes {
-					_, err = attribute_stmt.ExecContext(ctx, content_entry.ID(), attribute, value)
-					if err != nil {
-						echo.EchoErr(err)
-						tx.Rollback()
-						return err
-					}
-				}
-			}
+	if !tx_passed {
+		echo.EchoDebug("AddPage: No transaction passed, committing new one")
+		err = tx.Commit()
+		if err != nil {
+			tx.Rollback()
+			return err
 		}
-
 	}
 
-	err = tx.Commit()
+	return nil
+}
+
+func (content_db *ContentSQLiteDB) AddSection(ctx context.Context, section_id string, name string, page_id string, tx *sql.Tx) error {
+	var err error
+	var tx_passed bool = tx != nil
+
+	if !tx_passed {
+		echo.EchoDebug("AddSection: No transaction passed, starting new one")
+		tx, err = content_db.db.Begin()
+		if err != nil {
+			return err
+		}
+	}
+
+	section_stmt, err := tx.PrepareContext(ctx, "INSERT INTO `sections` (`section_id`, `name`, `page_fk`) VALUES (?, ?, ?)")
 	if err != nil {
-		tx.Rollback()
 		return err
+	}
+
+	_, err = section_stmt.ExecContext(ctx, section_id, name, page_id)
+	if err != nil {
+		return err
+	}
+
+	section_stmt.Close()
+
+	if !tx_passed {
+		echo.EchoDebug("AddSection: No transaction passed, committing new one")
+		err = tx.Commit()
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	return nil
+
+}
+
+func (content_db *ContentSQLiteDB) AddContentToSection(ctx context.Context, content_entry *models.ContentEntry, section_id string, page_id string, tx *sql.Tx) error {
+	var err error
+	var tx_passed bool = tx != nil
+
+	if !tx_passed {
+		echo.EchoDebug("AddContentToSection: No transaction passed, starting new one")
+		tx, err = content_db.db.Begin()
+		if err != nil {
+			echo.Echo(echo.RedBG, fmt.Sprintf("Error while starting transaction for adding content to section: %s", err))
+			return err
+		}
+	}
+
+	content_stmt, err := tx.PrepareContext(ctx, "INSERT INTO `content_entries` (`id`, `entry_id`, `section_fk`, `page_fk`, `locale`, `name`, `content_type`, `content_hash`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+	if err != nil {
+		echo.Echo(echo.RedBG, fmt.Sprintf("Error while preparing statement for adding content to section: %s", err))
+		return err
+	}
+
+	for _, locale := range content_db.locales_cache {
+		content_entry.SetLocale(locale)
+		content_entry.UpdateContentHash()
+
+		_, err = content_stmt.ExecContext(ctx, content_entry.ID(), content_entry.EntryID, section_id, page_id, locale, content_entry.Name, content_entry.ContentType, content_entry.ContentHash)
+		if err != nil {
+			echo.Echo(echo.RedBG, fmt.Sprintf("Error while adding content to section: %s", err))
+			return err
+		}
+	}
+
+	content_stmt.Close()
+
+	if !tx_passed {
+		echo.EchoDebug("AddContentToSection: No transaction passed, committing new one")
+		err = tx.Commit()
+		if err != nil {
+			echo.Echo(echo.RedBG, fmt.Sprintf("Error while committing transaction for adding content to section: %s", err))
+			tx.Rollback()
+			return err
+		}
 	}
 
 	return nil
 }
 
 func (content_db *ContentSQLiteDB) AddLocale(ctx context.Context, locale string) error {
-	rows, err := content_db.db.QueryContext(ctx, "SELECT DISTINCT `locale`, `entry_id`, `section_fk`, `page_fk`, `name`, `content_type` FROM `content_entries`")
+	rows, err := content_db.db.QueryContext(ctx, "SELECT `locale`, `entry_id`, `section_fk`, `page_fk`, `name`, `content_type` FROM `content_entries` WHERE `locale`=(SELECT DISTINCT `locale` FROM `content_entries` LIMIT 1)")
 	if err != nil {
 		return err
 	}
@@ -137,7 +262,11 @@ func (content_db *ContentSQLiteDB) AddLocale(ctx context.Context, locale string)
 			return err
 		}
 
-		content_entry.Locale = locale
+		content_entry.SetLocale(original_locale)
+
+		content_db.populateAttributes(&content_entry)
+
+		content_entry.SetLocale(locale)
 		content_entry.UpdateContentHash()
 
 		_, err = content_stmt.ExecContext(ctx, content_entry.ID(), content_entry.EntryID, section_fk, page_id, locale, content_entry.Name, content_entry.ContentType, content_entry.ContentHash)
@@ -149,6 +278,8 @@ func (content_db *ContentSQLiteDB) AddLocale(ctx context.Context, locale string)
 	}
 
 	err = tx.Commit()
+
+	content_db.locales_cache = append(content_db.locales_cache, locale)
 
 	return err
 }
@@ -209,7 +340,13 @@ func (content_db *ContentSQLiteDB) GetPageLocales(ctx context.Context, page_id s
 
 }
 
+// Returns a list of locales that exist in the txy website. if the locales_cache is populated, it will return that cached list. Otherwise, it will query the database and return that list
+// Under no circumstances will populate the locales_cache on its own. This is useful for when you want to refresh the list of locales
 func (content_db *ContentSQLiteDB) GetLocales(ctx context.Context) ([]string, error) {
+	if content_db.locales_cache != nil || len(content_db.locales_cache) != 0 {
+		return content_db.locales_cache, nil
+	}
+
 	var locales []string
 
 	rows, err := content_db.db.QueryContext(ctx, "SELECT DISTINCT `locale` FROM `content_entries`")
@@ -443,10 +580,19 @@ func (content_db *ContentSQLiteDB) UpdateContentEntry(ctx context.Context, conte
 	return nil
 }
 
-func (content_db *ContentSQLiteDB) UpdateContentEntryContent(ctx context.Context, content_entry *models.ContentEntry) error {
+// Updates the content entry attributes.
+func (content_db *ContentSQLiteDB) UpdateContentEntryContent(ctx context.Context, content_entry *models.ContentEntry, tx *sql.Tx) error {
 	var content_id string = content_entry.ID()
+	var err error
+	tx_passed := tx != nil
 
-	tx, err := content_db.db.Begin()
+	if !tx_passed {
+		tx, err = content_db.db.Begin()
+		if err != nil {
+			echo.Echo(echo.RedBG, fmt.Sprintf("Error while starting transaction for updating content entry content: %s", err))
+			return err
+		}
+	}
 
 	stmt, err := tx.PrepareContext(ctx, "DELETE FROM `entry_attributes` WHERE `entry_fk`=?")
 	if err != nil {
@@ -473,10 +619,12 @@ func (content_db *ContentSQLiteDB) UpdateContentEntryContent(ctx context.Context
 
 	stmt.Close()
 
-	err = tx.Commit()
-	if err != nil {
-		tx.Rollback()
-		return err
+	if !tx_passed {
+		err = tx.Commit()
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
 	}
 
 	return nil

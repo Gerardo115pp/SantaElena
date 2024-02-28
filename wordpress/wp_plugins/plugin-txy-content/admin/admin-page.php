@@ -21,5 +21,5 @@
     document.addEventListener('DOMContentLoaded', mountTxyApp);
 </script>
 <section id="libery-labs-txy-wp-menu">
-    <div id="app-root"></div>
+    <div id="app-root" data-theme="libery-labs-theme" class="dark"></div>
 </section>

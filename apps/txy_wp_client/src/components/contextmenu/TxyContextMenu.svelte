@@ -16,9 +16,16 @@
          */
         export let position = null;
         // export let position = { x: 0, y: 0 };
+
+        /**
+         * The menu sections to display
+         * @type {import("./txy_context_menu_params").ContextMenuSection[]}
+         */
+        export let menu_sections = [];
+        
+
     
     /*=====  End of Properties  ======*/
-    
 
     
     /*=============================================
@@ -27,11 +34,6 @@
 
         const closeContextMenu = () => {
             position = null;
-        }
-
-        const handleAddPage = () => {
-            console.debug("Adding page");
-            closeContextMenu();
         }
     
     /*=====  End of Methods  ======*/
@@ -46,21 +48,18 @@
         style:left="{position.x}px"
         style:top="{position.y}px"
     >
-        <li class="tccm-entry">
-            <button on:click={handleAddPage} class="tccm-entry-button">
-                Add Page
-            </button>
-        </li>
-        <li class="tccm-entry">
-            <button class="tccm-entry-button">
-                Add Locale
-            </button>
-        </li>
-        <li class="tccm-entry">
-            <button class="tccm-entry-button">
-                Add Section
-            </button>
-        </li>
+        {#each menu_sections as menu_section}
+            <fieldset class="tccm-menu-section">
+                <legend>{menu_section.title}</legend>
+                {#each menu_section.items as menu_item}
+                    <li class="tccm-entry" on:click={menu_item.action} role="button">
+                        <button class="tccm-entry-button">
+                            {menu_item.title}
+                        </button>
+                    </li>
+                {/each}
+            </fieldset>
+        {/each}
     </menu>
 {/if}
 
@@ -74,21 +73,37 @@
         width: 200px;
         background: var(--grey);
         position: absolute;
-        z-index: var(--z-index-t-5);
-        border: 1px solid var(--grey-8);
         box-shadow: var(--boxes-shadow);
+        border: 1px solid var(--grey-8);
+        z-index: var(--z-index-t-8);
+        border-radius: var(--border-radius);
+    }
+
+    .tccm-menu-section legend {
+        width: 100%;
+        font-size: var(--font-size-1);
+        color: var(--main-dark);
+        padding: calc(var(--spacing-1) * 0.5) var(--spacing-1);
+        background: color-mix(in oklab, var(--grey-9) 98%, var(--grey-3));
     }
 
     .tccm-entry {
-        padding: var(--spacing-1);
-        border-bottom: 1px solid var(--main-8);
+        padding: 0 var(--spacing-1);
+        border-bottom: 1px solid var(--main-9);
         transition: all 200ms ease-in-out;
         margin: 0;
     }
 
+    .tccm-entry:last-child {
+        border-bottom: none;
+    }
+
     .tccm-entry-button {
         background: transparent;
-        color: var(--main);
+        color: var(--main-5);
+        font-size: var(--font-size-1);
+        font-weight: 600;
+        text-transform: lowercase;
     }
 
     .tccm-entry:hover {

@@ -2,6 +2,7 @@ package database
 
 import (
 	"encoding/json"
+	"fmt"
 	"libery_txy_content_service/models"
 	"os"
 
@@ -33,6 +34,7 @@ func loadContentFromJson(json_filename string) (*models.PageContent, error) {
 	var page_sections []models.ContentSection
 	content_bytes, err := os.ReadFile(json_filename)
 	if err != nil {
+		echo.Echo(echo.RedBG, fmt.Sprintf("Error while reading file '%s': %s", json_filename, err))
 		return page_content, err
 	}
 
@@ -40,6 +42,7 @@ func loadContentFromJson(json_filename string) (*models.PageContent, error) {
 
 	err = json.Unmarshal(content_bytes, &page_content_json)
 	if err != nil {
+		echo.Echo(echo.RedBG, fmt.Sprintf("Error while unmarshalling JSON: %s", err))
 		return page_content, err
 	}
 
@@ -85,12 +88,14 @@ func loadContentEntriesFromJson(content_entries []contentEntryJSON) []models.Con
 		entry.Name = entry_json.Name
 		entry.ContentType, err = models.CastContentEntryType(entry_json.ContentType)
 		if err != nil {
+			echo.Echo(echo.RedBG, fmt.Sprintf("Error on loadContentEntriesFromJson. While casting content type: %s", err))
 			echo.EchoFatal(err)
 		}
 
 		for key, value := range entry_json.Attributes {
 			attribute, err := models.CastContentEntryAttribute(key)
 			if err != nil {
+				echo.Echo(echo.RedBG, fmt.Sprintf("Error on loadContentEntriesFromJson. While casting content attribute: %s", err))
 				echo.EchoFatal(err)
 			}
 

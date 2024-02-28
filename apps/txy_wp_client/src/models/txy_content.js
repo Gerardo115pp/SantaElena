@@ -1,4 +1,4 @@
-import { GetAvailableAttributesRequest, PutContentEntryRequest } from "@app_modules/Services/HttpRequests";
+import { GetAvailableAttributesRequest, PutContentEntryRequest, PostNewLocaleRequest } from "@app_modules/Services/HttpRequests";
 
 export class TxyContentEntry {
     /**
@@ -131,4 +131,18 @@ export const getAvailableAttributes = async () => {
     }
 
     return attributes;
+}
+
+/**
+ * Creates a new locale on the server
+ * @async
+ * @param {string} locale
+ * @returns {Promise<boolean>}
+ */
+export const createNewLocale = async locale => {
+    const request = new PostNewLocaleRequest(locale);
+
+    const response = await request.do();
+
+    return response.Created;
 }

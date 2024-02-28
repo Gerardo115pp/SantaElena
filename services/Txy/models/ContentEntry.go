@@ -62,6 +62,8 @@ func CastContentEntryType(content_type string) (contentEntryType, error) {
 		return ContentEntryTypes.Text, nil
 	case ContentEntryTypes.Html:
 		return ContentEntryTypes.Html, nil
+	case ContentEntryTypes.Markdown:
+		return ContentEntryTypes.Markdown, nil
 	default:
 		return "", fmt.Errorf("Invalid content entry type: %s", content_type)
 	}
@@ -93,14 +95,16 @@ func NewContentEntry() *ContentEntry {
 	}
 }
 
-func (ce *ContentEntry) ID() string {
-	if ce.id != "" {
-		return ce.id
-	}
-
+func (ce *ContentEntry) calculateID() {
 	var hash_source string = fmt.Sprintf("%s+%s", ce.EntryID, ce.Locale)
 
 	ce.id = helpers.GenerateSha1ID(hash_source)
+}
+
+func (ce *ContentEntry) ID() string {
+	if ce.id == "" {
+		ce.calculateID()
+	}
 
 	return ce.id
 }
@@ -113,6 +117,20 @@ func (ce *ContentEntry) GetAttribute(attribute contentEntryAttribute) string {
 	}
 
 	return attribute_value
+}
+
+func (ce *ContentEntry) SetLocale(locale string) {
+	ce.id = ""
+	ce.Locale = locale
+
+	ce.calculateID()
+}
+
+func (ce *ContentEntry) SetEntryID(entry_id string) {
+	ce.id = ""
+	ce.EntryID = entry_id
+
+	ce.calculateID()
 }
 
 func (ce *ContentEntry) UpdateContentHash() {

@@ -3,13 +3,14 @@
     import TxyContextMenu from "@components/contextmenu/TxyContextMenu.svelte";
     import PagesSelector from "@components/PagesControllers/PagesSelector.svelte";
     import LocaleSwitch from "@components/LocalesControllers/LocaleSwitch.svelte";
+    import { selected_locale, selected_page_id, selected_page_content_hash } from "@stores/txy_content";
+    import { getModalStore, ModalStore, ModalSettings } from "@skeletonlabs/skeleton";
+    import PageEditor from "./sub-components/PageEditor.svelte";
     import { getPageContent, TxyPage } from "@models/txy_pages";
     import { TxyPageSection } from "@models/txy_sections";
-    import { selected_locale, selected_page_id } from "@stores/txy_content";
-    import { onMount } from "svelte";
-    import PageEditor from "./sub-components/PageEditor.svelte";
     import { blur } from "svelte/transition";
     import { circIn } from "svelte/easing";
+    import { onDestroy, onMount } from "svelte";
 
     /*=============================================
     =            Properties            =
@@ -30,9 +31,47 @@
         let page_sections = [];
 
         /**
+         * @typedef {Object} Point
+         * @property {number} x
+         * @property {number} y
+        */
+
+        /**
          * The position where to show the context menu
+         * @type {Point}
          */
         let context_menu_position = null;
+        // let context_menu_position = { x: 0, y: 0 }; // STYLING: Use this to automatically show the context menu so it's easier to style it
+
+        /**
+         * The sections to pass to the context menu
+         * @type {import("@components/contextmenu/txy_context_menu_params").ContextMenuSection[]}
+        */
+        let context_menu_website_actions = [
+            {
+                title: "website actions",
+                items: [
+                    {
+                        title: "Add Page",
+                        action: handleAddPage
+                    },
+                    {
+                        title: "Add Section",
+                        action: handleAddSection
+                    },
+                    {
+                        title: "Add Locale",
+                        action: handleAddLocale
+                    }
+                ]
+            }
+        ]
+
+        /**
+         * Use this store to trigger modals
+         * @type {ModalStore}
+         */
+        const modal_store = getModalStore();
 
         /**
          * The dashboard element
@@ -43,6 +82,8 @@
         selected_page_id.set(home_page_id);
 
         let locale_selected_unsubscribe;
+        let page_selected_unsubscribe;
+        let page_content_hash_unsubscribe;
         
 
     /*=====  End of Properties  ======*/
@@ -51,11 +92,65 @@
         verifyInstallation();
 
         locale_selected_unsubscribe = selected_locale.subscribe(new_locale => loadPageContent($selected_page_id, new_locale));
+        page_selected_unsubscribe = selected_page_id.subscribe(new_page_id => loadPageContent(new_page_id, $selected_locale));
+        page_content_hash_unsubscribe = selected_page_content_hash.subscribe(handlePageContentHashUpdated);
+    });
+
+    onDestroy(() => {
+        locale_selected_unsubscribe();
+        page_selected_unsubscribe();
+        page_content_hash_unsubscribe();
     });
 
     /*=============================================
     =            Methods            =
     =============================================*/
+
+        const closeContextMenu = () => {
+            context_menu_position = null;
+        }
+
+        function handleAddPage() {
+            /**@type {ModalSettings}*/
+            let add_page_modal_settings = {
+                title: "Add a new page",
+                body: "This will add a new page to the txy website",
+                type: "component",
+                component: "CreateNewPageModal",
+            }
+
+            modal_store.trigger(add_page_modal_settings);
+            
+            closeContextMenu();
+        }
+
+        function handleAddSection() {
+            /**@type {ModalSettings}*/
+            let add_page_modal_settings = {
+                title: "Add a new section",
+                body: "This will add a section to the current page",
+                type: "component",
+                component: "CreateNewSectionModal",
+            }
+
+            modal_store.trigger(add_page_modal_settings);
+            
+            closeContextMenu();
+        }
+
+        function handleAddLocale() {
+            /**@type {ModalSettings}*/
+            let add_page_modal_settings = {
+                title: "Add a new locale",
+                body: "This will add a new locale to the txy website",
+                type: "component",
+                component: "CreateNewLocaleModal",
+            }
+
+            modal_store.trigger(add_page_modal_settings);
+            
+            closeContextMenu();
+        }
 
         /**
          * Handles the context menu event
@@ -77,6 +172,18 @@
 
             console.debug("Context menu position: ", { x, y });
             context_menu_position = { x, y };
+        }
+
+        const handlePageContentHashUpdated = new_hash => {
+            if (new_hash === "" || new_hash == null) return;
+
+            let selected_page = pages.get($selected_page_id);
+
+            if (new_hash === selected_page.ContentHash) return;
+
+            pages.delete($selected_page_id);
+
+            loadPageContent($selected_page_id, $selected_locale);
         }
 
         const loadPageContent = async (page_id, locale) => {
@@ -101,6 +208,8 @@
 
             console.debug("Selected page: ", selected_page);
 
+            selected_page_content_hash.set(selected_page.ContentHash);
+
             page_sections = selected_page.locales_content[locale];
         }
     
@@ -116,7 +225,7 @@
 </script>
 
 <div bind:this={dashboard_element} id="txy-dashboard-screen">
-    <TxyContextMenu bind:position={context_menu_position} />
+    <TxyContextMenu bind:position={context_menu_position} menu_sections={context_menu_website_actions}/>
     <header id="tds-top-header" class:adebug={false} on:contextmenu={handleContextMenu} role="menubar" tabindex="0">
         <article id="tds-th-informational-section" class="tds-th-column">
             <div id="tds-th-text-content-wrapper">

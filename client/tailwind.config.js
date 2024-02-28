@@ -1,6 +1,6 @@
 import { join } from 'path';
 import { skeleton } from '@skeletonlabs/tw-plugin';
-import { santa_elena_theme } from "./src//themes/santa-elena-theme"
+import { santa_elena_theme } from "./src/themes/santa-elena-theme"
 
 /** @type {import('tailwindcss').Config} */
 export default {

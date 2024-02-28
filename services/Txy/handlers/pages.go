@@ -5,6 +5,8 @@ import (
 	"libery_txy_content_service/repository"
 	"libery_txy_content_service/server"
 	"net/http"
+
+	"github.com/Gerardo115pp/patriots_lib/echo"
 )
 
 func PagesHandler(service_instance server.Server) http.HandlerFunc {
@@ -40,18 +42,44 @@ func getPagesHandler(response http.ResponseWriter, request *http.Request) {
 
 	json.NewEncoder(response).Encode(available_pages)
 }
+
 func postPagesHandler(response http.ResponseWriter, request *http.Request) {
-	response.WriteHeader(http.StatusMethodNotAllowed)
-	return
+	new_page_request := &struct {
+		PageID   string `json:"page_id"`
+		PageName string `json:"page_name"`
+	}{}
+
+	err := json.NewDecoder(request.Body).Decode(new_page_request)
+	if err != nil {
+		response.WriteHeader(400)
+		return
+	}
+
+	if new_page_request.PageID == "" || new_page_request.PageName == "" {
+		echo.Echo(echo.RedBG, "PageID or PageName is empty")
+		response.WriteHeader(400)
+		return
+	}
+
+	err = repository.PagesContent.AddPage(request.Context(), new_page_request.PageID, new_page_request.PageName, nil)
+	if err != nil {
+		response.WriteHeader(500)
+		return
+	}
+
+	response.WriteHeader(201)
 }
+
 func patchPagesHandler(response http.ResponseWriter, request *http.Request) {
 	response.WriteHeader(http.StatusMethodNotAllowed)
 	return
 }
+
 func deletePagesHandler(response http.ResponseWriter, request *http.Request) {
 	response.WriteHeader(http.StatusMethodNotAllowed)
 	return
 }
+
 func putPagesHandler(response http.ResponseWriter, request *http.Request) {
 	response.WriteHeader(http.StatusMethodNotAllowed)
 	return

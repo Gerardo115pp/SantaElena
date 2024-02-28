@@ -241,6 +241,98 @@ import { SVG_PREFIX, WORDPRESS_REST_API, TXY_SERVICE, PAYMENTS_SERVICE } from ".
                 return new HttpResponse(response, null);
             }
         }
+
+        export class PostNewPageRequest {
+            constructor(page_name, page_id) {
+                this.page_name = page_name;
+                this.page_id = page_id;
+            }
+
+            toJson = attributesToJson.bind(this);
+
+            /**
+             * Sends a request to the server to create a new page
+             * @async
+             * @returns {Promise<HttpResponse>}
+             */
+            do = async () => {
+                const response = await fetch(`${TXY_SERVICE}/pages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: this.toJson()
+                });
+
+                return new HttpResponse(response, null);
+            }
+
+        }
+
+        export class PostNewSectionRequest {
+            constructor(section_name, section_id, page_id) {
+                this.section_name = section_name;
+                this.section_id = section_id;
+                this.page_id = page_id;
+            }
+
+            toJson = attributesToJson.bind(this);
+
+            /**
+             * @typedef {Object} ContentUpdatedResponse
+             * @property {string} content_hash
+             */
+
+            /**
+             * Sends a request to the server to create a new section
+             * @async
+             * @returns {Promise<HttpResponse<ContentUpdatedResponse>>}
+             */
+            do = async () => {
+                const response = await fetch(`${TXY_SERVICE}/pages-content/section`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: this.toJson()
+                });
+
+                /** @type {ContentUpdatedResponse} */
+                let data = null;
+
+                if (response.status === 201) {
+                    data = await response.json();
+                }
+
+                return new HttpResponse(response, data);
+            }
+
+        }
+
+        export class PostNewLocaleRequest {
+            constructor(locale) {
+                this.locale = locale;
+            }
+
+            toJson = attributesToJson.bind(this);
+
+            /**
+             * Sends a request to the server to create a new locale
+             * @async
+             * @returns {Promise<HttpResponse>}
+             */
+            do = async () => {
+                const response = await fetch(`${TXY_SERVICE}/locales`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: this.toJson()
+                });
+
+                return new HttpResponse(response, null);
+            }
+        }
 /*=====  End of Txy  ======*/
 
 

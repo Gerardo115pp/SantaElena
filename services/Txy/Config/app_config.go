@@ -18,6 +18,7 @@ var database_default_engine string = "sqlite"
 var DATABASE_ENGINE string = database_default_engine
 var DATABASE_SCHEMA_FILE string
 var DATABASE_CONTENT_FILE string
+var INITIAL_LOCALE string
 
 func VerifyConfig() {
 
@@ -36,6 +37,18 @@ func VerifyConfig() {
 	err := loadSettings()
 	if err != nil {
 		panic(fmt.Sprintf("Error loading settings file: %s", err.Error()))
+	}
+
+	if DATABASE_SCHEMA_FILE == "" {
+		panic("DATABASE_SCHEMA_FILE is not set")
+	}
+
+	if DATABASE_CONTENT_FILE == "" {
+		panic("DATABASE_CONTENT_FILE is not set")
+	}
+
+	if INITIAL_LOCALE == "" {
+		panic("INITIAL_LOCALE is not set")
 	}
 }
 
@@ -71,6 +84,10 @@ func loadSettings() error {
 
 	if _, exists := service_settings["database_content_file"]; exists {
 		DATABASE_CONTENT_FILE = service_settings["database_content_file"].(string)
+	}
+
+	if initial_locale, exists := service_settings["initial_locale"]; exists {
+		INITIAL_LOCALE = initial_locale.(string)
 	}
 
 	return nil
