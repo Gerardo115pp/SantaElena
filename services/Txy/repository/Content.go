@@ -11,6 +11,7 @@ type ContentRepository interface {
 	AddSection(ctx context.Context, section_id string, name string, page_id string, tx *sql.Tx) error
 	AddContentToSection(ctx context.Context, content_entry *models.ContentEntry, section_id string, page_id string, tx *sql.Tx) error
 	AddLocale(ctx context.Context, locale string) error
+	DeleteLocale(ctx context.Context, locale string) error
 	PageHasLocale(ctx context.Context, page_id string, locale string) (bool, error)
 	GetPages(ctx context.Context) ([]models.PageMetadata, error)
 	GetPageContent(ctx context.Context, page_id string, locale string) (*models.PageContent, error)

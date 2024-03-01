@@ -59,6 +59,11 @@ func NewContentSQLiteDB() (*ContentSQLiteDB, error) {
 		content_db.locales_cache = append(content_db.locales_cache, app_config.INITIAL_LOCALE)
 	}
 
+	_, err = content_db.db.Exec("PRAGMA foreign_keys = ON")
+	if err != nil {
+		return nil, err
+	}
+
 	return content_db, nil
 }
 
@@ -247,12 +252,12 @@ func (content_db *ContentSQLiteDB) AddLocale(ctx context.Context, locale string)
 
 	defer rows.Close()
 
-	tx, err := content_db.db.Begin()
+	tx, err := content_db.db.BeginTx(ctx, nil)
 
 	content_stmt, err := tx.PrepareContext(ctx, "INSERT INTO `content_entries` (`id`, `entry_id`, `section_fk`, `page_fk`, `locale`, `name`, `content_type`, `content_hash`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
 
 	for rows.Next() {
-		var content_entry models.ContentEntry = *models.NewContentEntry()
+		var content_entry *models.ContentEntry = models.NewContentEntry()
 		var section_fk string
 		var page_id string
 		var original_locale string // we will use this to retrieve a media url when these are implemented
@@ -262,14 +267,25 @@ func (content_db *ContentSQLiteDB) AddLocale(ctx context.Context, locale string)
 			return err
 		}
 
+		echo.EchoDebug(fmt.Sprintf("content_entry.ID(): %s", content_entry.ID()))
 		content_entry.SetLocale(original_locale)
+		echo.EchoDebug(fmt.Sprintf("content_entry.ID() after SetLocale: %s", content_entry.ID()))
 
-		content_db.populateAttributes(&content_entry)
+		content_db.populateAttributes(content_entry)
+
+		echo.EchoDebug(fmt.Sprintf("Populated attributes for content entry %s: %+v", content_entry.ID(), content_entry.Attributes))
 
 		content_entry.SetLocale(locale)
 		content_entry.UpdateContentHash()
 
 		_, err = content_stmt.ExecContext(ctx, content_entry.ID(), content_entry.EntryID, section_fk, page_id, locale, content_entry.Name, content_entry.ContentType, content_entry.ContentHash)
+		if err != nil {
+			echo.EchoErr(err)
+			tx.Rollback()
+			return err
+		}
+
+		err = content_db.UpdateContentEntryContent(ctx, content_entry, tx)
 		if err != nil {
 			echo.EchoErr(err)
 			tx.Rollback()
@@ -282,6 +298,31 @@ func (content_db *ContentSQLiteDB) AddLocale(ctx context.Context, locale string)
 	content_db.locales_cache = append(content_db.locales_cache, locale)
 
 	return err
+}
+
+func (content_db *ContentSQLiteDB) DeleteLocale(ctx context.Context, locale string) error {
+	stmt, err := content_db.db.Prepare("DELETE FROM `content_entries` WHERE `locale`=?")
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.ExecContext(ctx, locale)
+	if err != nil {
+		return err
+	}
+
+	var updated_locales []string
+
+	for _, l := range content_db.locales_cache {
+		if l != locale {
+			updated_locales = append(updated_locales, l)
+		}
+	}
+
+	content_db.locales_cache = updated_locales
+	stmt.Close()
+
+	return nil
 }
 
 func (content_db *ContentSQLiteDB) GetPages(ctx context.Context) ([]models.PageMetadata, error) {
@@ -537,12 +578,16 @@ func (content_db *ContentSQLiteDB) PageHasLocale(ctx context.Context, page_id st
 func (content_db *ContentSQLiteDB) populateAttributes(content_entry *models.ContentEntry) error {
 	sql_statement := "SELECT `attribute_name`, `attribute_value` FROM `entry_attributes` WHERE `entry_fk`=?"
 
+	echo.EchoDebug(fmt.Sprintf("populateAttributes: content_entry.ID(): %s", content_entry.ID()))
 	rows, err := content_db.db.Query(sql_statement, content_entry.ID())
 	if err != nil {
 		return err
 	}
+	echo.EchoDebug(fmt.Sprintf("populateAttributes: content_entry.ID()(after query): %s", content_entry.ID()))
 
 	defer rows.Close()
+
+	echo.EchoDebug(fmt.Sprintf("Found %d attributes for content entry %s", len(content_entry.Attributes), content_entry.ID()))
 
 	for rows.Next() {
 		var attribute_name string
@@ -553,6 +598,8 @@ func (content_db *ContentSQLiteDB) populateAttributes(content_entry *models.Cont
 			return err
 		}
 
+		echo.EchoDebug(fmt.Sprintf("for content entry %s found attribute: %s=%s", content_entry.ID(), attribute_name, attribute_value))
+
 		attribute, err := models.CastContentEntryAttribute(attribute_name)
 		if err != nil {
 			return err
@@ -560,6 +607,8 @@ func (content_db *ContentSQLiteDB) populateAttributes(content_entry *models.Cont
 
 		content_entry.Attributes[attribute] = attribute_value
 	}
+
+	echo.EchoDebug(fmt.Sprintf("Attributes for content entry %s: %+v", content_entry.ID(), content_entry.Attributes))
 
 	return nil
 }

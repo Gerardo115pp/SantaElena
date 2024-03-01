@@ -120,9 +120,26 @@ func patchLocalesHandler(response http.ResponseWriter, request *http.Request) {
 	return
 }
 func deleteLocalesHandler(response http.ResponseWriter, request *http.Request) {
-	response.WriteHeader(http.StatusMethodNotAllowed)
-	return
+	delete_request := &struct {
+		Locale string `json:"locale"`
+	}{}
+
+	err := json.NewDecoder(request.Body).Decode(delete_request)
+	if err != nil {
+		response.WriteHeader(400)
+		return
+	}
+
+	err = repository.PagesContent.DeleteLocale(request.Context(), delete_request.Locale)
+	if err != nil {
+		echo.Echo(echo.RedFG, fmt.Sprintf("Error deleting locale: %s", err.Error()))
+		response.WriteHeader(500)
+		return
+	}
+
+	response.WriteHeader(204)
 }
+
 func putLocalesHandler(response http.ResponseWriter, request *http.Request) {
 	response.WriteHeader(http.StatusMethodNotAllowed)
 	return
