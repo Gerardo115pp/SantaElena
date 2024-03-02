@@ -2,6 +2,14 @@ import { getPageContent, getExistingPages, getLocales, TxyPage } from "./models/
 import TxyContentEntry from "./models/content_entry";
 import { TxySection } from "./models/section";
 import TXY_METADATA from "./txy_metadata";
+import { getTxyUserLocale } from "./txy_utils";
+
+/**
+* @typedef {Object} GetContentEntriesParams
+ * @property {string} page_id - the page_id of the page
+ * @property {string} section_id - the section_id of the section
+ * @property {string} entry_id - the entry_id of the entry
+*/
 
 /**
  * @typedef {Object} PageMetadata
@@ -10,62 +18,43 @@ import TXY_METADATA from "./txy_metadata";
  */
 
 class TxyRepository {
-    /**
-     * The locales availabe for this site
-     * @type {string[]}
-     */
-    #site_locales;
+    // Private fields
+        /**
+         * The locales availabe for this site
+         * @type {string[]}
+         */
+        #site_locales;
 
-    /**
-     * The loaded txy pages
-     * @type {Object<string, TxyPage>} - map from page_id to TxyPage
-     */
-    #txy_pages;
+        /**
+         * The loaded txy pages
+         * @type {Object<string, TxyPage>} - map from page_id to TxyPage
+         */
+        #txy_pages;
 
-    /**
-     * The metadata for this TxyRepository, things like the default page_id, default locale, text fallbacks, etc. 
-     * @type {typeof TXY_METADATA}
-     */
-    #metadata;
+        /**
+         * The metadata for this TxyRepository, things like the default page_id, default locale, text fallbacks, etc. 
+         * @type {typeof TXY_METADATA}
+         */
+        #metadata;
 
-    /**
-     * Whether this repository is ready to be used
-     * @type {boolean}
-     */
-    #booted;
+        /**
+         * A locale to be used by the repository. It's the user locale if it's available, otherwise the default locale
+         * @type {string}
+         */
+        #use_safe_locale;
 
-    /**
-     * The current page in which to look for content
-     * @type {string}
-     */
-    #current_page_id;
-
-    /**
-     * The current locale been used to look for content
-     * @type {string}
-     * @example 'es'
-     */
-    #current_locale;
-
-    /**
-     * A list of pages registered for this site
-     * @type {PageMetadata[]}
-     */
-    #existing_pages;
-
-    /**
-     * A map for the sections that is repopulated when the current page or locale changes
-     * @type {Map<string, TxySection>}
-     */
-    #sections_map;
+        /**
+         * The existing pages for this site
+         * @type {PageMetadata[]}
+         */
+        #existing_pages;
 
 
-    /**
-     * A map for the content entries that is repopulated when the current page or locale changes
-     * @type {Map<string, TxyContentEntry>}
-     */
-    #content_entries_map;
-
+        /**
+         * Whether this repository is ready to be used
+         * @type {boolean}
+         */
+        #booted;
 
     /**
      * 
@@ -73,28 +62,21 @@ class TxyRepository {
      */
     constructor(metadata) {
         this.#metadata = metadata;
-        this.#site_locales = [];
-        
-
         this.#txy_pages = {};
 
         // convert the fallback data into Object<pages_id, TxyPage>
         for (let page_id in metadata.fallback) {
-            console.debug('Creating TxyPage for page_id:', page_id);
-            console.debug('Page data:', metadata.fallback[page_id]);
             this.#txy_pages[page_id] = new TxyPage(metadata.fallback[page_id]);
         }
+        
+        
+        this.#site_locales = this.#createSiteLocales();
+        this.#existing_pages = this.#createExistingPages();
 
-        this.#current_page_id = undefined;
-        this.#current_locale = undefined;
+        this.#use_safe_locale = this.#getUseSafeLocale();        
 
-        this.#sections_map = {};
-        this.#content_entries_map = {};
 
         this.#booted = metadata.fallback !== undefined;
-
-        // set the default page and locale
-        this.setCurrentPageAndLocale(metadata.default_page_id, metadata.default_locale);
     }
 
     /**
@@ -111,30 +93,11 @@ class TxyRepository {
      * @returns {string}
      */
     get CurrentLocale() {
-        return this.#current_locale;
+        return this.#use_safe_locale;
     }
-
-    /**
-     * The current set page
-     * @returns {string}
-     * @readonly
-     * @see setCurrentPageAndLocale - if you want to change the current page and locale
-     */
-    get CurrentPageID() {
-        return this.#current_page_id;
-    }
-
-    /**
-     * The current page object
-     * @returns {TxyPage}
-     * @readonly
-     */
-    get CurrentPage() {
-        return this.#txy_pages[this.#current_page_id];
-    }
-
 
     async boot() {
+        console.debug('Booting TxyRepository');
         await this.#loadSiteLocales();
 
         await this.#loadExistingPages();
@@ -157,25 +120,81 @@ class TxyRepository {
     }
 
     /**
-     * 
+     * From the txy fallbacks. creates the existing pages.
+     * @returns {PageMetadata[]}
      */
+    #createExistingPages() {
+        let existing_pages = [];
 
-    /**
-     * Returns all the data in the txy section for the current page and locale.
-     * @param {string} section_id 
-     * @returns {TxySection}
-     */
-    getSection(section_id) {
-        return this.#sections_map.get(section_id);
+        Object.keys(this.#metadata.fallback).forEach(page_id => {
+            existing_pages.push({ page_id, name: this.#metadata.fallback[page_id].name });
+        });
+
+        return existing_pages;
     }
 
     /**
-     * Returns a content entry by its id or undefined if it does not exist
-     * @param {string} entry_id
+     * Creates the site locales array from the fallbacks
+     * @returns {string[]}
+     */
+    #createSiteLocales() {
+        let a_page_id = Object.keys(this.#metadata.fallback)[0];
+        if (a_page_id === undefined) return [];
+
+        let a_page = this.#txy_pages[a_page_id];
+
+        return Object.keys(a_page.locales_content);
+    }
+
+    /**
+     * Returns all the data in the txy section for the current page and locale.
+     * @param {string} page_id
+     * @param {string} section_id 
+     * @returns {TxySection}
+     */
+    getSection(page_id, section_id) {
+        // this
+
+        return this.#txy_pages[page_id].locales_content[this.#use_safe_locale].find(s => s.SectionId === section_id);
+    }
+
+    /**
+     * Returns the best locale prioritizing the user locale
+     */
+    #getUseSafeLocale() {
+        let use_safe_locale = getTxyUserLocale();
+
+        return this.#site_locales.includes(use_safe_locale) ? use_safe_locale : this.#metadata.default_locale;        
+    }
+
+    /**
+     * Returns a content entry from the repository. if it's not loaded, it will attempt to fetch it from the Txy Service.
+     * @param {GetContentEntriesParams} get_content_params
      * @returns {TxyContentEntry}
      */
-    getContentEntry(entry_id) {
-        return this.#content_entries_map.get(entry_id);
+    async getContentEntry(get_content_params) {
+        let page = await this.getPage(get_content_params.page_id);
+        if (page == null) return undefined;
+
+        let section = page.locales_content[this.#use_safe_locale].find(s => s.SectionId === get_content_params.section_id);
+        if (section === undefined) return undefined;
+
+        return section.getContentEntry(get_content_params.entry_id);
+    }
+
+    /**
+     * Returns synchronously the content entry from the repository. if it's not loaded, it will NOT attempt to fetch it from the Txy Service.
+     * This is useful when asynchronous operations are not allowed.
+     * @param {GetContentEntriesParams} get_content_params
+     */
+    getContentEntrySync(get_content_params) {
+        let page = this.#txy_pages[get_content_params.page_id];
+        if (page == null) return undefined;
+
+        let section = page.locales_content[this.#use_safe_locale].find(s => s.SectionId === get_content_params.section_id);
+        if (section === undefined) return undefined;
+
+        return section.getContentEntry(get_content_params.entry_id);
     }
 
     /**
@@ -209,7 +228,7 @@ class TxyRepository {
         if (target_page === undefined) {
             let page_metadata = this.#existing_pages.find(p => p.page_id === page_id);
             if (page_metadata !== undefined) {
-                await this.#loadPage(page_id, this.#current_locale);
+                await this.#loadPage(page_id, this.#use_safe_locale);
                 target_page = this.#txy_pages[page_id];
             }
         }
@@ -253,36 +272,6 @@ class TxyRepository {
     }
 
     /**
-     * Repopulates the sections map with the sections of the current page and locale
-     * @returns {void}
-     */
-        #populateSectionsMap() {
-        this.#sections_map = new Map();
-
-        let sections = this.#txy_pages[this.#current_page_id].locales_content[this.#current_locale];
-
-        for (let section of sections) {
-            this.#sections_map.set(section.section_id, section);
-        }
-    }
-
-    /**
-     * Repopulates the content entries map with the content entries of the current page and locale
-     * @returns {void}
-     */
-    #populateContentEntriesMap() {
-        this.#content_entries_map = new Map();
-
-        let sections = this.#txy_pages[this.#current_page_id].locales_content[this.#current_locale];
-
-        for (let section of sections) {
-            for (let entry of section.ContentEntries) {
-                this.#content_entries_map.set(entry.entry_id, entry);
-            }
-        }
-    }
-
-    /**
      * Requests the available locales for the site
      * @returns {Promise<string[]>}
      */
@@ -299,16 +288,6 @@ class TxyRepository {
     }
 
     /**
-     * Refreshes the existing pages for this site
-     * @returns {Promise<void>}
-     */
-    async refreshExistingPages() {
-        let fresh_pages = await this.#requestExistingPages();
-
-        this.#existing_pages = fresh_pages;
-    }
-
-    /**
      * Refreshes the site locales
      * @returns {Promise<void>}
      * @private
@@ -318,48 +297,6 @@ class TxyRepository {
 
         this.#site_locales = fresh_locales;
     }
-
-
-
-    /**
-     * Sets the current page and locale to the given values. if any of the values is null, the current values will be used.
-     * @param {string|null} page_id
-     * @param {string|null} locale
-     * @returns {Promise<Error|void>}
-     */
-    async setCurrentPageAndLocale(page_id, locale) {
-        /** @type {Error} */
-        let err = null;
-        if (page_id === null && locale === null) return new Error('Both page_id and locale are null');
-
-        let page_id_ready = this.pageIsLoaded(page_id);
-        if (!page_id_ready) {
-            await this.#loadPage(page_id, locale);
-        }
-
-        /** @type {TxyPage} */
-        let page = this.#txy_pages[page_id];
-        if (page === undefined) {
-            console.error('Page not found:', page_id);
-            return new Error('Page not found');
-        }
-
-        if (!page_id_ready || !page.hasLocaleContent(locale)) {
-            err = await page.addNewLocale(locale);
-            if (err != null) {
-                console.error('Error loading page content:', err.message);
-                return err;
-            }
-        }
-
-
-        this.#current_page_id = page_id ?? this.#current_page_id;
-        this.#current_locale = locale ?? this.#current_locale;
-
-        this.#populateSectionsMap();
-        this.#populateContentEntriesMap();
-    }
-
 }
 
 const txy_repository = new TxyRepository(TXY_METADATA);

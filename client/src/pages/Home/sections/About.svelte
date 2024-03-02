@@ -6,6 +6,7 @@
     import viewport from "@components/viewport_actions/useViewportActions";
     import { layout_images, navbar_transparent } from "@stores/layout";
     import txy_repository from "@app_modules/TxyClient/txy_repository";
+    import { get_content_entries_params } from "@stores/txy";
     import SectionHeader from "@components/UI/SectionHeader.svelte";
     import { onMount } from "svelte";
 
@@ -18,38 +19,30 @@
         /*----------  Txy  ----------*/
         
             
-
-            const content_ids = {
-                TITLE_ONE: "stehp-as-card-one-title",
-                CONTENT_ONE: "stehp-as-card-one-content",
-                TITLE_TWO: "stehp-as-card-two-title",
-                CONTENT_TWO: "stehp-as-card-two-content"
-            }
-
             /**
              * The content entry for the title of the first section in the about section
              * @type {TxyContentEntry} 
              */
-            let title_one = txy_repository.getContentEntry(content_ids.TITLE_ONE);
+            let title_one = txy_repository.getContentEntrySync(get_content_entries_params.HOME_ABOUT_HEADLINE_ONE);
 
             /**
              * The content entry for the content of the first section in the about section
              * @type {TxyContentEntry} 
              */
-            let content_one = txy_repository.getContentEntry(content_ids.CONTENT_ONE);
+            let content_one = txy_repository.getContentEntrySync(get_content_entries_params.HOME_ABOUT_CONTENT_ONE);
 
 
             /**
              * The content entry for the title of the second section in the about section
              * @type {TxyContentEntry} 
              */
-            let title_two = txy_repository.getContentEntry(content_ids.TITLE_TWO);
+            let title_two = txy_repository.getContentEntrySync(get_content_entries_params.HOME_ABOUT_HEADLINE_TWO);
 
             /**
              * The content entry for the content of the second section in the about section
              * @type {TxyContentEntry} 
              */
-            let content_two = txy_repository.getContentEntry(content_ids.CONTENT_TWO);
+            let content_two = txy_repository.getContentEntrySync(get_content_entries_params.HOME_ABOUT_CONTENT_TWO);
 
             /**
              * The preprocess rules to apply to the content
@@ -88,14 +81,10 @@
             let new_title_two = await title_two.GetFreshCopy();
             let new_content_two = await content_two.GetFreshCopy();
 
-            console.debug("Content one: ", new_content_one);
-
             title_one = new_title_one !== null ? new_title_one : title_one;
             content_one = new_content_one !== null ? new_content_one : content_one;
             title_two = new_title_two !== null ? new_title_two : title_two;
             content_two = new_content_two !== null ? new_content_two : content_two;
-
-            console.debug("Content one: ", content_one);
         }
     
     /*=====  End of Methods  ======*/

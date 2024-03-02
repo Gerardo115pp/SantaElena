@@ -1,4 +1,5 @@
 import { GetAvailableAttributesRequest, PutContentEntryRequest, GetFreshContentEntryRequest } from "../../Services/HttpRequests";
+import TXY_METADATA from "../txy_metadata";
 
 export class TxyContentEntry {
     /**
@@ -110,6 +111,8 @@ export class TxyContentEntry {
      * @returns {Promise<TxyContentEntry|null>}
      */
     GetFreshCopy = async () => {
+        if (!TXY_METADATA.enable_content_refresh) return null;
+
         const request = new GetFreshContentEntryRequest(this.entry_id, this.locale, this.content_hash);
         const response = await request.do();
 

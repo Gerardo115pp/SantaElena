@@ -5,6 +5,7 @@
     import TxyMarkup from "@app_modules/TxyClient/components/TxyMarkup.svelte";
     import { santa_elena_markup_rules } from "@themes/markup_styles/santa_elena_markup";
     import { onMount } from "svelte";
+    import { get_content_entries_params } from "@stores/txy";
 
     
     /*=============================================
@@ -12,30 +13,20 @@
     =============================================*/
     
         /** 
-         * The id of the section of the txy page where the blog header is stored
-         * @type {string}
-         */
-        const blog_header_section_id = "santa-elena-blog-header";
-
-        const blog_headline_entry_id = "sebh-headline";
-
-        const blog_subheadline_entry_id = "sebh-subheadline";
-
-
-        /** 
          * The headline content entry
          * @type {TxyContentEntry}
          */
-        let headline_entry = txy_repository.getContentEntry(blog_headline_entry_id);
+        let headline_entry = txy_repository.getContentEntrySync(get_content_entries_params.BLOG_HEADER);
 
         /** 
          * The subheadline content entry
          * @type {TxyContentEntry}
          */
-        let subheadline_entry = txy_repository.getContentEntry(blog_subheadline_entry_id);
-
-        console.debug("Blog headline entry: ", headline_entry);
-
+        let subheadline_entry = txy_repository.getContentEntrySync(get_content_entries_params.BLOG_SUBHEADER);
+        console.debug("subheadline_entry", subheadline_entry);
+        console.debug("subheadline_entry.params", get_content_entries_params.BLOG_SUBHEADER);
+        console.debug("headline_entry", headline_entry);
+        console.debug("headline_entry.params", get_content_entries_params.BLOG_HEADER);
     
     /*=====  End of Properties  ======*/
     
@@ -63,7 +54,6 @@
             if (new_subheadline_entry !== null) {
                 subheadline_entry = new_subheadline_entry;
             }
-            console.debug("Blog subheadline entry updated", subheadline_entry);
         }
     
     /*=====  End of Methods  ======*/

@@ -4,6 +4,7 @@
     import { layout_images, layout_properties, navbar_transparent } from "@stores/layout";
     import viewport from "@components/viewport_actions/useViewportActions";
     import txy_repository from "@app_modules/TxyClient/txy_repository";
+    import { get_content_entries_params, GetContentEntriesParams } from "@stores/txy";
     import TxyContentEntry from "@app_modules/TxyClient/models/content_entry";
     import { onMount } from "svelte";
 
@@ -16,16 +17,10 @@
         /*----------  Txy  ----------*/
         
             /**
-             * The content id of the hero section
-             * @type {string}
-             */
-            const content_id = "stehp-hero-section-subheadline";
-
-            /**
              * The content entry of the hero section
              * @type {TxyContentEntry}
              */
-            let content_entry = txy_repository.getContentEntry(content_id);
+            let content_entry = txy_repository.getContentEntrySync(get_content_entries_params.HOME_HERO_SUBHEADLINE);
     
     /*=====  End of Properties  ======*/
     
@@ -48,8 +43,6 @@
             if (new_content_entry !== null) {
                 content_entry = new_content_entry;
             }
-
-            console.debug("Content entry updated", content_entry);
         }
     
     /*=====  End of Methods  ======*/

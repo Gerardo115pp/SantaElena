@@ -1,11 +1,12 @@
 /**
  * @type {Object<string, TxyPage>} - map from page_id to TxyPage
  */
-const txy_fallback = TXY_FALLBACK
+const txy_fallback = TXY_FALLBACK;
 
 const TXY_METADATA = {
     default_page_id: "santa-elena-home-page",
     default_locale: "es",
+    enable_content_refresh: true,
     fallback: txy_fallback
 }
 
