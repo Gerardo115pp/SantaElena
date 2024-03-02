@@ -87,7 +87,8 @@ const meta_rules = {
 /**
  * Used to add classes, attributes, and events handlers to Nodes on the ServiceData description
  * @typedef {Object} NodesPreprocessRule
- * @property {string} tag_name
+ * @property {string} tag_name - looks for an immediate child with the tag name
+ * @property {string} selector - looks for a non-immediate child with a matching selector 
  * @property {string[]} classes
  * @property {Object.<string, string>[]} attributes
  * @property {Object.<string, Function>[]} event_handlers
@@ -97,10 +98,16 @@ export class LiberyHTMLPreprocessor {
     /**
      * @type {Object<string, HTMLPreprocessRule>}
      */
+    #rules_map;
+
+    /**
+     * @type {NodesPreprocessRule[]}
+     */
     #rules;
 
     constructor(){
-        this.#rules = {};
+        this.#rules_map = {};
+        this.#rules = [];
     }
 
     /**
@@ -111,7 +118,7 @@ export class LiberyHTMLPreprocessor {
      * @returns {void}
      */
     addEventListener = (tag_name, event_name, event_listener) => {
-        let rule = this.#rules[tag_name] ?? false;
+        let rule = this.#rules_map[tag_name] ?? false;
 
         if (!rule) return;
 
@@ -124,7 +131,7 @@ export class LiberyHTMLPreprocessor {
      * @returns {Node}
      */
     #applyExactRule = node => {
-        let rule = this.#rules[node.nodeName.toLowerCase()];
+        let rule = this.#rules_map[node.nodeName.toLowerCase()];
         let processed_node = node;
 
         if (rule !== undefined) {
@@ -135,7 +142,7 @@ export class LiberyHTMLPreprocessor {
     }
 
     /**
-     * Process an array of elements/nodes and returns the modified array
+     * Process an array of elements/nodes and returns the modified array. It's faster but DOES NOT APPLY SELECTOR BASED RULES
      * @param {Node[]} nodes
      * @returns {Node[]}
      */
@@ -153,9 +160,39 @@ export class LiberyHTMLPreprocessor {
      * @returns {Node[]}
      */
     processText = html_text => {
-        let collection = parseHtmlText(html_text);
-        let nodes = Array.from(collection);
-        return this.processNodes(nodes);
+        let parser = new DOMParser();
+        let fake_dom = null;
+
+        try {
+            fake_dom = parser.parseFromString(html_text, 'text/html');
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+
+        for(let rule of this.#rules) {
+            let selector = rule.selector;
+            if (selector == null) {
+                continue;
+            }
+
+            let html_rule = this.#rules_map[selector];
+
+            if (html_rule === undefined) {
+                continue;
+            }
+
+            let elements = fake_dom.querySelectorAll(selector);
+
+            elements.forEach(element => {
+                let processed_element = html_rule.ProcessNode(element);
+                element.replaceWith(processed_element);
+            });
+        }
+
+        const content_nodes = Array.from(fake_dom.body.children);
+
+        return this.processNodes(content_nodes);
     }
 
 
@@ -165,8 +202,8 @@ export class LiberyHTMLPreprocessor {
      * @returns {Node}
      */
     #processHeadlines = node => {
-        let headline_rule = this.#rules[meta_rules.HEADLINE];
-        let special_headline_rule = this.#rules[node.nodeName.toLowerCase()];
+        let headline_rule = this.#rules_map[meta_rules.HEADLINE];
+        let special_headline_rule = this.#rules_map[node.nodeName.toLowerCase()];
 
         if (headline_rule !== undefined) {
             node = headline_rule.ProcessNode(node);
@@ -205,7 +242,7 @@ export class LiberyHTMLPreprocessor {
      * @returns {void}
      */
     setRules = rules => {
-        this.#rules = {};
+        this.#rules_map = {};
 
         rules.forEach(rule => {
             let rule_listeners = [];
@@ -216,11 +253,13 @@ export class LiberyHTMLPreprocessor {
             rule_classes = rule.classes !== undefined ? rule.classes : rule_classes;
             rule_listeners = rule.event_handlers !== undefined ? rule.event_handlers : rule_listeners;
 
-            this.#rules[rule.tag_name] = new HTMLPreprocessRule({
+            this.#rules_map[rule.tag_name ?? rule.selector] = new HTMLPreprocessRule({
                 attributes: rule_attributes,
                 class_names: rule_classes,
                 listeners: rule_listeners
             });
         });
+
+        this.#rules = rules;
     }
 }

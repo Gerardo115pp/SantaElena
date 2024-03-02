@@ -151,13 +151,18 @@
 
     :global(strong) {
         font-weight: 500;
-        color: var(--shade-light-8);
+        color: var(--color-5);
     }
 
     :global(ul, ol) {
         list-style: none;
         padding: 0;
         margin: 0;
+    }
+
+    :global(a) {
+        text-decoration: none;
+        color: var(--color-7);
     }
 
 

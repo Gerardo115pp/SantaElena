@@ -17,19 +17,17 @@
     
 </script>
 
-<a href="{the_post.Link}">
-    <article class="santa-elena-post-entry">
-        <h2>{the_post.Title}</h2>
-        <div class="excerpt-wrapper">
-            {@html the_post.Excerpt}
-        </div>
-        <p class="post-date">
-            <small>
-                {the_post.Date}
-            </small>
-        </p>
-    </article>
-</a>
+<article class="santa-elena-post-entry">
+    <h2>{the_post.Title}</h2>
+    <div class="excerpt-wrapper">
+        {@html the_post.Excerpt}
+    </div>
+    <p class="post-date">
+        <small>
+            {the_post.Date}
+        </small>
+    </p>
+</article>
 
 <style>
     .santa-elena-post-entry {

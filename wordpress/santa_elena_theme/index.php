@@ -1,9 +1,3 @@
-<?php
-    if ($_SERVER['REQUEST_URI'] !== "/") {
-        header("Location: /");
-        exit;
-    }
-?>
 <?php get_header(); ?>
 
 <root id="app-root">

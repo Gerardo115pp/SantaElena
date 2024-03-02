@@ -1,7 +1,7 @@
 <script>
     import { WordpressPost } from "@models/Wordpress/posts";
     import { getAllPosts } from "@models/Wordpress/posts";
-    import { onMount } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     import PostEntry from "../sub-components/PostEntry.svelte";
 
     
@@ -15,18 +15,41 @@
          * @type {WordpressPost[]}
          */
         let posts = [];
+
+        const dispatch = createEventDispatcher();
     
     /*=====  End of Properties  ======*/
 
     onMount(async () => {
         posts = await getAllPosts();
+        // handlePostSelection(posts[0]); // STYLING: Use this to style the post component
     });
+
     
+    /*=============================================
+    =            Methods            =
+    =============================================*/
+    
+        /** 
+         * Handles the post selection
+         * @param {WordpressPost} post - The selected post
+         */
+        const handlePostSelection = post => {
+            dispatch("post-selected", { post });
+        }
+            
+    
+    /*=====  End of Methods  ======*/
+    
+    
+
 </script>
 
 <section id="posts-archive">
     {#each posts as post}
-        <PostEntry the_post={post}/>
+        <a href="{post.Link}" on:click|preventDefault={() => handlePostSelection(post)}>
+            <PostEntry the_post={post}/>
+        </a>
     {/each}
 </section>
 
