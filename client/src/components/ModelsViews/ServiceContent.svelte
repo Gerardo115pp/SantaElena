@@ -3,8 +3,10 @@
     import ImageMultiStage from "@components/Images/ImageMultiStage.svelte";
     import { ServiceData } from "@models/Services";
     import { layout_images } from "@stores/layout";
-    import { createEventDispatcher, onMount } from "svelte";
-    import { LiberyHTMLPreprocessor, NodesPreprocessRule } from "@app_modules/LiberyHTMLpreprocessor/html_preprocessor";
+    import { createEventDispatcher } from "svelte";
+    import { NodesPreprocessRule } from "@app_modules/LiberyHTMLpreprocessor/html_preprocessor";
+    import HtmlRenderer from "@app_modules/LiberyHTMLpreprocessor/components/HtmlRenderer.svelte";
+    import { wordpress_posts_rules } from "@themes/markup_styles/wordpress_posts";
     import { link } from "svelte-spa-router";
 
     
@@ -28,50 +30,22 @@
         });
 
         /**
-         * The description mount element
-         * @type {HTMLDivElement}
-         */
-        let description_mount;
-
-        /**
          * The rules for the preprocessor of the services content that's fetched from the wordpress API
          * @type {NodesPreprocessRule[]}
          */
-        const service_content_preprocessor_rules = [
-            {
-                tag_name: "headline",
-                classes: ["headline-2"],
-                attributes: [],
-                event_handlers: []
-            },
-            {
+        const wordpress_posts_rules_extended = [...wordpress_posts_rules, {
                 tag_name: "p",
                 classes: ["service-description-paragraph"],
                 attributes: [],
                 event_handlers: []
-            },
-            {
-                tag_name: "ul",
-                classes: ["decorated-list-item"],
             }
         ]
-
-        /**
-         * The preprocessor for the service content
-         * @type {LiberyHTMLPreprocessor}
-         */
-        const service_content_preprocessor = new LiberyHTMLPreprocessor();
 
         const dispatcher = createEventDispatcher();
     
     /*=====  End of Properties  ======*/
 
-    onMount(() => {
-        updateServiceContentPreprocessorRules(service_content_preprocessor_rules);
-
-        renderServiceDescription(service_data);
-    });
-    
+   
     /*=============================================
     =            Methods            =
     =============================================*/
@@ -83,32 +57,6 @@
             dispatcher("service-unselected");
         }
 
-        /**
-         * Renders the service description
-         * @param {ServiceData} service_data 
-         */
-        const renderServiceDescription = (service_data) => {
-            if (description_mount === undefined) return;
-
-            /**
-             * @type {HTMLCollection}
-             */
-            const service_description = service_data.Description;
-
-            const nodes = Array.from(service_description);
-            const processed_nodes = service_content_preprocessor.processNodes(nodes);
-
-            description_mount.replaceChildren(...processed_nodes);
-        }
-
-        /**
-         * Updates the rules of the service content preprocessor
-         * @param {NodesPreprocessRule[]} rules
-         */
-        const updateServiceContentPreprocessorRules = (rules) => {
-            service_content_preprocessor.setRules(rules);
-        }
-
     /*=====  End of Methods  ======*/
     
     
@@ -117,7 +65,9 @@
 <article class="service-content-display">
     <TwoColumnImageText
     >
-        <div bind:this={description_mount} class="service-description-wrapper scd-content-column libery-scroll" slot="text_content"></div>
+        <div class="service-description-wrapper scd-content-column libery-scroll" slot="text_content">
+            <HtmlRenderer the_rules={wordpress_posts_rules_extended} the_content={service_data.DescriptionText} wrapper_class="service-description"/>
+        </div>
         <aside class="article-details scd-content-column" slot="image_resource">
             <div class="scd-image-wrapper">
                 {#if service_data.hasImage()}
@@ -163,14 +113,14 @@
     =            Service description            =
     =============================================*/
 
-        .service-description-wrapper {
+        :global(.service-description-wrapper .service-description) {
             overflow: auto;
             display: flex;
             flex-direction: column;
             row-gap: var(--spacing-2);
         }
 
-        :global(.service-content-display .service-description-wrapper > p) {
+        :global(.service-content-display .service-description-wrapper .service-description p) {
             font-size: var(--font-size-p);
             font-weight: lighter;
         }

@@ -86,4 +86,18 @@
     /*=====  End of Nested Spacing  ======*/
     
     
+    /*=============================================
+    =            Screen breakpoints            =
+    =============================================*/
+    
+        @container (width <= 1241px) {
+            .sep-the-content {
+                width: 90cqw;
+            }
+        }
+    
+    /*=====  End of Screen breakpoints  ======*/
+    
+    
+    
 </style>

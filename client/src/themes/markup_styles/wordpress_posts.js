@@ -42,19 +42,53 @@ export const wordpress_posts_rules =  [
         classes: ["bg-dark-6", "text-shade-light-2"]
     },
     {
-        selector: ".wp-block-group.is-layout-flex",
-        classes: ["flex", "flex-row", "gap-4", "md:gap-8", "w-full", "min-w-1/2"]
+        selector: ".wp-block-group.is-layout-flex:not(.is-vertical)",
+        classes: [
+            "flex",
+            "cnt-inline",
+            "xl:flex-row",
+            "gap-4",
+            "flex-col",
+            "md:gap-8",
+            "w-full",
+            "min-w-1/2"
+        ]
     },
     {
         selector: ".wp-block-group.is-layout-flex.is-vertical",
-        classes: ["flex-col"]
+        classes: [
+            "flex",
+            "flex-col",
+            "gap-4",
+        ]
     },
     {
         selector: ".wp-block-group.is-layout-flex > figure",
-        classes: ["w-max", "min-w-max"]
+        classes: [
+            "w-full", 
+            "max-w-full",
+            "md:max-w-1/2",
+            "md:w-cq-1/2",
+            "container"
+        ]
     },
     {
         selector: "figure.wp-block-image > img",
-        classes: ["min-w-full"]
+        classes: [
+            "min-w-cq-1/2",
+            "w-cq-1/2"
+        ],
+        attributes: [
+            {
+                name: "style",
+                value: "width: 50cqw"
+            },
+            {
+                name: "!width",
+            },
+            {
+                name: "!height"
+            }
+        ]
     }
 ]

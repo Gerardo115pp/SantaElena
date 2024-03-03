@@ -67,6 +67,14 @@ class HTMLPreprocessRule {
         if(!(tag instanceof Element)) return tag;
 
         this.#attributes.forEach(attribute => {
+            let is_remove = attribute.name.startsWith('!');
+            
+            if (is_remove) {
+                attribute.name = attribute.name.substring(1);
+                tag.removeAttribute(attribute.name);
+                return;
+            } 
+
             tag.setAttribute(attribute.name, attribute.value);
         });
 
@@ -90,7 +98,7 @@ const meta_rules = {
  * @property {string} tag_name - looks for an immediate child with the tag name
  * @property {string} selector - looks for a non-immediate child with a matching selector 
  * @property {string[]} classes
- * @property {Object.<string, string>[]} attributes
+ * @property {Object.<string, string>[]} attributes - If the key starts with '!', it will remove the attribute
  * @property {Object.<string, Function>[]} event_handlers
  */ 
 

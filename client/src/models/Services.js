@@ -92,12 +92,30 @@ export class ServiceData {
     }
 
     /**
+     * Returns the html content of the Service description as text
+     * @returns {string}
+     * @readonly
+     */
+    get DescriptionText() {
+        return this.#description;
+    }
+
+    /**
      * The Html content of the Service next steps instructions
      * @returns {HTMLCollection}
      * @readonly
      */
     get NextSteps() {
         return parseHtmlText(this.#next_steps);
+    }
+
+    /**
+     * Returns the html content of the Service next steps instructions as text
+     * @returns {string}
+     * @readonly
+     */
+    get NextStepsText() {
+        return this.#next_steps;
     }
 
     /**

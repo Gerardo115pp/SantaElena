@@ -1,6 +1,8 @@
 <script>
     import { LiberyHTMLPreprocessor } from "@app_modules/LiberyHTMLpreprocessor/html_preprocessor";
     import { createCheckoutSession } from "@app_modules/LiberyPayments/models/payments";
+    import HtmlRenderer from "@app_modules/LiberyHTMLpreprocessor/components/HtmlRenderer.svelte";
+    import { wordpress_posts_rules } from "@themes/markup_styles/wordpress_posts";
     import { services_fallbacks } from "@databases/prefetch_services";
     import { user_agent_price_formatter } from "@stores/services";
     import { getSantaElenaServices } from "@models/Services";
@@ -109,8 +111,6 @@
 
         if ($selected_service == null) {
             getServiceData();
-        } else {
-            renderServiceData(service_data);
         }
     });
     
@@ -128,8 +128,6 @@
 
             service_data = all_services.find(service => service.Id === service_id);
             console.debug(`Service data: ${service_data} for service id ${service_id}`)
-
-            renderServiceData(service_data);
         }
 
         const handleBack = () => {
@@ -148,54 +146,6 @@
             const session = await createCheckoutSession(tracking_id, service_data.Id, customer_name, customer_email, success_url, cancel_url);
 
             session.redirect();
-        }
-
-        /**
-         * Renders all the data needed out of the service data
-         * @param {ServiceData} service_data
-         * @returns {void}
-         */
-        const renderServiceData = service_data => {
-            renderServiceDescription(service_data);
-            renderNextSteps(service_data);
-        }
-
-        /**
-         * Renders the service description
-         * @param {ServiceData} service_data
-         */
-        const renderServiceDescription = service_data => {
-            if (service_data == null) return;
-
-            const description_article = document.getElementById(description_article_id);
-
-            if (description_article == null) return;
-
-            const service_description = service_data.Description;
-
-            const nodes = Array.from(service_description);
-            const preprocessed_nodes = service_checkout_preprocessor.processNodes(nodes, service_checkout_preprocessor_rules);
-
-            description_article.replaceChildren(...preprocessed_nodes);
-        }
-
-        /**
-         * Renders the next steps
-         * @param {ServiceData} service_data
-         */
-        const renderNextSteps = service_data => {
-            if (service_data == null) return;
-
-            const next_steps_article = document.getElementById(next_steps_article_id);
-
-            if (next_steps_article == null) return;
-
-            const next_steps = service_data.NextSteps;
-
-            const nodes = Array.from(next_steps);
-            const preprocessed_nodes = service_checkout_preprocessor.processNodes(nodes, service_checkout_preprocessor_rules);
-
-            next_steps_article.replaceChildren(...preprocessed_nodes);
         }
 
         const updateServicesCheckoutPreprocessorRules = rules => {
@@ -221,7 +171,12 @@
                     {service_data.brief_description}
                 </p>
             </header>
-            <article id="{description_article_id}" class="checkout-box">
+            <article class="checkout-box">
+                <HtmlRenderer 
+                    the_rules={wordpress_posts_rules}
+                    the_content={service_data.DescriptionText}
+                    wrapper_class="service-description"
+                />
             </article>
         </section>
         <aside id="service-purchase-panel">
@@ -229,7 +184,12 @@
                 <h2 class="headline-2">
                     Siguientes pasos
                 </h2>
-                <article id="{next_steps_article_id}" class="checkout-box"></article>
+                <article class="checkout-box">
+                    <HtmlRenderer 
+                        the_rules={service_checkout_preprocessor_rules}
+                        the_content={service_data.NextStepsText}
+                    />
+                </article>
             </div>
             <div id="spp-spanel-purchase-checkout">
                 <div id="spp-spanel-pc-customer-information" role="group">
@@ -317,10 +277,15 @@
             line-height: 1;
         }
 
-        header#spp-header + article {
+        :global(header#spp-header + article .service-description) {
             display: flex;
             flex-direction: column;
             row-gap: var(--spacing-3);
+        }
+
+        :global(header#spp-header + article .service-description p) {
+            font-size: var(--font-size-p);
+            font-weight: lighter;
         }
     
     /*=====  End of Header  ======*/

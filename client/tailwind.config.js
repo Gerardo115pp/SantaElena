@@ -129,6 +129,25 @@ export default {
                     '9': 'var(--danger-9)',
                 },
             },
+            maxWidth: {
+                '1/4': '25%',
+                '1/2': '50%',
+                '3/4': '75%',
+            },
+            width: {
+                'cq-1/4': '25cqw',
+                'cq-1/3': '33.33cqw',
+                'cq-1/2': '50cqw',
+                'cq-3/4': '75cqw',
+                'cq-full': '100cqw',
+            },
+            minWidth: {
+                'cq-1/4': '25cqw',
+                'cq-1/3': '33.33cqw',
+                'cq-1/2': '50cqw',
+                'cq-3/4': '75cqw',
+                'cq-full': '100cqw',
+            }
         },
 	},
 	plugins: [
