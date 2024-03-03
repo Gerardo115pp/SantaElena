@@ -42,13 +42,13 @@
             <h2 class="fpp-privacy-page">
                 <!-- svelte-ignore a11y-invalid-attribute -->
                 <a href="#">
-                    {$layout_properties.VIEWPORT_WIDTH > 450 ? "Términos y condiciones" : "Términos&Condiciones" }
+                    {$layout_properties.VIEWPORT_WIDTH >= 1116 ? "Términos y condiciones" : "Términos&Condiciones" }
                 </a>
             </h2>
             <h2 class="fpp-privacy-page">
                 <!-- svelte-ignore a11y-invalid-attribute -->
                 <a href="#">
-                    {$layout_properties.VIEWPORT_WIDTH > 450 ? "Aviso de privacidad" : "Privacidad" }
+                    {$layout_properties.VIEWPORT_WIDTH >= 1116 ? "Aviso de privacidad" : "Privacidad" }
                 </a>
             </h2>
         </div>
@@ -59,6 +59,7 @@
     #santa-elena-footer-juvenil {
         width: 100%;
         display: grid;
+        container-type: inline-size;
         grid-template-columns: repeat(2, 1fr);
         background: var(--dark-8);
         color: var(--color-light-2);
@@ -83,7 +84,9 @@
 
     #footer-juvenil-left #footer-logo-wrapper {
         height: 80%;
-        width: max-content;
+        width: 30cqw;
+        max-width: 700px;
+        min-width: 200px;
     }
 
     #footer-juvenil-left ul#footer-socials {
@@ -151,7 +154,29 @@
         text-decoration: none;
     }
 
-    @media only screen and (max-width: 768px) {
+    @container (width < 1262px) {
+        #footer-juvenil-right #footer-main-pages {
+            column-gap: var(--spacing-3);
+        }
+    }
+
+    @container (width < 1146px) and (width > 768px) {
+        #footer-juvenil-right {
+            align-items: flex-start;
+        }
+
+        #footer-juvenil-right #footer-main-pages {
+            flex-direction: column;
+            row-gap: var(--spacing-3);
+        }
+
+        #footer-juvenil-right #footer-privacy-pages {
+            flex-direction: column;
+            row-gap: var(--spacing-3);
+        }
+    }
+
+    @media only screen and (max-width: 914px) {
         #santa-elena-footer-juvenil {
             grid-template-columns: 1fr;
             grid-auto-rows: max-content;
