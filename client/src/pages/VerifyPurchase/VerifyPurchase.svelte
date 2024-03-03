@@ -2,6 +2,7 @@
     import CTloader from "@app_modules/components/Loaders/CTloader.svelte";
     import { OrphanOrderVerification, verifyOrder } from "@app_modules/LiberyPayments/models/payments"
     import { navbar_solid } from "@stores/layout";
+    import { defineNavbarDarkColorSchema } from "@themes/component_themes";
     import Footer from "@components/Footer/Footer.svelte";
     import { onMount } from "svelte";
     import MainLogo from "@components/UI/MainLogo.svelte";
@@ -39,6 +40,8 @@
     /*=====  End of Properties  ======*/
 
     onMount(async () => {
+        defineNavbarDarkColorSchema();
+
         await updateOrderVerification();
     });
 

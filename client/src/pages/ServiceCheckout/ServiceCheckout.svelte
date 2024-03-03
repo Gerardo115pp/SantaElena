@@ -8,6 +8,7 @@
     import { getSantaElenaServices } from "@models/Services";
     import { selected_service } from "@stores/services";
     import { isValidEmail } from "@app_modules/utils";
+    import { defineNavbarDarkColorSchema } from "@themes/component_themes";
     import { ServiceData } from "@models/Services";
     import { navbar_solid } from "@stores/layout";
     import { pop } from "svelte-spa-router";
@@ -102,13 +103,11 @@
              */
             let is_customer_data_valid = false;
 
-        const description_article_id = "service-description";
-        
-        const next_steps_article_id = "next-steps";
-    
     /*=====  End of Properties  ======*/
     
     onMount(() => {
+        defineNavbarDarkColorSchema();
+
         updateServicesCheckoutPreprocessorRules(service_checkout_preprocessor_rules);
 
         if ($selected_service == null) {

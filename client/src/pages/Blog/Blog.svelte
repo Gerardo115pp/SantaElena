@@ -3,8 +3,9 @@
     import BlogHeader from "./sections/BlogHeader.svelte";
     import BlogArchive from "./sections/BlogArchive.svelte";
 	import BlogPost from "./sections/BlogPost.svelte";
-    import { navbar_solid } from "@stores/layout";
+	import { defineNavbarDarkColorSchema } from "@themes/component_themes";
     import Footer from "@components/Footer/Footer.svelte";
+    import { onMount } from "svelte";
 
 
     
@@ -13,9 +14,7 @@
     =            Setup            =
     =============================================*/
     
-        navbar_solid.set(true);
-
-        
+        window.scrollTo(0, 0);
     
     /*=====  End of Setup  ======*/
 
@@ -32,7 +31,9 @@
 	
 	/*=====  End of Properties  ======*/
 	
-	
+	onMount(() => {
+		defineNavbarDarkColorSchema();
+	})
 	
 	/*=============================================
 	=            Methods            =

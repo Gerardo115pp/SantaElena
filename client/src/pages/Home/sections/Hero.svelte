@@ -73,9 +73,11 @@
                 </p>
             </div>
             <div id="lse-hp-hs-cc-hero-cta-controls">
-                <button class="button-1" on:viewportEnter={handleViewportEnter} use:viewport>
-                    Contactanos
-                </button>
+                <a href="https://wa.me/5213313045999" target="_blank" rel="noopener noreferrer">
+                    <button class="button-1" on:viewportEnter={handleViewportEnter} use:viewport>
+                        Contactanos
+                    </button>
+                </a>
             </div>
         </div>
     </div>

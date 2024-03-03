@@ -1,14 +1,27 @@
 <script>
     import BurgerBtn from "@components/UI/BurgerBTN.svelte";
     import { getSVGResource } from "@libs/Services/media_loaders";
-    import { navbar_transparent, layout_properties, navbar_solid } from "@stores/layout";
+    import { layout_properties } from "@stores/layout";
     import { onMount } from "svelte";
     import { Writable, writable } from "svelte/store";
     import DropMenu from "./sub-components/DropMenu.svelte";
     import { link } from "svelte-spa-router";
     import txy_repository from "@app_modules/TxyClient/txy_repository";
+    import { registerSupportedComponent, supported_components } from "@libs/ColorSchema";
     import TxyContentEntry from "@app_modules/TxyClient/models/content_entry";
 
+    
+    /*=============================================
+    =            Setup            =
+    =============================================*/
+    
+        let navbar_id = "santa-elena-navbar";
+
+        registerSupportedComponent("NAVBAR", `#${navbar_id}`);
+    
+    /*=====  End of Setup  ======*/
+    
+    
     
     /*=============================================
     =            Properties            =
@@ -139,7 +152,7 @@
     
 </script>
 
-<nav id="santa-elena-navbar" class:glass-navbar={!$navbar_transparent && !$is_mobile_menu_opened && !$navbar_solid} class:solid-navbar={$is_mobile_menu_opened || $navbar_solid }>
+<nav id="{navbar_id}" data-schema-theme="default">
     <div id="sen-left-content">
         {#if !$layout_properties.IS_MOBILE}
             <a href="/" id="sen-santa-elena-logo" class="sen-icon-wrapper" use:link>
@@ -165,9 +178,11 @@
                 {/each}
             </menu>
             <div id="sen-nav-controls">
-                <button class="button-thin" class:button-1={!$navbar_transparent && !$navbar_solid} class:button-2={$navbar_transparent} class:button-3={$navbar_solid}>
-                    Atencion inmediata
-                </button>
+                <a href="https://wa.me/5213313045999" target="_blank" rel="noopener noreferrer">
+                    <button class="button-thin">
+                        Atencion inmediata
+                    </button>
+                </a>
             </div>
         {/if}
     </div>
@@ -178,15 +193,14 @@
 
 <style>
     #santa-elena-navbar {
-        --on-color: var(--shade-9);
+        --on-color: var(--color-schema-primary);
         --on-color-active: var(--color-light-4);
+        --navbar-surface: var(--color-schema-surface);
 
         position: fixed;
         display: flex;
         width: 100dvw;
         height: var(--navbar-height);
-        background: transparent;
-        backdrop-filter: none;
         container-type: inline-size;
         top: 0;
         left: 0;
@@ -196,25 +210,11 @@
         z-index: var(--z-index-t-5);
         transition: all 0.3s ease-in-out;
     }
-    
-    #santa-elena-navbar.glass-navbar {
-        background: var(--glass-gradient);
-        backdrop-filter: blur(10px);
-        /* animation-duration: 0.3s;
-        animation-fill-mode: forwards;
-        animation-iteration-count: 1;
-        animation-name: glassify; */
-        border-bottom: 1px solid var(--color-1);
-    }
 
-    /* Targets: .solid-navbar */
-    #santa-elena-navbar.glass-navbar.solid-navbar, #santa-elena-navbar.solid-navbar {
-        --on-color: var(--color-light-3);
-        --on-color-active: var(--color-light-5);
-
-        background: var(--dark-7);
-        backdrop-filter: none;
-        border-bottom: 3px solid var(--color-light-3);
+    @supports (color: rgb(from white r g b)) {
+        #santa-elena-navbar {
+            --on-color-active: hsl(from var(--on-color) h 100% l / 1);
+        }
     }
 
     #sen-left-content {
@@ -234,10 +234,6 @@
 
     :global(#sen-santa-elena-logo svg) {
         fill: var(--color-light-3);
-    }
-
-    :global(#santa-elena-navbar.glass-navbar #sen-icon-wrapper svg) {
-        fill: var(--color-light-7);
     }
 
     #sen-right-content {
@@ -271,4 +267,63 @@
     #sen-nav-option .sen-nav-option a:hover {
         color: var(--shade-2);
     }
+
+    #sen-nav-controls button {
+        background: var(--color-4);
+        color: var(--dark-7);
+    }
+
+    
+    /*=============================================
+    =            Themes            =
+    =============================================*/
+
+        
+        /*----------  Default  ----------*/
+        
+            #santa-elena-navbar[data-schema-theme="default"] {
+                background: transparent;
+                backdrop-filter: none;
+                border-bottom: none;
+            }
+
+        
+        /*----------  glass-navbar  ----------*/
+        
+            :global(#santa-elena-navbar[data-schema-theme="glass-navbar"]) {
+                background: hsl(from var(--clear-1) h s l / 0.3);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid var(--color-1);
+            }        
+
+            :global(#santa-elena-navbar[data-schema-theme="glass-navbar"] #sen-santa-elena-logo svg) {
+                fill: var(--color-light-7);
+            }
+
+            #santa-elena-navbar[data-schema-theme="glass-navbar"] #sen-nav-options .sen-nav-option a {
+                color: var(--color-light-7);
+            }
+
+            #santa-elena-navbar[data-schema-theme="glass-navbar"] #sen-nav-controls button {
+                background: var(--color-light-5);
+                color: var(--clear-1);
+            }
+
+    
+        
+        /*----------  solid-dark  ----------*/
+        
+            :global(#santa-elena-navbar[data-schema-theme="solid-dark"]){
+                --on-color: var(--color-light-3);
+                --on-color-active: var(--color-light-5);
+
+                background: var(--dark-7);
+                backdrop-filter: none;
+                border-bottom: 3px solid var(--color-light-3);
+            }
+    
+    /*=====  End of Themes  ======*/
+    
+    
+
 </style>
