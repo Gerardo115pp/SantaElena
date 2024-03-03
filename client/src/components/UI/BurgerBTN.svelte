@@ -24,21 +24,6 @@
 </svg>
 
 <style>
-    @keyframes IntoOblivion {
-        0% {
-            stroke: var(--on-color);
-            opacity: 1;
-        }
-        70% {
-            stroke: var(--on-color-active);
-            opacity: 0.7;
-        }
-        100% {
-            stroke: var(--on-color-active);
-            opacity: 0.4;
-        }
-    }
-
     .libery-burger-btn {
         width: 100%;
         outline: none !important;
@@ -50,7 +35,7 @@
 
         stroke: var(--on-color);
         stroke-width: 2;
-        stroke-linecap: butt;
+        stroke-linecap: round;
         transition: all .2s ease-in-out;
         transform-box: fill-box;
         transform-origin: left top;
@@ -61,11 +46,7 @@
     }
     
     .libery-burger-btn .into-oblivion {
-        transform-origin: center;
-        animation-name: IntoOblivion;
-        animation-duration: .2s;
-        animation-fill-mode: forwards;
-        transition: none;
+        transition: all .2s ease-in;
     }
 
     .libery-burger-btn .x-diagonal {

@@ -23,11 +23,7 @@
      * @param {MouseEvent} e
     */
     const clickAnchorHandler = e => {
-        e.preventDefault();
-
         visible.set(false);
-
-        // scrollToSection(e.currentTarget.getAttribute("href"));
     }
 </script>
 
@@ -92,11 +88,12 @@
     }
 
     .submenu-item a {
-        font-family: var(--font-read);
+        font-family: var(--font-titles);
         cursor: pointer;
         text-decoration: none;
         color: var(--color-light-3);
-        font-size: calc(var(--font-size-h1) * .75);
+        font-weight: lighter;
+        font-size: calc(var(--font-size-h1) * 1.25);
         line-height: 1;
         transition: all .3s ease-in-out;
     }

@@ -178,8 +178,8 @@
 
 <style>
     #santa-elena-navbar {
-        --on-color: var(--color-light-3);
-        --on-color-active: var(--color-light-2);
+        --on-color: var(--shade-9);
+        --on-color-active: var(--color-light-4);
 
         position: fixed;
         display: flex;
@@ -196,40 +196,22 @@
         z-index: var(--z-index-t-5);
         transition: all 0.3s ease-in-out;
     }
-
-    @keyframes glassify {
-        0% {
-            background: hsl(from var(--shade-light-1) h s l / 0.1);
-        }
-        30% {
-            background: hsl(from var(--shade-light-1) h s l / 0.3);
-            backdrop-filter: blur(1px);
-        }
-        50% {
-            background: hsl(from var(--shade-light-1) h s l / 0.5);
-            backdrop-filter: blur(3px);
-        }
-        70% {
-            background: var(--glass-gradient);
-            backdrop-filter: blur(5px);
-        }
-        100% {
-            background: var(--glass-gradient);
-            backdrop-filter: blur(10px);
-        }
-    }
     
     #santa-elena-navbar.glass-navbar {
-        /* background: var(--glass-gradient);
-        backdrop-filter: blur(10px); */
-        animation-duration: 0.3s;
+        background: var(--glass-gradient);
+        backdrop-filter: blur(10px);
+        /* animation-duration: 0.3s;
         animation-fill-mode: forwards;
         animation-iteration-count: 1;
-        animation-name: glassify;
+        animation-name: glassify; */
         border-bottom: 1px solid var(--color-1);
     }
 
+    /* Targets: .solid-navbar */
     #santa-elena-navbar.glass-navbar.solid-navbar, #santa-elena-navbar.solid-navbar {
+        --on-color: var(--color-light-3);
+        --on-color-active: var(--color-light-5);
+
         background: var(--dark-7);
         backdrop-filter: none;
         border-bottom: 3px solid var(--color-light-3);
