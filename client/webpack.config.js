@@ -2,6 +2,7 @@ const path = require('path');
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const webpack  = require('webpack');
 const fs = require('fs');
+const { exit } = require('process');
 
 const APP_NAME = "Santa Elena";
 
@@ -128,6 +129,7 @@ const config = {
 }
 
 const requestTxyFallback = async () => {
+	console.log("Requesting TXY fallbacks");
 	if (process.env.TXY_API === undefined) {
 		throw new Error("TXY_API is not defined");
 	}
@@ -142,6 +144,7 @@ const requestTxyFallback = async () => {
 }
 
 const requestWordpressServices = async () => {
+	console.log("Requesting wordpress services");
 	if (process.env.WP_API === undefined) {
 		throw new Error("WP_API is not defined");
 	}
@@ -151,8 +154,9 @@ const requestWordpressServices = async () => {
 	if (!(response.status >= 200 && response.status < 300)) {
 		throw new Error(`WP_API responded with status ${response.status}`);
 	}
-
-	return await response.json();
+	let json_data = await response.json();
+	
+	return json_data;
 }
 
 module.exports = async (env, argv) => {

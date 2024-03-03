@@ -30,6 +30,10 @@ export const wordpress_posts_rules =  [
         classes: ["font-semibold"]
     },
     {
+        selector: "img",
+        classes: ["santa-elena-image"]
+    },
+    {
         selector: "p.has-background strong",
         classes: ["text-theme-color-light-4"]
     },
@@ -52,9 +56,5 @@ export const wordpress_posts_rules =  [
     {
         selector: "figure.wp-block-image > img",
         classes: ["min-w-full"]
-    },
-    {
-        selector: "p.wp-container-content-1",
-        classes: ["max-w-md", "mx-auto"]
     }
 ]

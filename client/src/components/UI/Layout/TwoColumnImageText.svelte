@@ -107,23 +107,23 @@
 </div>
 
 <style>
-  .two-column-image-text-wrapper {
-    width: 100%;
-    display: grid;
-    container-type: inline-size;
-    container-name: tcitw-container;
-    place-items: center;
-    padding: var(--padding-top) var(--padding-right) var(--padding-bottom) var(--padding-left);
-  }  
+    .two-column-image-text-wrapper {
+        width: 100%;
+        display: grid;
+        container-type: inline-size;
+        container-name: tcitw-container;
+        place-items: center;
+        padding: var(--padding-top) var(--padding-right) var(--padding-bottom) var(--padding-left);
+    }  
 
-  .tcit-columns-wrapper {
-    width: min(100%, 1664px);
-    display: flex;
-    height: 40cqw;
-    container-type: size;
-    justify-content: space-between;
-    align-items: center;
-  }
+    .tcit-columns-wrapper {
+        width: min(100%, 1664px);
+        display: flex;
+        height: 40cqw;
+        container-type: size;
+        justify-content: space-between;
+        align-items: center;
+    }
 
     .tcit-image-wrapper {
         width: 40%;
@@ -145,7 +145,12 @@
         place-items: center;
     }
 
-
+    @container tcitw-container (width <= 1200px) {
+        .tcit-columns-wrapper {
+            height: max-content;
+            container-type: inline-size;
+        }
+    }
 
     @container tcitw-container (max-width: 768px) {
         .two-column-image-text-wrapper .tcit-columns-wrapper {
