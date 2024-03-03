@@ -178,6 +178,9 @@
 
 <style>
     #santa-elena-navbar {
+        --on-color: var(--color-light-3);
+        --on-color-active: var(--color-light-2);
+
         position: fixed;
         display: flex;
         width: 100dvw;
@@ -243,7 +246,8 @@
     }
 
     #sen-burger-menu-btn {
-        width: 16cqw;
+        width: 10cqw;
+        max-width: 45px;
     }
 
     :global(#sen-santa-elena-logo svg) {
