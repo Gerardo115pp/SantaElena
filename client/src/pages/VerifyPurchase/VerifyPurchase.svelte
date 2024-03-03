@@ -2,6 +2,7 @@
     import CTloader from "@app_modules/components/Loaders/CTloader.svelte";
     import { OrphanOrderVerification, verifyOrder } from "@app_modules/LiberyPayments/models/payments"
     import { navbar_solid } from "@stores/layout";
+    import Footer from "@components/Footer/Footer.svelte";
     import { onMount } from "svelte";
     import MainLogo from "@components/UI/MainLogo.svelte";
 
@@ -10,6 +11,8 @@
     =            Setup            =
     =============================================*/
     
+        window.scrollTo(0, 0);
+
         navbar_solid.set(true);
     
     /*=====  End of Setup  ======*/
@@ -120,12 +123,14 @@
         {/if}
     </div>
 </main>
+<Footer />
 
 <style>
     #purchase-verification-page {
         display: grid;
         padding: var(--navbar-height) 0 0 0; 
-        min-height: calc(100vh - var(--navbar-height));
+        container: purchase-verification-page / inline-size;
+        min-height: 100vh;
         width: 100%;
         place-items: center;
     }
@@ -176,4 +181,36 @@
         background: var(--button-color) !important;
         color: var(--clear-1) !important;
     }
+
+    
+    /*=============================================
+    =            Screen breakpoints            =
+    =============================================*/
+    
+        @container purchase-verification-page (width < 1268px) {
+            #page-center-content {
+                padding: var(--spacing-3) 0;
+                width: 80%;
+            }
+
+            .order-details-wrapper figure {
+                width: 40cqw;
+            }
+        }
+
+        @container purchase-verification-page (width < 768px) {
+            .order-details-wrapper figure {
+                width: 60cqw;
+            }
+        }
+
+        @container purchase-verification-page (width <= 350px) {
+            .order-details-wrapper figure {
+                width: 100cqw;
+            }
+        }
+    
+    /*=====  End of Screen breakpoints  ======*/
+    
+    
 </style>

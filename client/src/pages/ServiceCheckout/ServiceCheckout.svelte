@@ -18,6 +18,8 @@
     =            setup            =
     =============================================*/
     
+        window.scrollTo(0, 0);
+
         navbar_solid.set(true);
     
     /*=====  End of setup  ======*/
@@ -163,21 +165,23 @@
 {#if service_data != null}
     <main id="service-purchase-page">
         <section id="spp-service-content">
-            <header id="spp-header">
-                <h1 id="spp-service-name" class="text-dark-7">
-                    {service_data.title}
-                </h1>
-                <p class="service-biref text-gray-700 blockquote">
-                    {service_data.brief_description}
-                </p>
-            </header>
-            <article class="checkout-box">
-                <HtmlRenderer 
-                    the_rules={wordpress_posts_rules}
-                    the_content={service_data.DescriptionText}
-                    wrapper_class="service-description"
-                />
-            </article>
+            <div id="spp-service-content-wrapper">
+                <header id="spp-header">
+                    <h1 id="spp-service-name" class="text-dark-7">
+                        {service_data.title}
+                    </h1>
+                    <p class="service-biref text-gray-700 blockquote">
+                        {service_data.brief_description}
+                    </p>
+                </header>
+                <article class="checkout-box">
+                    <HtmlRenderer 
+                        the_rules={wordpress_posts_rules}
+                        the_content={service_data.DescriptionText}
+                        wrapper_class="service-description"
+                    />
+                </article>
+            </div>
         </section>
         <aside id="service-purchase-panel">
             <div id="spp-spanel-next-steps">
@@ -253,10 +257,15 @@
     #service-purchase-page {
         display: grid;
         grid-template-columns: 70% 30%;
+        container: service-purchase-page / inline-size;
         padding: var(--navbar-height) 0 0 0;
     }
     
     #spp-service-content {
+        container: spp-service-content / inline-size;
+    }
+    
+    #spp-service-content-wrapper {
         display: flex;
         flex-direction: column;
         padding: var(--spacing-5) var(--spacing-5);
@@ -297,11 +306,11 @@
     
         aside#service-purchase-panel {
             box-sizing: border-box;
-            position: fixed;
+            position: sticky;
             display: flex;
-            container-type: size;
+            container: service-purchase-panel / size;
             overflow: auto;
-            width: 30%;
+            width: 100%;
             height: calc(100vh - var(--navbar-height));
             background: var(--dark-8);
             top: var(--navbar-height);
@@ -443,6 +452,77 @@
     
     /*=====  End of Purchase panel  ======*/
     
+    
+    
+    /*=============================================
+    =            Screen breakpoints            =
+    =============================================*/
+    
+        @media only screen and (max-width: 1341px) and (min-width: 1021px) {
+            h1#spp-service-name {
+                font-size: var(--font-size-h2);
+            }
+
+            #service-purchase-page {
+                grid-template-columns: 50% 50%;
+            }
+        }
+
+        @media only screen and (max-width: 1020px) {
+            #service-purchase-page {
+                grid-template-columns: 100%;
+            }
+        }
+
+        @container service-purchase-page (width <= 1341px) and (width > 1021px) {
+            #spp-spanel-purchase-checkout #spp-spanel-pc-controls {
+                flex-direction: column-reverse;
+                row-gap: var(--spacing-2);
+            }
+        }
+
+        @container service-purchase-page (width <= 1020px) {
+            #service-purchase-page #spp-service-content {
+                grid-row: 2 / span 1;
+            }
+
+            #service-purchase-page aside#service-purchase-panel {
+                grid-row: 1 / span 1;
+                position: static;
+            }
+        }
+
+        
+        /*----------  Service Purchase Panel  ----------*/
+        
+            @container service-purchase-panel (width <= 453px) {
+                #spp-spanel-pc-customer-information legend h2 {
+                    font-size: var(--font-size-h3);
+                }
+
+                #spp-spanel-purchase-checkout #spp-spanel-pc-controls {
+                    flex-direction: column-reverse;
+                    row-gap: var(--spacing-3);
+                }
+            }
+        
+        
+        /*----------  spp-service-content  ----------*/
+        
+            @container spp-service-content (width <= 878px) {
+                #spp-service-content-wrapper {
+                    padding: var(--spacing-5) var(--spacing-4);
+                }
+            }
+
+            /* @container spp-service-content (width <= 393px) {
+                #spp-service-content-wrapper {
+                    padding: var(--spacing-5) var(--spacing-3);
+                }
+            } */
+    
+
+    /*=====  End of Screen breakpoints  ======*/
     
     
     

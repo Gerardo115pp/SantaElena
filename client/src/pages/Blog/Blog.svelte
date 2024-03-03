@@ -4,6 +4,7 @@
     import BlogArchive from "./sections/BlogArchive.svelte";
 	import BlogPost from "./sections/BlogPost.svelte";
     import { navbar_solid } from "@stores/layout";
+    import Footer from "@components/Footer/Footer.svelte";
 
 
     
@@ -68,6 +69,7 @@
 		<BlogArchive on:post-selected={handlePostSelection} />
 	{/if}
 </main>
+<Footer />
 
 <style>
     #santa-elena-blog-page {
