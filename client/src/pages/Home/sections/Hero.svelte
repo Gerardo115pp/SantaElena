@@ -61,11 +61,18 @@
     <div id="lse-hp-hs-overlay" class="section-content-layout">
         <div id="lse-hp-hs-center-content">
             <div class="" id="lse-hp-hs-cc-logo-wrapper">
-                <MainLogo
-                    headline_color="var(--dark)"
-                    subheadline_color="var(--color-light-8)"
-                    swallow_color="var(--warning)"
-                />
+                <figure>
+                    <MainLogo
+                        headline_color="var(--dark)"
+                        subheadline_color="var(--color-light-8)"
+                        swallow_color="var(--warning)"
+                    />
+                    <figcaption>
+                        <h1>
+                            Santa Elena - Funerarias
+                        </h1>
+                    </figcaption>
+                </figure>
             </div>
             <div id="lse-hp--hs-cc-hero-headline">
                 <p>
@@ -194,6 +201,12 @@
 
     #lse-hp-hs-cc-logo-wrapper {
         width: min(616px, 100%);
+    }
+
+    #lse-hp-hs-cc-logo-wrapper figure figcaption {
+        height: 0;
+        width: 0;
+        opacity: 0;
     }
 
 
