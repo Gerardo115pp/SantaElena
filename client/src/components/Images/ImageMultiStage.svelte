@@ -41,6 +41,12 @@
          * Whether or not the image has been loaded
          */
         let is_loaded = false;
+
+        /**
+         * Blur unloaded image
+         * @type {boolean}
+         */
+        export let blur_unloaded = true;
     
     
     /*=====  End of Properties  ======*/
@@ -91,7 +97,7 @@
 </script>
 
 {#if image_resource !== undefined}
-    <img bind:this={image_element} src="{image_resource.getUrl(0.2)}" alt="{alt_text}" class="multi-stage-image" class:multi-image-loaded={is_loaded}>
+    <img bind:this={image_element} src="{image_resource.getUrl(0.2)}" alt="{alt_text}" class="multi-stage-image" class:blur-unloaded={blur_unloaded} class:multi-image-loaded={is_loaded}>
 {/if}
 
 <style>
@@ -100,11 +106,14 @@
         height: 100%;
         object-fit: cover;
         object-position: center;
-        filter: blur(2px);
         transition: filter 1.5s ease-in-out;
     }
 
-    .multi-image-loaded {
+    .multi-stage-image.blur-unloaded {
+        filter: blur(2px);
+    }
+
+    .multi-image-loaded.blur-unloaded {
         filter: blur(0);
     }
 </style>

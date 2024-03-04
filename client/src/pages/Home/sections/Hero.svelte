@@ -84,37 +84,96 @@
 </section>
 
 <style>
+    
+    /*=============================================
+    =            Animations            =
+    =============================================*/
+    
+        @keyframes breathing-float {
+            0% {
+                transform: translate(-5px,0) scale(1);
+            }
+            25% {
+                transform: translate(5px, 0) scale(1.01);
+            }
+            50% {
+                transform: translate(-5px, 0) scale(1.01);
+            }
+            75% {
+                transform: translate(5px, 0) scale(1.01);
+            }
+            100% {
+                transform: translate(-5px,0) scale(1);
+            }
+        }
+
+        @keyframes unblur {
+            from {
+                backdrop-filter: blur(15px);
+            }
+            to {
+                backdrop-filter: blur(0px);
+            }
+        }
+
+        @keyframes logo-fly-away {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            20% {
+                transform: translateY(-40%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes logarithmic-fly-away {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(100px);
+            }
+        }
+    
+    /*=====  End of Animations  ======*/
+    
     #lse-hp-hero-section {
         position: relative;
         container-type: size;
         container-name: hero-section;
         width: 100svw;
         overflow: hidden;
-        height: 104vh;
+        height: 100vh;
     }
 
     #lse-hp-hero-section .bg-wrapper {
         position: absolute;
-        width: 100cqw;
-        height: 100cqh;
+        width: 110cqw;
+        height: 110cqh;
+        animation-name: breathing-float;
+        animation-duration: 20s;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease-in-out;
+        animation-direction: alternate;
+        animation-fill-mode: both;
+        animation-play-state: running;
+        animation-delay: 300ms;
     }
 
-    /* :global(#lse-hp-hero-section .bg-wrapper img.multi-image-loaded) {
-        filter: contrast(1.4) saturate(1.8) sepia(0.1) brightness(0.7) hue-rotate(1deg);
-        filter: brightness(0.7);    
-        mix-blend-mode: soft-light;
-    } */
-
     #lse-hp-hs-overlay {
-        
         width: 100cqw;
         height: 100cqh;
         border-bottom: 6px solid var(--color-light-7, #BB931C);
         background: linear-gradient(90deg, hsla(28, 100%, 92%, 0.3) 0%, hsla(28, 100%, 92%, .50) 20%, hsla(28, 100%, 92%, .50) 50%, hsla(28, 100%, 92%, .45) 80%, hsla(28, 100%, 92%, 0.3) 100%);
-        /* background: hsl(from var(--color-8) h 30% 100% / 0.2); */
-        /* background: hsla(28, 100%, 92%, 0.8); */
-        /* background: hsl(from var(--dark-9) h s l / 0.5); */
-        /* background: hsla(34, 66%, 15%, 0.404); */
+        backdrop-filter: blur(15px);
+        animation-name: unblur;
+        animation-duration: 1s;
+        animation-fill-mode: both;
     }
 
     #lse-hp-hs-center-content {
@@ -137,12 +196,81 @@
         width: min(616px, 100%);
     }
 
-    @media only screen and (max-width: 768px)  {
-        #lse-hp-hs-center-content {
-            grid-column: 1 / -1;
-            height: 100%;
-            padding: var(--spacing-3);
+
+    
+    /*=============================================
+    =            Media Queries            =
+    =============================================*/
+    
+        @supports (animation-timeline: scroll()) {
+            #lse-hp-hs-overlay {
+                animation-timeline: scroll(root);
+                animation-duration: 3ms;
+                animation-timing-function: linear;
+                animation-fill-mode: forwards;
+                animation-range: 0% 3%;
+            }
+
+            :global(#lse-hp-hero-section .bg-wrapper img) {
+                animation-timeline: scroll(root);
+                animation-name: logarithmic-fly-away;
+                animation-duration: 3ms;
+                animation-timing-function: linear;
+                animation-fill-mode: forwards;
+                animation-range: 0% 10%;
+            }
+
+            #lse-hp-hs-center-content {
+                animation-timeline: scroll(root);
+                animation-name: logo-fly-away;
+                animation-duration: 3ms;
+                animation-timing-function: ease-in;
+                animation-fill-mode: forwards;
+                animation-range: 0% 50%;
+            }
         }
-    }
+
+        @media prefers-reduced-motion {
+            #lse-hp-hero-section .bg-wrapper {
+                animation: none;
+            }
+        }
+
+        @media only screen and (max-width: 800px) {
+            @keyframes breathing-float {
+                0% {
+                    transform: translate(-2px,0) scale(1);
+                }
+                25% {
+                    transform: translate(2px, 0) scale(1.01);
+                }
+                50% {
+                    transform: translate(-2px, 0) scale(1.01);
+                }
+                75% {
+                    transform: translate(2px, 0) scale(1.01);
+                }
+                100% {
+                    transform: translate(-2px,0) scale(1);
+                }
+            }
+
+            #lse-hp-hero-section .bg-wrapper {
+                width: 150cqw;
+                height: 100cqh;
+            }
+        }
+    
+        @media only screen and (max-width: 768px)  {
+            #lse-hp-hs-center-content {
+                grid-column: 1 / -1;
+                height: 100%;
+                padding: var(--spacing-3);
+            }
+        }
+    /*=====  End of Media Queries  ======*/
+    
+    
+
 
 </style>

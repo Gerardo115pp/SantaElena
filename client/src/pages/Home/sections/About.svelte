@@ -137,6 +137,30 @@
         row-gap: var(--spacing-3);
     }
 
+    @keyframes flip-in-hor-bottom {
+        0% {
+            -webkit-transform: rotateX(80deg);
+                    transform: rotateX(80deg);
+            opacity: 0;
+        }
+        100% {
+            -webkit-transform: rotateX(0);
+                    transform: rotateX(0);
+            opacity: 1;
+        }
+    }
+
+    :global(#lse-hp-about-section .santa-elena-image) {
+        animation-timeline: view(block 90% 20%);
+        /* animation-timeline: scroll(); */
+        animation-name: flip-in-hor-bottom;
+        /* animation-duration: .5s; */
+        animation-fill-mode: both; 
+        transform: rotateX(80deg);
+        opacity: 0;
+        animation-timing-function: linear;
+    }
+
     .a-tc-description {
         display: flex;
         flex-direction: column;
@@ -182,6 +206,4 @@
             text-align: center;
         } */
     }
-
-
 </style>
