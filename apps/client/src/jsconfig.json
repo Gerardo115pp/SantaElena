@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "$app/*": ["../.svelte-kit/dev/runtime/app/*", "../node_modules/@sveltejs/kit/src/runtime/app/environment/types.d.ts"],
+        "@libs/*": ["libs/*"],
+        "@components/*": ["components/*"],
+        "@models/*": ["models/*"],
+        "@pages/*": ["pages/*"],
+        "@svg/*": ["svg/*"],
+        "@actions/*": ["actions/*"],
+        "@events/*": ["events/*"],
+        "@app_modules/*": ["../../apps/modules/*"],
+        "@stores/*": ["stores/*"],
+        "@databases/*": ["databases/*"],
+        "@themes/*": ["themes/*"],
+        "@app/*": ["./*"],
+      }
+    },
+    "exclude": ["node_modules", "**/node_modules/*"]
+  }
+  

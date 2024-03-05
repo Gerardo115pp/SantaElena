@@ -13,3 +13,4 @@
 wordpress/wp_plugins/**/vendor/
 docs/
 secrets/
+/**/.svelte-kit/
