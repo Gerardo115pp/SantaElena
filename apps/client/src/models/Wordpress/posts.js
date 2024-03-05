@@ -1,4 +1,4 @@
-import { GetAllPostsRequest } from "@app_modules/Services/HttpRequests";
+import { GetAllPostsRequest } from "@libs/Services/HttpRequests";
 
 export class WordpressPost {
     /** @type {number} */

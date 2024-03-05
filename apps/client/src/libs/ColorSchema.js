@@ -1,5 +1,5 @@
-import { location } from "svelte-spa-router";
 import { get } from "svelte/store";
+import { page } from "$app/stores";
 
 
 /**
@@ -123,7 +123,7 @@ export function checkLastComponentCollision(sections_color_schemas, current_hash
  * @returns {SectionListenerUnsubscriber}
  */
 export const watchCollisions = (sections_color_schemas) => {
-    let current_hash = get(location);
+    let current_hash = get(page).url;
 
     const collision_listener = checkLastComponentCollision.bind({}, sections_color_schemas, current_hash);
 

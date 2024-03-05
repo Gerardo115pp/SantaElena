@@ -4,10 +4,8 @@
     import { ServiceData } from "@models/Services";
     import { layout_images } from "@stores/layout";
     import { createEventDispatcher } from "svelte";
-    import { NodesPreprocessRule } from "@app_modules/LiberyHTMLpreprocessor/html_preprocessor";
-    import HtmlRenderer from "@app_modules/LiberyHTMLpreprocessor/components/HtmlRenderer.svelte";
+    import HtmlRenderer from "@libs/LiberyHTMLpreprocessor/components/HtmlRenderer.svelte";
     import { wordpress_posts_rules } from "@themes/markup_styles/wordpress_posts";
-    import { link } from "svelte-spa-router";
 
     
     /*=============================================
@@ -93,7 +91,7 @@
                         Contactanos
                     </button>
                 {:else}
-                    <a href="/service-checkout/{service_data.Id}" use:link>
+                    <a href="/service-checkout/{service_data.Id}">
                         <button class="button-1 button-thin button-purchase">
                             Contratar: {price_formater.format(service_data.Price)}
                         </button>

@@ -1,11 +1,11 @@
 name: Deploy Santa Elena to GCP
 
-on:
-  push:
-    branches:
-      - master
-    paths:
-      - 'client/**'
+# on:
+#   push:
+#     branches:
+#       - master
+#     paths:
+#       - 'client/**'
 
 jobs:
   build-and-deploy-app:

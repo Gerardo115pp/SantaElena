@@ -1,5 +1,13 @@
 const MOBILE_BREAKPOINT = 768;
 
+export const isValidEmail = email => {
+    const email_input = document.createElement('input');
+    email_input.type = 'email';
+    email_input.required = true;
+    email_input.value = email;
+
+    return email_input.checkValidity();
+}
 
 export const isMobile = () => {
     let is_mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);

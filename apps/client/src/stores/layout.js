@@ -1,7 +1,7 @@
-import { get, writable, Writable } from "svelte/store";
+import { get, writable } from "svelte/store";
 import { ImageResource  } from "@models/MediaResources";
 import { MEDIA_SIZES } from "@libs/Services/media_loaders";
-import a from "$app/"
+import { browser } from "$app/environment"
 
 /**
  * If there is a resize on the viewport but is not bigger than this threshold, the layout is not considered changed
@@ -13,8 +13,8 @@ let LAYOUT_PROPERTIES = {
     IS_MOBILE: false,
     MOBILE_BREAKPOINT: 768,
     TABLET_BREAKPOINT: 1024,
-    VIEWPORT_WIDTH: window.clientWidth,
-    VIEWPORT_HEIGHT: window.clientHeight,
+    VIEWPORT_WIDTH: 1920,
+    VIEWPORT_HEIGHT: 1080,
     SPACING: {
         SPACING_1: 0,
         SPACING_2: 0,
@@ -26,6 +26,11 @@ let LAYOUT_PROPERTIES = {
         SPACING_8: 0,
         SPACING_9: 0
     }
+}
+
+if (browser) {
+    LAYOUT_PROPERTIES.VIEWPORT_WIDTH = window.innerWidth;
+    LAYOUT_PROPERTIES.VIEWPORT_HEIGHT = window.innerHeight;
 }
 
 /**
@@ -84,7 +89,7 @@ export function isMobile() {
     return is_mobile;
 }
 
-export const user_locale = window.navigator.language.split("-")[0] || "en";
+export const user_locale = browser ? (window.navigator.language.split("-")[0] || "en") : "en";
 
 
 

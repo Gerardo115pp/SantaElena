@@ -3,11 +3,11 @@
     import { getSVGResource } from "@libs/Services/media_loaders";
     import { layout_properties } from "@stores/layout";
     import { onMount } from "svelte";
-    import { Writable, writable } from "svelte/store";
+    import { writable } from "svelte/store";
     import DropMenu from "./sub-components/DropMenu.svelte";
-    import txy_repository from "@app_modules/TxyClient/txy_repository";
+    import txy_repository from "@libs/TxyClient/txy_repository";
     import { registerSupportedComponent, supported_components } from "@libs/ColorSchema";
-    import TxyContentEntry from "@app_modules/TxyClient/models/content_entry";
+    import TxyContentEntry from "@libs/TxyClient/models/content_entry";
 
     
     /*=============================================

@@ -1,4 +1,28 @@
+/**
+ * A base class for all services responses
+ * @template T
+ */
 export class HttpResponse {
+    /**
+     * @type {number}
+     */
+    status;
+
+    /**
+     * @type {T}
+     */
+    data;
+
+    /**
+     * @type {Object<string, string>}
+     */
+    headers;
+
+    /**
+     * 
+     * @param {Response} response   
+     * @param {T} data 
+     */
     constructor(response, data) {
         this.status = response.status;
         this.data = data;
@@ -11,6 +35,16 @@ export class HttpResponse {
      */
     get Ok() {
         return this.status >= 200 && this.status < 300;
+    }
+
+    /**
+     * indicates that the request has succeeded and has led to the creation of a resource. The new resource, or a description and link to the new resource, is effectively created before
+     * the response is sent back and the newly created items are returned in the body of the message, located at either the URL of the request, or at the URL in the value of the 
+     * Location header.
+     * @returns {boolean}
+     */
+    get Created() {
+        return this.status === 201;
     }
 }
 

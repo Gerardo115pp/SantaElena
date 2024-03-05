@@ -2,10 +2,10 @@
     import ImageMultiStage from "@components/Images/ImageMultiStage.svelte";
     import { ImageResource } from "@models/MediaResources";
     import ParticleDecoration from "@components/Animations/ParticleDecoration.svelte";
-    import TxyContentEntry from "@app_modules/TxyClient/models/content_entry";
+    import TxyContentEntry from "@libs/TxyClient/models/content_entry";
     import viewport from "@components/viewport_actions/useViewportActions";
-    import txy_repository from "@app_modules/TxyClient/txy_repository";
-    import { writable, Writable } from "svelte/store";
+    import txy_repository from "@libs/TxyClient/txy_repository";
+    import { writable } from "svelte/store";
     import { layout_images } from "@stores/layout";
     import { onDestroy, onMount } from "svelte";
     import { blur } from "svelte/transition";

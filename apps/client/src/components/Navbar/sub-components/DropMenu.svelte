@@ -1,5 +1,4 @@
 <script>
-    import { Writable } from "svelte/store";
     // import { scrollToSection } from "@pages/Home/sections";
     import { slide } from "svelte/transition";
 

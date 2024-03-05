@@ -2,7 +2,6 @@ import { join } from 'path';
 import { skeleton } from '@skeletonlabs/tw-plugin';
 import { santa_elena_theme } from "./src/themes/santa-elena-theme"
 
-console.log("santa_elena_theme", santa_elena_theme);
 /** @type {import('tailwindcss').Config} */
 export default {
     darkMode: "class",

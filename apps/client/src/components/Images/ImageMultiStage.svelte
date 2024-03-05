@@ -1,4 +1,5 @@
 <script>
+    import { browser } from "$app/environment";
     import { ImageResource } from "@models/MediaResources";
     import { onMount } from "svelte";
 
@@ -52,6 +53,9 @@
     /*=====  End of Properties  ======*/
     
     onMount(() => {
+        console.log("Is browser: ", browser)
+        if (!browser) return;
+
         if (image_resource === undefined) {
             console.error("ImageMultiStage.svelte: image_resource is undefined");
             return;
@@ -96,7 +100,7 @@
 
 </script>
 
-{#if image_resource !== undefined}
+{#if image_resource !== undefined && browser}
     <img bind:this={image_element} src="{image_resource.getUrl(0.2)}" alt="{alt_text}" class="multi-stage-image" class:blur-unloaded={blur_unloaded} class:multi-image-loaded={is_loaded}>
 {/if}
 

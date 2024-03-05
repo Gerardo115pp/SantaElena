@@ -1,4 +1,4 @@
-import { Writable, writable } from "svelte/store";
+import {  writable } from "svelte/store";
 
 /**
  * Whether the txy repository is usable or not
