@@ -220,14 +220,15 @@ class TxyRepository {
      * Returns a txy page by its id. if it's not loaded, checks in #existing_pages and if it's there, loads it.
      * if not, returns undefined
      * @param {string} page_id
+     * @param {boolean} force_load - whether to force the load of a fresh page from the Txy Service
      * @returns {Promise<TxyPage>}
      */
-    async getPage(page_id) {
+    async getPage(page_id, force_load = false) {
         let target_page = this.#txy_pages[page_id];
 
-        if (target_page === undefined) {
+        if (target_page === undefined || force_load) {
             let page_metadata = this.#existing_pages.find(p => p.page_id === page_id);
-            if (page_metadata !== undefined) {
+            if (page_metadata !== undefined || force_load) {
                 await this.#loadPage(page_id, this.#use_safe_locale);
                 target_page = this.#txy_pages[page_id];
             }

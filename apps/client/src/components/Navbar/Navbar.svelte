@@ -8,6 +8,7 @@
     import txy_repository from "@libs/TxyClient/txy_repository";
     import { registerSupportedComponent, supported_components } from "@libs/ColorSchema";
     import TxyContentEntry from "@libs/TxyClient/models/content_entry";
+    import { browser } from "$app/environment";
 
     
     /*=============================================
@@ -110,7 +111,7 @@
                 }
             }
             const current_locale = txy_repository.CurrentLocale;
-            const navigation_page = await txy_repository.getPage(navigation_page_id);
+            const navigation_page = await txy_repository.getPage(navigation_page_id, browser);
             const sections = navigation_page.locales_content[current_locale];
 
             // Get nav options part
