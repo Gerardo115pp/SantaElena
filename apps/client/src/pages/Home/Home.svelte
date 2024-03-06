@@ -101,11 +101,9 @@
     /*=====  End of Properties  ======*/
 
     onMount(() => {
-        if (browser) {
-            page_sections.HERO.color_schema.define();
-    
-            section_collision_listener_unsubscriber = watchCollisions(page_sections);
-        }
+        page_sections.HERO.color_schema.define();
+
+        section_collision_listener_unsubscriber = watchCollisions(page_sections);
 
         updateContentEntry();
     });

@@ -131,6 +131,10 @@
 </section>
 
 <style>
+    #lse-hp-about-section {
+        perspective: 1000px;
+    }
+
     .about-text-content {
         display: flex;
         flex-direction: column;
@@ -150,6 +154,10 @@
         }
     }
 
+    :global(#lse-hp-about-section .tcit-image-wrapper) {
+        perspective: 1000px;
+    }
+
     :global(#lse-hp-about-section .santa-elena-image) {
         animation-timeline: view(block 90% 20%);
         /* animation-timeline: scroll(); */
@@ -157,8 +165,10 @@
         /* animation-duration: .5s; */
         animation-fill-mode: both; 
         transform: rotateX(80deg);
-        opacity: 0;
+        /* opacity: 0; */
         animation-timing-function: linear;
+        transition: transform .5s;
+        transform-style: preserve-3d;
     }
 
     .a-tc-description {

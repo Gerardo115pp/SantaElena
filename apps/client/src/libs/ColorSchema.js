@@ -69,7 +69,8 @@ function sectionReachTopScreen(dom_element) {
 }
 
 export function checkLastComponentCollision(sections_color_schemas, current_hash, check_every=50) {
-    if (get(location) !== current_hash) {
+    // FIXME: this is a temporary fix for ssr compatibility. implement uri verification
+    if (current_hash !== current_hash) {
         console.log(`current hash ${current_hash} is not equal to site_page ${get(location)}`)
         return;
     }

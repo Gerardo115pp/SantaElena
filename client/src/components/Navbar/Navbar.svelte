@@ -132,9 +132,15 @@
          */
         const parseContentEntries = content_entries => {
             return content_entries.map(content_entry => {
+                let spa_href = content_entry.Href;
+
+                if (spa_href !== undefined && !spa_href.startsWith("/#")) {
+                    spa_href = `/#${spa_href}`;
+                }
+
                 return {
                     name: content_entry.Text !== "" ? content_entry.Text : content_entry.name,
-                    href: content_entry.Href ?? "#",
+                    href: spa_href,
                 }
             });
         }
