@@ -98,6 +98,10 @@ export default defineConfig(async ({ command, mode, isSsrBuild, isPreview }) => 
 				"@themes": '/src/themes',
 				"@app": '/src'
 			},
+		},
+		clearScreen: true,
+		esbuild: {
+			tsconfigRaw: "./src/jsconfig.json"
 		}
 	}
 

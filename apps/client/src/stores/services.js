@@ -1,6 +1,11 @@
 import { writable } from "svelte/store";
 import { ServiceData } from "@models/Services";
 import { browser } from "$app/environment";
+/**
+ * @typedef {import("svelte/store").Writable<T>} Writable
+ * @template T
+ */
+
 
 /**
  * The selected service

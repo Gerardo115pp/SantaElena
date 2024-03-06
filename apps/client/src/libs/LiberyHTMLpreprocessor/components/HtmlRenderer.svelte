@@ -25,6 +25,12 @@
          * @type {string}
          */
         export let the_content;
+
+        /**
+         * Whether the element should be rendered on the server to optimize for SEO
+         * @type {boolean}
+         */
+        export let optimize_seo = false;
     
         /**
          * The markup preprocessor
@@ -66,5 +72,9 @@
 
 {#if browser}
     <div class="libery-html-preprocessor {wrapper_class}" bind:this={content_mount}>
+    </div>
+{:else if (optimize_seo)}
+    <div class="libery-html-preprocessor {wrapper_class}" style:color="transparent">
+        {@html the_content}
     </div>
 {/if}

@@ -2,6 +2,10 @@ import { get, writable } from "svelte/store";
 import { ImageResource  } from "@models/MediaResources";
 import { MEDIA_SIZES } from "@libs/Services/media_loaders";
 import { browser } from "$app/environment"
+/**
+* @typedef {import("svelte/store").Writable<T>} Writable
+ * @template T
+*/
 
 /**
  * If there is a resize on the viewport but is not bigger than this threshold, the layout is not considered changed
