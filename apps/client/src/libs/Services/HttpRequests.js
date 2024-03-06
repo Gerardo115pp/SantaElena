@@ -77,6 +77,30 @@ import { SVG_PREFIX, WORDPRESS_REST_API, TXY_SERVICE, PAYMENTS_SERVICE } from ".
                 return new HttpResponse(response, data);
             }
         }
+
+        export class GetPostByIdRequest {
+            constructor(id) {
+                this.id = id;
+            }
+
+            toJson = attributesToJson.bind(this);
+
+            /**
+             * Sends a request to the server to get a post by its id
+             * @async
+             * @returns {Promise<HttpResponse>}
+             */
+            do = async () => {
+                const response = await fetch(`${WORDPRESS_REST_API}/wp/v2/posts/${this.id}`);
+                let data = null;
+
+                if (response.status >= 200 && response.status < 300) {
+                    data = await response.json();
+                }
+
+                return new HttpResponse(response, data);
+            }
+        }
 /*=====  End of Wordpress  ======*/
 
 

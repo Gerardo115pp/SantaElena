@@ -1,4 +1,4 @@
-import { GetAllPostsRequest } from "@libs/Services/HttpRequests";
+import { GetAllPostsRequest, GetPostByIdRequest } from "@libs/Services/HttpRequests";
 
 export class WordpressPost {
     /** @type {number} */
@@ -71,6 +71,10 @@ export class WordpressPost {
         this.#tags = post_data.tags;
     }
 
+    get Id() {
+        return this.#id;
+    }
+
     get Title() {
         return this.#title;
     }
@@ -103,8 +107,26 @@ export const getAllPosts = async () => {
     let posts = [];
 
     if (response.Ok) {
+        console.log("Response", response);
         posts = response.data.map(post => new WordpressPost(post));
     }
 
     return posts;
+}
+
+/**
+ * Fetches a single post from the wordpress server
+ * @async
+ * @param {number} id
+ * @returns {Promise<WordpressPost>}
+ */
+export const getPostById = async (id) => {
+    const request = new GetPostByIdRequest(id);
+    const response = await request.do();
+
+    if (response.Ok) {
+        return new WordpressPost(response.data);
+    }
+
+    return null;
 }

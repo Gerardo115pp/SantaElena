@@ -14,14 +14,17 @@
          * The posts to display
          * @type {WordpressPost[]}
          */
-        let posts = [];
+        export let posts = [];
 
         const dispatch = createEventDispatcher();
     
     /*=====  End of Properties  ======*/
 
     onMount(async () => {
-        posts = await getAllPosts();
+        if (posts.length === 0) {
+            posts = await getAllPosts();
+        }
+
         // handlePostSelection(posts[0]); // STYLING: Use this to style the post component
     });
 
@@ -29,15 +32,6 @@
     /*=============================================
     =            Methods            =
     =============================================*/
-    
-        /** 
-         * Handles the post selection
-         * @param {WordpressPost} post - The selected post
-         */
-        const handlePostSelection = post => {
-            dispatch("post-selected", { post });
-        }
-            
     
     /*=====  End of Methods  ======*/
     
@@ -47,9 +41,9 @@
 
 <section id="posts-archive">
     {#each posts as post}
-        <div role="navigation" on:click|preventDefault={() => handlePostSelection(post)}>
+        <a href="/blog/post/{post.Id}">
             <PostEntry the_post={post}/>
-        </div>
+        </a>
     {/each}
 </section>
 
@@ -58,9 +52,5 @@
         display: flex;
         flex-direction: column;
         row-gap: var(--spacing-3);
-    }
-
-    #posts-archive [role="navigation"] {
-        cursor: pointer;
     }
 </style>

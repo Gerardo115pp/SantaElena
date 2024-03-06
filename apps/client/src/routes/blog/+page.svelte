@@ -14,6 +14,14 @@
     /*=============================================
     =            Setup            =
     =============================================*/
+		/**
+		 * @typedef {Object} BlogPageData
+		 * @property {WordpressPost[]} posts - All of the posts prefetched from the server
+		 */
+
+		/** @type {BlogPageData} */
+		export let data;
+
 		if (browser) {
 			window.scrollTo(0, 0);
 		}
@@ -24,6 +32,14 @@
 	/*=============================================
 	=            Properties            =
 	=============================================*/
+
+		/**
+		 * All of the posts prefetched from the server
+		 * @type {WordpressPost[]}
+		 */
+		export let posts = data.posts;
+
+		console.log("Posts: ", posts);
 	
 		/** 
 		 * The selected blog post
@@ -42,46 +58,12 @@
 	=            Methods            =
 	=============================================*/
 	
-		/** 
-		 * Handles the post selection
-		 * @param {MouseEvent} e - The click event
-		 */
-		const handlePostSelection = e => {
-			selected_post = e.detail?.post;
-		}
-	
+
 	/*=====  End of Methods  ======*/
-	
-	console.log("Selected post: ", selected_post);
 	
 </script>
     
-<main id="santa-elena-blog-page">
-	{#if selected_post != null}
-		<menu id="blog-controls">
-			<ol class="breadcrumb">
-				<li class="crumb">
-					<a href="/#" on:click|preventDefault={handlePostSelection}>Blog</a>
-				</li>
-				<li class="crumb-separator" aria-hidden>/</li>
-				<li class="crumb">{selected_post.Title}</li>
-			</ol>
-		</menu>
-		{#if browser}
-			<BlogPost the_post={selected_post}/>
-		{/if}
-	{:else}
-		<BlogHeader />
-		<BlogArchive on:post-selected={handlePostSelection} />
-	{/if}
-</main>
-<Footer />
+<BlogHeader />
+<BlogArchive {posts} />
 
-<style>
-    #santa-elena-blog-page {
-        display: flex;
-        padding: calc(var(--navbar-height) + var(--spacing-5)) var(--spacing-4) var(--spacing-4) var(--spacing-4);
-        flex-direction: column;
-        row-gap: var(--spacing-4);
-    }
-</style>
+
