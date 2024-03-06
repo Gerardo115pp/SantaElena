@@ -143,13 +143,11 @@
 
     @keyframes flip-in-hor-bottom {
         0% {
-            -webkit-transform: rotateX(80deg);
-                    transform: rotateX(80deg);
+            rotate: x 80deg;
             opacity: 0;
         }
         100% {
-            -webkit-transform: rotateX(0);
-                    transform: rotateX(0);
+            rotate: x 0deg;
             opacity: 1;
         }
     }
@@ -164,7 +162,7 @@
         animation-name: flip-in-hor-bottom;
         /* animation-duration: .5s; */
         animation-fill-mode: both; 
-        transform: rotateX(80deg);
+        rotate: x 80deg;
         /* opacity: 0; */
         animation-timing-function: linear;
         transition: transform .5s;
