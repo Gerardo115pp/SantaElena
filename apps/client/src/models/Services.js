@@ -1,4 +1,4 @@
-import { GetProductsRequest } from "@libs/Services/HttpRequests";
+import { GetProductsRequest, GetProductArchiveRequest } from "@libs/Services/HttpRequests";
 import { parseHtmlText } from "@libs/utils";
 import { WordpressMedia, getWordpressMediaById } from "@models/Wordpress/media";
 
@@ -148,6 +148,32 @@ export class ServiceData {
 
 }
 
+export class ServiceArchiveItem {
+    /**
+     * @type {number}
+     */
+    #id
+
+    /**
+     * @type {string}
+     */
+    #name
+
+
+    constructor({id, name}) {
+        this.#id = id;
+        this.#name = name;
+    }
+
+    get Id() {
+        return this.#id;
+    }
+
+    get Name() {
+        return this.#name;
+    }
+}
+
 /**
  * Fetches all the services from the wordpress server
  * @async
@@ -176,4 +202,23 @@ export const getSantaElenaServices = async () => {
     let result = await Promise.allSettled(promises);
 
     return result.map((promise) => promise.status === "fulfilled" ? promise.value : null).filter((service) => service !== null);
+};
+
+/**
+ * Fetches all in a compact form including only the id and name of the services
+ * @async
+ * @returns {Promise<ServiceArchiveItem[]>}
+ */
+export const getSantaElenaServicesArchive = async () => {
+    let products_archive = [];
+
+    const request = new GetProductArchiveRequest();
+
+    const response = await request.do();
+
+    if (response.Ok) {
+        products_archive = response.data.map((product) => new ServiceArchiveItem(product));
+    }
+
+    return products_archive;
 };

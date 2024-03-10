@@ -142,7 +142,7 @@
         }
 
         const handleBack = () => {
-            // pop();
+            history.back();
         }
 
         const handleServicePurchase = async () => {
@@ -270,6 +270,10 @@
         grid-template-columns: 70% 30%;
         container: service-purchase-page / inline-size;
         padding: var(--navbar-height) 0 0 0;
+    }
+
+    :global(main#service-purchase-page + footer) {
+        display: none !important;
     }
     
     #spp-service-content {

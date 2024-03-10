@@ -1,5 +1,5 @@
-import { writable } from "svelte/store";
-import { ServiceData } from "@models/Services";
+import { writable, get } from "svelte/store";
+import { ServiceData, ServiceArchiveItem, getSantaElenaServicesArchive } from "@models/Services";
 import { browser } from "$app/environment";
 /**
  * @typedef {import("svelte/store").Writable<T>} Writable
@@ -13,6 +13,10 @@ import { browser } from "$app/environment";
  */
 export const selected_service = writable(null);
 
+/**
+ * The two byte code of the user's language
+ * @type {string}
+ */
 let user_locale = browser ? window.navigator.language : "en-US";
 
 /**

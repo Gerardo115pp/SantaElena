@@ -30,6 +30,36 @@ import { SVG_PREFIX, WORDPRESS_REST_API, TXY_SERVICE, PAYMENTS_SERVICE } from ".
             }
         }
 
+        export class GetProductArchiveRequest {
+            constructor() {}
+
+            toJson = attributesToJson.bind(this);
+
+            /**
+             * @typedef {Object} ProductArchiveItem
+             * @property {number} id
+             * @property {string} name
+             */
+
+            /**
+             * Returns all the post with the type of 'santa-elena-product' from the wordpress server in a compact format, ideal for displaying in a list
+             * It only includes the post id and the title
+             * @async
+             * @returns {Promise<HttpResponse<ProductArchiveItem[]>>}
+             */
+            do = async () => {
+                const response = await fetch(`${WORDPRESS_REST_API}/santa-elena/v1/products/archive`);
+
+                let data = null;
+
+                if (response.status >= 200 && response.status < 300) {
+                    data = await response.json();
+                }
+
+                return new HttpResponse(response, data);
+            }
+        }
+
     /*----------  Wordpress Assets  ----------*/
         export class GetWordpressMediaByIdRequest {
             constructor(id) {

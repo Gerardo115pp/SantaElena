@@ -1,11 +1,6 @@
-<script>
-    import Footer from "@components/Footer/Footer.svelte";
-</script>
-
 <main id="santa-elena-blog-page">
     <slot/>
 </main>
-<Footer />
 
 <style>
     #santa-elena-blog-page {

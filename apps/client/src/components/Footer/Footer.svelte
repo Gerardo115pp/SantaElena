@@ -2,6 +2,22 @@
     import MainLogo from "@components/UI/MainLogo.svelte";
     import SocialIcon from "@components/UI/SocialIcon.svelte";
     import { layout_properties } from "@stores/layout";
+    /**
+     * @typedef {import("@models/Services").ServiceArchiveItem} ServiceArchiveItem
+    */
+
+
+    
+    /*=============================================
+    =            Properties            =
+    =============================================*/
+    
+        /** @type {ServiceArchiveItem[]} */
+        export let services = [];
+    
+    /*=====  End of Properties  ======*/
+    
+    
 </script>
 
 <footer id="santa-elena-footer-juvenil">
@@ -26,11 +42,14 @@
             </div>
             <div class="footer-main-page">
                 <h2 id="page-name">SERVICIOS</h2>
-                <ul class="fmp-subpages">
-                    <li class="fmp-subpage">Cremación</li>
-                    <li class="fmp-subpage">Funeraria</li>
-                    <li class="fmp-subpage">Recolección</li>
-                    <li class="fmp-subpage">Importación</li>
+                <ul role="navigation" class="fmp-subpages">
+                    {#each services.slice(0,5) as service_item}
+                        <li class="fmp-subpage">
+                            <a href="/service-checkout/{service_item.Id}">
+                                {service_item.Name}
+                            </a>
+                        </li>
+                    {/each}
                 </ul>
             </div>
             <div class="footer-main-page">
@@ -135,6 +154,11 @@
         font-size: var(--font-size-p-small);
         font-family: var(--font-read);
         font-weight: lighter;
+    }
+
+    #footer-juvenil-right #footer-main-pages .footer-main-page ul.fmp-subpages li.fmp-subpage a {
+        color: var(--color-light-2);
+        text-decoration: none;
     }
 
     #footer-juvenil-right #footer-privacy-pages {

@@ -57,6 +57,17 @@ class Product {
     }
 }
 
+class ProductArchiveItem {
+    public int $id;
+    public string $name;
+ 
+    public function __construct(WP_Post $post) {
+        $this->id = $post->ID;
+        $this->name = $post->post_title;
+    }   
+}
+    
+
 function libery_getPostMeta($post_id, $field_name) {
     return get_post_meta($post_id, $field_name, true);
 }
