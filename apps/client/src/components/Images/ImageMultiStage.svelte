@@ -53,7 +53,6 @@
     /*=====  End of Properties  ======*/
     
     onMount(() => {
-        console.log("Is browser: ", browser)
         if (!browser) return;
 
         if (image_resource === undefined) {
@@ -66,7 +65,6 @@
         const image_holder = document.createElement("img");
 
         image_holder.onload = () => handleHDImageLoad(image_holder);
-        console.log(`requesting percentage ${image_percentage}`);
         image_holder.src = image_resource.getUrl(image_percentage);
     });
     

@@ -62,7 +62,6 @@
         const image_holder = document.createElement("img");
 
         image_holder.onload = () => handleHDImageLoad(image_holder);
-        console.log(`requesting percentage ${image_percentage}`);
         image_holder.src = image_resource.getUrl(image_percentage);
     });
     
@@ -87,7 +86,7 @@
         /**
          * @param {HTMLImageElement} image_holder
          */
-        const handleHDImageLoad = image_holder => {
+       const handleHDImageLoad = image_holder => {
             is_loaded = true;
             image_element.src = image_holder.src;
         }

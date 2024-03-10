@@ -1,6 +1,6 @@
 <script>
     import viewport from "@components/viewport_actions/useViewportActions";
-    export let id;
+    export let id = `lazy-wrapper-${crypto.randomUUID()}`;
     export let className;
     export let image_url;
 

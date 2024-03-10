@@ -26,7 +26,6 @@
             if (is_visible === value) return;
 
             is_visible = value;
-            console.log(`Section ${section_name} is visible: ${is_visible}`)
         }
     
     /*=====  End of Methods  ======*/
