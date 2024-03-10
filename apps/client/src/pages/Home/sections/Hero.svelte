@@ -1,8 +1,7 @@
 <script>
     import ImageMultiStage from "@components/Images/ImageMultiStage.svelte";
     import MainLogo from "@components/UI/MainLogo.svelte";
-    import { layout_images, layout_properties, navbar_transparent } from "@stores/layout";
-    import viewport from "@components/viewport_actions/useViewportActions";
+    import { layout_images, layout_properties } from "@stores/layout";
     import txy_repository from "@libs/TxyClient/txy_repository";
     import { get_content_entries_params } from "@stores/txy";
     import TxyContentEntry from "@libs/TxyClient/models/content_entry";
@@ -32,10 +31,7 @@
     /*=============================================
     =            Methods            =
     =============================================*/
-    
-        const handleViewportEnter = e => {
-            navbar_transparent.set(true);
-        }
+
 
         const updateContentEntry = async () => {
             let new_content_entry = await content_entry.GetFreshCopy();
@@ -81,7 +77,7 @@
             </div>
             <div id="lse-hp-hs-cc-hero-cta-controls">
                 <a href="https://wa.me/5213313045999" target="_blank" rel="noopener noreferrer">
-                    <button class="button-1" on:viewportEnter={handleViewportEnter} use:viewport>
+                    <button class="button-1 mobile-only">
                         Contactanos
                     </button>
                 </a>
@@ -207,6 +203,11 @@
         height: 0;
         width: 0;
         opacity: 0;
+    }
+
+    #lse-hp-hs-cc-hero-cta-controls button {
+        background-color: var(--shade-7);
+        color: var(--color-light-1);
     }
 
 

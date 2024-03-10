@@ -417,6 +417,14 @@ ul.page-nav-menu{
   box-shadow: var(--box-shadow);
 }
 
+.subpage-title {
+  font-family: var(--font-titles);
+  font-weight: 300;
+  font-size: var(--font-size-h1);
+  color: var(--color-9);
+  text-align: center;
+}
+
 /*=============================================
 =            Text Styles            =
 =============================================*/

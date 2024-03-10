@@ -33,6 +33,7 @@
 
         /**
          * The sections that will change the color schema on collision
+         * @type {import("@libs/ColorSchema").SectionListenerParams}
          */
         let page_sections = {
             HERO: {
@@ -155,6 +156,3 @@
         </div>
     {/if}
 </main>
-<!-- <div id="{page_sections.FOOTER.section_id}" class="page-section-wrapper" bind:this={page_sections.FOOTER.ref}>
-    <Footer services={services_archive}/>
-</div> -->

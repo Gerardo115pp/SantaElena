@@ -253,7 +253,7 @@
     }
 
     #sen-nav-options .sen-nav-option a {
-        color: var(--shade-1);
+        color: var(--shade-light-2);
         font-size: var(--font-size-2);
         text-transform: capitalize;
         font-weight: 500;
@@ -269,8 +269,8 @@
     }
 
     #sen-nav-controls button {
-        background: var(--color-4);
-        color: var(--dark-7);
+        background: var(--dark-8);
+        color: var(--color-light-3);
     }
 
     
@@ -320,6 +320,11 @@
                 background: var(--dark-7);
                 backdrop-filter: none;
                 border-bottom: 3px solid var(--color-light-3);
+            }
+
+            :global(#santa-elena-navbar[data-schema-theme="solid-dark"] #sen-nav-controls button) {
+                background: var(--color-4);
+                color: var(--dark-7);
             }
     
     /*=====  End of Themes  ======*/

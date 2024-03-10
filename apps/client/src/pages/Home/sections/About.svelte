@@ -2,8 +2,7 @@
     import TwoColumnImageText from "@components/UI/Layout/TwoColumnImageText.svelte";
     import TxyMarkup from "@libs/TxyClient/components/TxyMarkup.svelte";
     import TxyContentEntry from "@libs/TxyClient/models/content_entry";
-    import viewport from "@components/viewport_actions/useViewportActions";
-    import { layout_images, navbar_transparent } from "@stores/layout";
+    import { layout_images } from "@stores/layout";
     import txy_repository from "@libs/TxyClient/txy_repository";
     import { get_content_entries_params } from "@stores/txy";
     import SectionHeader from "@components/UI/SectionHeader.svelte";
@@ -70,10 +69,6 @@
     =            Methods            =
     =============================================*/
     
-        const handleViewportEnter = e => {
-            navbar_transparent.set(false);
-        }
-
         const updateContentEntries = async () => {
             let new_title_one = await title_one.GetFreshCopy();
             let new_content_one = await content_one.GetFreshCopy();
@@ -113,7 +108,7 @@
     <TwoColumnImageText image_resource={layout_images.IDYLLICISM_IMAGE} background_color="var(--shade-light-1)" reverse padding_top="var(--spacing-4)">
         <div id="our-process-wrapper" class="about-text-content" slot="text_content">
             <div class="a-tc-description">
-                <h3 class="headline-2" on:viewportEnter={handleViewportEnter} use:viewport>
+                <h3 class="headline-2">
                     {title_two.Text}
                 </h3>
                 <div class="paragraphs-wrapper">

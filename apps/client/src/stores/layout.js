@@ -69,7 +69,6 @@ export const defineLayout = () => {
 
     layout_properties.set(new_layout_properties);
     LAYOUT_PROPERTIES = new_layout_properties;
-    console.log("layout changed, is mobile: ", get(layout_properties).IS_MOBILE);
 }
 
 export const hasChangedLayout = () => {
@@ -78,6 +77,11 @@ export const hasChangedLayout = () => {
 
     const width_change = Math.abs(current_width - LAYOUT_PROPERTIES.VIEWPORT_WIDTH) / LAYOUT_PROPERTIES.VIEWPORT_WIDTH;
     const height_change = Math.abs(current_height - LAYOUT_PROPERTIES.VIEWPORT_HEIGHT) / LAYOUT_PROPERTIES.VIEWPORT_HEIGHT;
+
+
+    // const layout_changed = width_change > layout_change_threshold || height_change > layout_change_threshold;
+
+    // return layout_changed;
 
     return width_change > layout_change_threshold || height_change > layout_change_threshold;
 }
@@ -101,21 +105,6 @@ export const user_locale = browser ? (window.navigator.language.split("-")[0] ||
 =            Layout elements            =
 =============================================*/
 
-/**
- * @type {Writable<boolean>} whether the navbar is transparent or not
- */
-export const navbar_transparent = writable(true);
-
-/**
- * @type {Writable<boolean>} whether the navbar should have a solid background
- */
-export const navbar_solid = writable(false);
-
-navbar_solid.subscribe((value) => {
-    if (true) { 
-        navbar_transparent.set(false);
-    }
-});
 
 export const layout_images = {
     HERO_BACKGROUND: new ImageResource("hero-bg.webp", MEDIA_SIZES.EXTRA_LARGE.postfix),
