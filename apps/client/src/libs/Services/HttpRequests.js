@@ -131,6 +131,36 @@ import { SVG_PREFIX, WORDPRESS_REST_API, TXY_SERVICE, PAYMENTS_SERVICE } from ".
                 return new HttpResponse(response, data);
             }
         }
+    
+    /*----------  Pages  ----------*/
+        
+        export class GetPageByIdRequest {
+            /**
+             * @param {number} id 
+             */
+            constructor(id) {
+                this.id = id;
+            }
+
+            toJson = attributesToJson.bind(this);
+
+            /**
+             * Sends a request to the server to get a page by its id
+             * @async
+             * @returns {Promise<HttpResponse>}
+             */
+            do = async () => {
+                const response = await fetch(`${WORDPRESS_REST_API}/wp/v2/pages/${this.id}`);
+                let data = null;
+
+                if (response.status >= 200 && response.status < 300) {
+                    data = await response.json();
+                }
+
+                return new HttpResponse(response, data);
+            }
+        }
+    
 /*=====  End of Wordpress  ======*/
 
 

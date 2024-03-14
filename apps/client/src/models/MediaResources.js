@@ -1,5 +1,7 @@
 import { MEDIA_SIZES, getImageResourceUrl } from "@libs/Services/media_loaders";
 
+const global_execution_context = this;
+
 export class ImageResource {
     /** 
      * @type {string} the name of the file without extension or size postfix 
@@ -69,7 +71,9 @@ export class ImageResource {
      * @returns {string} the appropriate postfix for the given width percentage
      */
     getPostfix(width_percentage) {
-        const viewport_width = window.innerWidth;
+        // TODO: Figure out how we can detect if a request is sent from a mobile or desktop device, and then define the default width accordingly
+        const default_width = 400;
+        const viewport_width = globalThis.innerWidth ?? default_width; // in the browser window is the global execution context(aka 'this') by default. In Node.js, it is the global object, which does not have an innerWidth so viewport_width will default to default_width;
         const need_size = viewport_width * width_percentage;
         let appropriate_size = MEDIA_SIZES.ORIGINAL.postfix;
 

@@ -60,13 +60,13 @@
         <div id="footer-privacy-pages">
             <h2 class="fpp-privacy-page">
                 <!-- svelte-ignore a11y-invalid-attribute -->
-                <a href="#">
+                <a href="/privacy">
                     {$layout_properties.VIEWPORT_WIDTH >= 1116 ? "Términos y condiciones" : "Términos&Condiciones" }
                 </a>
             </h2>
             <h2 class="fpp-privacy-page">
                 <!-- svelte-ignore a11y-invalid-attribute -->
-                <a href="#">
+                <a href="/privacy">
                     {$layout_properties.VIEWPORT_WIDTH >= 1116 ? "Aviso de privacidad" : "Privacidad" }
                 </a>
             </h2>

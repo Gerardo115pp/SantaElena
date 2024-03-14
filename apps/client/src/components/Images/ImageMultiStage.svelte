@@ -98,7 +98,7 @@
 
 </script>
 
-{#if image_resource !== undefined && browser}
+{#if image_resource !== undefined}
     <img bind:this={image_element} src="{image_resource.getUrl(0.2)}" alt="{alt_text}" class="multi-stage-image" class:blur-unloaded={blur_unloaded} class:multi-image-loaded={is_loaded}>
 {/if}
 

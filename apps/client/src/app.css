@@ -139,6 +139,14 @@
             --spacing-8: calc(var(--spacing-7) * 2); /* 1024px */
             --spacing-9: calc(var(--spacing-8) * 2); /* 2048px */
             
+            /* Wordpress: spacing */
+            --wp--preset--spacing--10: var(--spacing-1);
+            --wp--preset--spacing--20: var(--spacing-2);
+            --wp--preset--spacing--30: var(--spacing-3);
+            --wp--preset--spacing--40: var(--spacing-4);
+            --wp--preset--spacing--50: var(--spacing-5);
+            --wp--preset--spacing--60: var(--spacing-6);
+            --wp--preset--spacing--70: var(--spacing-7);
         /* Fonts */
             --font-size-1: 16px; /* 16px */
             --font-size-2: calc(var(--font-size-1) * 1.1875); /* 19px */
