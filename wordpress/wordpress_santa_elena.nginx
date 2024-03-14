@@ -1,0 +1,24 @@
+upstream php {
+    server 127.0.0.1:9000;
+}
+
+server { 
+    listen 80; 
+    server_name localhost; # Development
+    # server_name santa-elena.mx; # Production
+
+    # error_log /dev/fd/1 info;
+    # error_log /dev/fd/1 debug;
+
+    http2 on;
+
+    location ~ \.php$ {
+        root /var/www/html;
+        add_header X-Handled-By "PHP - Container";
+        fastcgi_index  index.php;
+        # FIXME: This file is probably using the wrong path prefix(/scripts/) verfiy by error_log /some/path debug;
+        fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        include        fastcgi_params;
+        fastcgi_pass   php;
+    }
+}
