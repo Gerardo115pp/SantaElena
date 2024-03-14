@@ -522,5 +522,7 @@ WORKDIR /var/www/html
 
 EXPOSE 80
 
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]e used as delimiters. This can be useful when your pattern includes a lot of slashes
+# entrypoint handles the copy of wp files to /var/www/html, and makes all the necessary adjustments to the nginx config files based on the container restrictions(cpus, memory, etc)
+# also includes the app vh configuration on nginx.conf 
+ENTRYPOINT ["docker-entrypoint.sh"] 
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
