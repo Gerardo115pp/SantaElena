@@ -532,6 +532,7 @@ RUN sed -i '/#gzip  on;/a\	include /etc/nginx/webapp.conf;' /etc/nginx/nginx.con
 RUN sed -i '/access_log/a\	error_log  /dev/fd/1 debug;' /etc/nginx/nginx.conf
 RUN sed -i '/include \/etc\/nginx\/conf.d/d' /etc/nginx/nginx.conf
 
+# TODO: Remove/Comment out the following lines before deploying to production
 # Testing util packages
 RUN set -eux ; \
 	apk add --no-cache \
