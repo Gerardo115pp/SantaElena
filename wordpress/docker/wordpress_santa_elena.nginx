@@ -12,12 +12,13 @@ server {
 
     http2 on;
 
-    location ~ \.php$ {
+    location ~ ^/wordpress/.+\.php$ {
         root /var/www/html;
+        rewrite ^/wordpress/(.+)$ /$1 break;
         add_header X-Handled-By "PHP - Container";
-        fastcgi_index  index.php;
-        # FIXME: This file is probably using the wrong path prefix(/scripts/) verfiy by error_log /some/path debug;
-        fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        # FIXME: This file is probably using the wrong path prefix(/scrips/) verfiy by error_log /some/path debug;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        include        snippets/fastcgi-php.conf;
         include        fastcgi_params;
         fastcgi_pass   php;
     }

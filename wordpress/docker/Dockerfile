@@ -80,7 +80,7 @@ RUN set -eux; \
 	\
 	apk del --no-network .fetch-deps
 
-COPY docker-php-source /usr/local/bin/
+COPY ./docker/docker-php-source /usr/local/bin/
 
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps \
@@ -196,7 +196,7 @@ RUN set -eux; \
 # smoke test
 	php --version
 
-COPY docker-php-ext-* docker-php-entrypoint /usr/local/bin/
+COPY ./docker/docker-php-ext-* ./docker/docker-php-entrypoint /usr/local/bin/
 
 # sodium was built as a shared module (so that it can be replaced later if so desired), so let's enable it too (https://github.com/docker-library/php/issues/598)
 RUN docker-php-ext-enable sodium
@@ -292,7 +292,7 @@ RUN set -ex; \
 # https://pecl.php.net/package/imagick
 # https://github.com/Imagick/imagick/commit/5ae2ecf20a1157073bad0170106ad0cf74e01cb6 (causes a lot of build failures, but strangely only intermittent ones 🤔)
 # see also https://github.com/Imagick/imagick/pull/641
-# this is "pecl install imagick-3.7.0", but by hand so we can apply a small hack / part of the above commit
+# this is "pecl install imagick-3.7.0", but by hand so we can apply a small hack / patch of the above commit
 	curl -fL -o imagick.tgz 'https://pecl.php.net/get/imagick-3.7.0.tgz'; \
 	echo '5a364354109029d224bcbb2e82e15b248be9b641227f45e63425c06531792d3e *imagick.tgz' | sha256sum -c -; \
 	tar --extract --directory /tmp --file imagick.tgz imagick-3.7.0; \
@@ -391,8 +391,8 @@ RUN set -eux; \
 
 VOLUME /var/www/html
 
-COPY --chown=www-data:www-data wp-config-docker.php /usr/src/wordpress/
-COPY docker-entrypoint.sh /usr/local/bin/
+COPY --chown=www-data:www-data ./docker/wp-config-docker.php /usr/src/wordpress/
+COPY ./docker/docker-entrypoint.sh /usr/local/bin/
 
 # EXPOSE 9000 we don't expose php-fpm, just the nginx(80)
 
@@ -459,10 +459,16 @@ RUN set -x \
 # create a docker-entrypoint.d directory
     && mkdir /docker-entrypoint.d
 
-COPY 10-listen-on-ipv6-by-default.sh /docker-entrypoint.d
-COPY 15-local-resolvers.envsh /docker-entrypoint.d
-COPY 20-envsubst-on-templates.sh /docker-entrypoint.d
-COPY 30-tune-worker-processes.sh /docker-entrypoint.d
+COPY ./docker/10-listen-on-ipv6-by-default.sh /docker-entrypoint.d
+COPY ./docker/15-local-resolvers.envsh /docker-entrypoint.d
+COPY ./docker/20-envsubst-on-templates.sh /docker-entrypoint.d
+COPY ./docker/30-tune-worker-processes.sh /docker-entrypoint.d
+
+# Add FastCGI configuration files
+
+COPY ./docker/snippets /etc/nginx/snippets
+COPY ./docker/fastcgi.conf /etc/nginx/fastcgi.conf
+COPY ./docker/fastcgi_params /etc/nginx/fastcgi_params
 
 # End of Nginx installation. Next we install supervisord
 
@@ -498,8 +504,20 @@ RUN apk add --no-cache supervisor ; {\
 
 # End of supervisord installation. Next we setup the project's wordpress plugin's and theme's
 
-COPY ./santa_elena_theme /var/www/html/wp-content/themes
-COPY ./wp_plugins/* /var/www/html/wp-content/plugins/
+RUN mkdir -p /var/www/html/wp-content/themes ; \
+	mkdir -p /var/www/html/wp-content/plugins
+
+
+# EDIT THE FOLLOWING LINES TO FIT THE PROJECT'S THEME NAME. all the plugins in the wp_plugins folder will be copied over to the plugins folder in the wordpress installation
+COPY ./santa_elena_theme /var/www/html/wp-content/themes/santa_elena_theme/
+COPY --chown=www-data:www-data --chmod=755 ./wp_plugins /tmp/wp_plugins
+
+# Copy the plugins to the wordpress installation
+RUN for plugin in /tmp/wp_plugins/* ; do \
+		cp -r $plugin /var/www/html/wp-content/plugins/ ; \
+	done ; \
+	rm -rf /tmp/wp_plugins
+
 
 # Ensure the files are owned by the www-data and have the correct permissions
 RUN chown -R www-data:www-data /var/www/html/wp-content/themes ; \
@@ -508,10 +526,17 @@ RUN chown -R www-data:www-data /var/www/html/wp-content/themes ; \
 	chmod -R 755 /var/www/html/wp-content/plugins
 
 # Add the nginx configuration file
-COPY ./wordpress_santa_elena.nginx /etc/nginx/webapp.conf
+COPY ./docker/wordpress_santa_elena.nginx /etc/nginx/webapp.conf
 
 RUN sed -i '/#gzip  on;/a\	include /etc/nginx/webapp.conf;' /etc/nginx/nginx.conf
+RUN sed -i '/access_log/a\	error_log  /dev/fd/1 debug;' /etc/nginx/nginx.conf
 RUN sed -i '/include \/etc\/nginx\/conf.d/d' /etc/nginx/nginx.conf
+
+# Testing util packages
+RUN set -eux ; \
+	apk add --no-cache \
+		vim \
+		tree
 
 
 # Override stop signal to stop process gracefully

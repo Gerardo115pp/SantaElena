@@ -64,4 +64,7 @@ sed -i -E 's,listen       80;,listen       80;\n    listen  [::]:80;,' /$DEFAULT
 
 entrypoint_log "$ME: info: Enabled listen on IPv6 in /$DEFAULT_CONF_FILE"
 
+# Enable PHP
+sed -i -E 's,;
+
 exit 0

@@ -1,0 +1,206 @@
+# Local dev
+# upstream php-fpm {
+#     server unix:/run/php-fpm/php-fpm.sock;
+# }
+
+# Contenerized wordpress
+upstream php-fpm {
+    server localhost:8080;
+}
+
+server {
+    listen 443;
+    server_name dev-santa-elena.mx;
+
+    http2 on;
+
+    error_log /var/www/octavio/logs/dev-santa-elena.mx-error.log debug;
+    access_log /var/www/octavio/logs/dev-santa-elena.mx-access.log;
+
+    ssl_certificate /home/el_maligno/local_domain_certificates/santa-elena.mx/dev-santa-elena.mx.pem;
+    ssl_certificate_key /home/el_maligno/local_domain_certificates/santa-elena.mx/dev-santa-elena.mx-key.pem;
+
+    location /resources/ {
+        add_header 'Cache-Control' 'max-age=13600, public';
+        add_header 'Age' '360';
+        rewrite ^/resources/(.*)$ /$1 break;
+        root /var/www/octavio/resources;
+    }
+
+    location /resources/fonts/ {
+        add_header 'Cache-Control' 'max-age=132600, public'; # 1.5 days
+        add_header 'Age' '360';
+        
+        rewrite ^/resources/fonts/(.*)$ /$1 break;
+
+        root /var/www/octavio/resources/assets/fonts;
+
+        try_files $uri $uri /resources/fonts/$uri;
+    }
+
+    location /scripts/ {
+        rewrite ^/scripts/(.*)$ /$1 break;
+        proxy_redirect off;
+        proxy_set_header Host $host;
+
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, PATCH, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization';
+            return 200;
+        }
+
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_method $request_method;
+
+        proxy_pass https://dev-santa-elena.mx:5006/bundle.js;
+    }
+
+    # Services 
+
+        location /txy-api/ {
+            proxy_redirect off;
+            proxy_set_header Host $host;
+
+            if ($request_method = 'OPTIONS') {
+                add_header 'Access-Control-Allow-Origin' '*';
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, PATCH, OPTIONS';
+                add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization';
+                return 200;
+            }
+
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_method $request_method;
+
+            if ($request_method != 'OPTIONS') {
+                rewrite ^/txy-api/(.*)$ /$1 break;
+                proxy_pass http://localhost:6001;
+            }
+        }
+
+        location /payments-api/ {
+            proxy_redirect off;
+            proxy_set_header Host $host;
+
+            if ($request_method = 'OPTIONS') {
+                add_header 'Access-Control-Allow-Origin' '*';
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, PATCH, OPTIONS';
+                add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization';
+                return 200;
+            }
+
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_method $request_method;
+
+            if ($request_method != 'OPTIONS') {
+                rewrite ^/payments-api/(.*)$ /$1 break;
+                proxy_pass http://localhost:6002;
+            }
+        }
+
+    # Wordpress
+
+        # for local php-fpm
+        # location ~ ^/wordpress/.+\.php$ {
+        #     root /var/www/octavio/wordpress;
+        #     rewrite ^/wordpress/(.+)$ /$1 break;
+        #     add_header X-Location "wordpress-php";
+        #     add_header X-Uri $uri;
+        #     add_header X-Script-Name $document_root$fastcgi_script_name;
+        #     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        #     include snippets/fastcgi-php.conf;
+        #     fastcgi_pass php-fpm;
+        # }
+
+        # for contenerized wordpress
+        location ~ ^/wordpress/.+\.php$ {
+            # rewrite ^/wordpress/(.+)$ /$1 break;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            add_header X-Location "wordpress-php";
+            proxy_method $request_method;
+            proxy_pass http://php-fpm;
+        }
+
+        location /wp-admin {
+            index index.php;
+            return 302 /wordpress$uri;
+        }
+
+
+        location = /wordpress/wp-admin/ {
+            index index.php;
+            return 302 /wordpress/wp-admin/index.php;
+        }
+
+        location /wordpress {
+            # TODO: Cause we are now using a contenerized wordpress, we need to handle the different paths. Probably best to handle that on the wordpress container
+            root /var/www/octavio/wordpress;
+            rewrite ^/wordpress/?(.*)$ /$1 break;
+            add_header debug-uri $uri always;   
+            try_files $uri $uri /wordpress/index.php?$args;
+        }
+
+        location /index.php {
+            if ($http_referer !~ "https://(dev-)?santa-elena.mx/wordpress(/.*)?") {
+                return 403;
+            }
+
+            rewrite ^/index.php$ /wordpress/index.php break;
+            
+            try_files $uri /wordpress/index.php?$args;
+        }
+
+        # location /wordpress/wp-json {
+        #     root /var/www/octavio/wordpress;
+        #     # fastcgi_index index.php;
+        #     fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+        #     fastcgi_index test.php; # REMOVE THIS LINE IN PRODUCTION
+
+        #     include fastcgi.conf;
+                
+        #     # fastcgi_param SCRIPT_FILENAME $document_root/test.php;
+        #     fastcgi_param SCRIPT_FILENAME $document_root/index.php;
+
+        #     set $path_info $fastcgi_path_info;
+        #     fastcgi_param PATH_INFO $path_info;
+
+        #     add_header X-Location "wordpress-wp-json";
+        #     add_header X-Uri $request_uri;
+        #     add_header X-Script-Name $document_root$fastcgi_script_name;
+            
+        #     fastcgi_pass php-fpm;
+        # }
+
+
+    # Dev
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_method $request_method;
+        proxy_pass https://dev-santa-elena.mx:5005;
+    }
+
+    location = /favicon.ico {
+        root /var/www/octavio/resources/assets;
+        try_files $uri /favicon.ico;
+    }
+
+    # Prod
+    # location / {
+    #     root /var/www/octavio/scripts;
+    #     try_files $uri /index.html;
+    # }
+}
+
+server {
+    listen 80;
+    server_name dev-santa-elena.mx;
+
+    return 301 https://$host$request_uri;
+}
