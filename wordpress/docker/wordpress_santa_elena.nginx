@@ -16,10 +16,19 @@ server {
         root /var/www/html;
         rewrite ^/wordpress/(.+)$ /$1 break;
         add_header X-Handled-By "PHP - Container";
-        # FIXME: This file is probably using the wrong path prefix(/scrips/) verfiy by error_log /some/path debug;
+        add_header X-Uri $uri;
+        add_header X-Script-Name $document_root$fastcgi_script_name;
         fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
         include        snippets/fastcgi-php.conf;
         include        fastcgi_params;
         fastcgi_pass   php;
+    }
+
+
+    location /wordpress {
+        root /var/www/octavio/wordpress;
+        rewrite ^/wordpress/?(.*)$ /$1 break;
+        add_header debug-uri $uri always;  
+        try_files $uri $uri /wordpress/index.php?$args;
     }
 }

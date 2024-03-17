@@ -113,18 +113,6 @@ server {
         #     fastcgi_pass php-fpm;
         # }
 
-        # for contenerized wordpress
-        location ~ ^/wordpress/.+\.php$ {
-            # rewrite ^/wordpress/(.+)$ /$1 break;
-            proxy_set_header Host $host;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header X-Forwarded-Proto $scheme;
-            add_header X-Location "wordpress-php";
-            proxy_method $request_method;
-            proxy_pass http://php-fpm;
-        }
-
         location /wp-admin {
             index index.php;
             return 302 /wordpress$uri;
@@ -138,9 +126,32 @@ server {
 
         location /wordpress {
             # TODO: Cause we are now using a contenerized wordpress, we need to handle the different paths. Probably best to handle that on the wordpress container
+            proxy_redirect off;
             root /var/www/octavio/wordpress;
             rewrite ^/wordpress/?(.*)$ /$1 break;
             add_header debug-uri $uri always;   
+
+                # for contenerized wordpress
+                location ~ ^/wordpress/.+\.php$ {
+                    proxy_redirect https://dev-santa-elena.mx/wordpress/ https://dev-santa-elena.mx/;
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_set_header Upgrade $http_upgrade;
+                    proxy_set_header X-Forwarded-Proto $scheme;
+                    add_header X-Location "wordpress-php";
+                    proxy_method $request_method;
+                    proxy_pass http://php-fpm;
+                }
+
+                location /wordpress/wp-json {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_set_header Upgrade $http_upgrade;
+                    proxy_set_header Connection "upgrade";
+                    proxy_method $request_method;
+                    proxy_pass http://php-fpm;
+                }
+
             try_files $uri $uri /wordpress/index.php?$args;
         }
 
@@ -153,27 +164,6 @@ server {
             
             try_files $uri /wordpress/index.php?$args;
         }
-
-        # location /wordpress/wp-json {
-        #     root /var/www/octavio/wordpress;
-        #     # fastcgi_index index.php;
-        #     fastcgi_split_path_info ^(.+?\.php)(/.*)$;
-        #     fastcgi_index test.php; # REMOVE THIS LINE IN PRODUCTION
-
-        #     include fastcgi.conf;
-                
-        #     # fastcgi_param SCRIPT_FILENAME $document_root/test.php;
-        #     fastcgi_param SCRIPT_FILENAME $document_root/index.php;
-
-        #     set $path_info $fastcgi_path_info;
-        #     fastcgi_param PATH_INFO $path_info;
-
-        #     add_header X-Location "wordpress-wp-json";
-        #     add_header X-Uri $request_uri;
-        #     add_header X-Script-Name $document_root$fastcgi_script_name;
-            
-        #     fastcgi_pass php-fpm;
-        # }
 
 
     # Dev
@@ -190,12 +180,6 @@ server {
         root /var/www/octavio/resources/assets;
         try_files $uri /favicon.ico;
     }
-
-    # Prod
-    # location / {
-    #     root /var/www/octavio/scripts;
-    #     try_files $uri /index.html;
-    # }
 }
 
 server {
