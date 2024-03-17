@@ -1,0 +1,4 @@
+# All in one WordPress/PHP-FPM image.
+*All in one except for db*
+This image is based on the official [PHP-FPM alpine](https://github.com/docker-library/php/blob/16b4b79d0cc6346ec003ed30f30566f9fbfdc6a1/8.3/alpine3.19/fpm/Dockerfile), the [WordPress fpm-alpine](https://github.com/docker-library/wordpress/blob/509adb58cbc7463a03e317931df65868ec8a3e92/latest/php8.3/fpm-alpine/Dockerfile) and the [Nginx alpine-slim](https://github.com/nginxinc/docker-nginx/blob/1f227619c1f1baa0bed8bed844ea614437ff14fb/mainline/alpine-slim/Dockerfile) images.
+The image is designed incorporate Wordpress as a throwaway service that integrates well with my other services. The changes to the above mentioned images mainly related to unnecessary packages, making persistent what needs to be persistent and glueing everything together with supervisord.
