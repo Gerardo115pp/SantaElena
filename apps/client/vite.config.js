@@ -31,7 +31,15 @@ const requestWordpressServices = async () => {
 	if (!(response.status >= 200 && response.status < 300)) {
 		throw new Error(`WP_API responded with status ${response.status}`);
 	}
-	let json_data = await response.json();
+	let json_data = null;
+	try {
+		json_data = await response.json();
+	} catch (error) {
+		console.error("Error parsing response:", error);
+		console.error("Response:", response);
+		console.error("request endpoint:", `${process.env.WP_API}/santa-elena/v1/products`);
+		throw error;
+	}
 	
 	return json_data;
 }

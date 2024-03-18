@@ -509,14 +509,15 @@ RUN mkdir -p /var/www/html/wp-content/themes ; \
 
 
 # EDIT THE FOLLOWING LINES TO FIT THE PROJECT'S THEME NAME. all the plugins in the wp_plugins folder will be copied over to the plugins folder in the wordpress installation
-COPY ./santa_elena_theme /var/www/html/wp-content/themes/santa_elena_theme/
-COPY --chown=www-data:www-data --chmod=755 ./wp_plugins /tmp/wp_plugins
+COPY --chown=www-data:www-data --chmod=1777 ./santa_elena_theme /usr/src/wordpress/wp-content/themes/santa_elena_theme
+COPY --chown=www-data:www-data --chmod=1777 ./wp_plugins /tmp/wp_plugins
 
 # Copy the plugins to the wordpress installation
-RUN for plugin in /tmp/wp_plugins/* ; do \
-		cp -r $plugin /var/www/html/wp-content/plugins/ ; \
-	done ; \
-	rm -rf /tmp/wp_plugins
+RUN for plugin in \
+		/tmp/wp_plugins/* \
+	; do \
+		cp -r $plugin /usr/src/wordpress/wp-content/plugins ; \
+	done ; 
 
 
 # Ensure the files are owned by the www-data and have the correct permissions
@@ -534,10 +535,10 @@ RUN sed -i '/include \/etc\/nginx\/conf.d/d' /etc/nginx/nginx.conf
 
 # TODO: Remove/Comment out the following lines before deploying to production
 # Testing util packages
-RUN set -eux ; \
-	apk add --no-cache \
-		vim \
-		tree
+# RUN set -eux ; \
+# 	apk add --no-cache \
+# 		vim \
+# 		tree
 
 
 # Override stop signal to stop process gracefully
