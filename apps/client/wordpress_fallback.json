@@ -1,0 +1,24 @@
+[
+    {
+        "id": 35,
+        "name": "Gift and Flowers",
+        "image": "36",
+        "content": "\n<h2 class=\"wp-block-heading\">Incluye</h2>\n\n\n\n<p id=\"esto-es-un-id\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ac lectus est. Praesent tellus metus, porta tristique magna interdum, feugiat aliquam massauspendisse mollis.</p>\n\n\n\n<p>Mauris nec dictum tortor, sed malesuada ante. Ut volutpat urna velit:</p>\n\n\n\n<ul>\n<li>Duis aliquam libero</li>\n\n\n\n<li>Non diam rhoncus</li>\n\n\n\n<li>Quisque non commodo lectus</li>\n\n\n\n<li>Vestibulum eu odio</li>\n</ul>\n\n\n\n<p>Etiam a facilisis felis. Mauris semper dictum lorem, sed rutrum nisi. Nulla facilisi. Fusce consequat, diam et varius molestie, sem tortor vulputate lorem, sit amet porttitor diam quam vitae lacus.</p>\n\n\n\n<p>Sed molestie ullamcorper nunc sit amet tincidunt. Nunc semper odio efficitur massa maximus lobortis.</p>\n",
+        "short_description": "Una ultima ofrenda para un ser amado",
+        "next_steps": "<p>Primero eso, despues tendras que hacer algo mas y al final no se que pueda pasar&#8230;</p>\n",
+        "price": 200,
+        "price_range": "",
+        "slug": "gift-and-flowers"
+    },
+    {
+        "id": 32,
+        "name": "Recoleccion",
+        "image": "",
+        "content": "\n<h2 class=\"wp-block-heading\">El Proceso de recolección</h2>\n\n\n\n<p>En Santa Elena Funerarias, honramos la vida y los recuerdos que unen a las familias. Nuestra misión es celebrar cada existencia de manera única y personal, resaltando los momentos que dieron forma a una vida plena. Desde el corazón de Guadalajara, Jalisco, llevamos más de dos décadas acompañando a las comunidades en la conmemoración de sus seres queridos.</p>\n\n\n\n<p>Entendemos que despedir a un ser amado es un acto de amor y respeto. Por ello, nos dedicamos a crear servicios que reflejan la alegría y el amor, más allá del adiós. Nuestra promesa es proporcionar un espacio de paz y serenidad donde las familias pueden reunirse para recordar y honrar a aquellos que han marcado sus vidas.</p>\n\n\n\n<p>En Santa Elena, creemos en la importancia de la despedida sin dejar de lado la celebración del legado y la esencia de quienes nos han precedido. A través de nuestra dedicación y servicios personalizados, nos aseguramos de que cada ceremonia sea un reflejo fiel de la vida y los deseos de cada persona y su familia.</p>\n\n\n\n<p>Le invitamos a conocernos y descubrir cómo podemos ayudarle a celebrar una vida extraordinaria.</p>\n\n\n\n<div class=\"wp-block-group is-nowrap is-layout-flex wp-container-core-group-layout-2 wp-block-group-is-layout-flex\">\n<figure class=\"wp-block-image size-large is-resized\"><img loading=\"lazy\" decoding=\"async\" width=\"1024\" height=\"636\" src=\"https://dev-santa-elena.mx/wordpress/wp-content/uploads/2024/02/service01-1024x636.jpg\" alt=\"\" class=\"wp-image-36\" style=\"width:539px;height:auto\" srcset=\"https://dev-santa-elena.mx/wordpress/wp-content/uploads/2024/02/service01-1024x636.jpg 1024w, https://dev-santa-elena.mx/wordpress/wp-content/uploads/2024/02/service01-300x186.jpg 300w, https://dev-santa-elena.mx/wordpress/wp-content/uploads/2024/02/service01-768x477.jpg 768w, https://dev-santa-elena.mx/wordpress/wp-content/uploads/2024/02/service01.jpg 1400w\" sizes=\"(max-width: 1024px) 100vw, 1024px\" /></figure>\n\n\n\n<div class=\"wp-block-group has-global-padding is-layout-constrained wp-block-group-is-layout-constrained\">\n<h2 class=\"wp-block-heading\">Hey</h2>\n\n\n\n<p>hola soy un chico</p>\n</div>\n</div>\n",
+        "short_description": "Este es un servicio de recoleccion de cuerpos en domicilio o semefo",
+        "next_steps": "<h3>Paso 1</h3>\n<p>Primero comunicate con nosotros para verificar disponibilidad.</p>\n<h3>Paso 2</h3>\n<p>Despues pasara esto, y tu debes hacer esto otro.</p>\n<p><strong>Explanation:</strong></p>\n<ul>\n<li><strong>Header:</strong> Typically consists of two parts: the type of the token, which is JWT, and the signing algorithm being used, such as HMAC SHA256 (HS256).</li>\n<li><strong>Payload:</strong> Contains the claims. Claims are statements about an entity (typically, the user) and additional metadata.</li>\n<li><strong>Signature:</strong> To create the signature part you have to take the encoded header, the encoded payload, a secret, the algorithm specified in the header, and sign that.</li>\n</ul>\n",
+        "price": 600,
+        "price_range": "",
+        "slug": "recoleccion"
+    }
+]

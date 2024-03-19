@@ -1,0 +1,494 @@
+{
+    "santa-elena-about-us-page": {
+        "page_id": "santa-elena-about-us-page",
+        "name": "Sobre Nosotros",
+        "content_hash": "",
+        "locales_content": {
+            "en": [
+                {
+                    "section_id": "about-us-page-headline",
+                    "name": "Titulo de pagina",
+                    "content": [
+                        {
+                            "entry_id": "auph-header-headline",
+                            "name": "El cache phrase de la pagina",
+                            "content_type": "text",
+                            "attributes": {
+                                "instructions": "El titulo de la pagina de 'sobre nosotros'",
+                                "text": "About santa elena"
+                            },
+                            "content_hash": "32547f4275bd29443035598d268322cf13b01316",
+                            "locale": "en"
+                        },
+                        {
+                            "entry_id": "auph-subheadline",
+                            "name": "Breve descripción de el contenido de la pagina ",
+                            "content_type": "markdown",
+                            "attributes": {
+                                "text": "*Discover who we are*"
+                            },
+                            "content_hash": "ae635e7747eb583550b563701ed7bedb7ce2e7fd",
+                            "locale": "en"
+                        }
+                    ]
+                }
+            ],
+            "es": [
+                {
+                    "section_id": "about-us-page-headline",
+                    "name": "Titulo de pagina",
+                    "content": [
+                        {
+                            "entry_id": "auph-header-headline",
+                            "name": "El cache phrase de la pagina",
+                            "content_type": "text",
+                            "attributes": {
+                                "instructions": "El titulo de la pagina de 'sobre nosotros'",
+                                "text": "Sobre santa elena"
+                            },
+                            "content_hash": "d5e632e988a4e366e1123380a9365340dbed5acf",
+                            "locale": "es"
+                        },
+                        {
+                            "entry_id": "auph-subheadline",
+                            "name": "Breve descripción de el contenido de la pagina ",
+                            "content_type": "markdown",
+                            "attributes": {
+                                "text": "*Descubre quienes somos*"
+                            },
+                            "content_hash": "0c2214b5253d2f39f819beafaac6215c01bde8b1",
+                            "locale": "es"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "santa-elena-blog-page": {
+        "page_id": "santa-elena-blog-page",
+        "name": "Blog",
+        "content_hash": "",
+        "locales_content": {
+            "en": [
+                {
+                    "section_id": "santa-elena-blog-header",
+                    "name": "Header",
+                    "content": [
+                        {
+                            "entry_id": "sebh-headline",
+                            "name": "El titulo de la pagina de blog",
+                            "content_type": "text",
+                            "attributes": {
+                                "text": "Blog de santa elena"
+                            },
+                            "content_hash": "2537004e00952d78b5b67270bdcab45e310d742a",
+                            "locale": "en"
+                        },
+                        {
+                            "entry_id": "sebh-subheadline",
+                            "name": "Subtitiular de la pagina de blog",
+                            "content_type": "markdown",
+                            "attributes": {
+                                "text": "Este es el blog de santa elena. Explora los temas que te interesan"
+                            },
+                            "content_hash": "91378942cc989a5ae6c54821190f2a75fc49abe8",
+                            "locale": "en"
+                        }
+                    ]
+                }
+            ],
+            "es": [
+                {
+                    "section_id": "santa-elena-blog-header",
+                    "name": "Header",
+                    "content": [
+                        {
+                            "entry_id": "sebh-headline",
+                            "name": "El titulo de la pagina de blog",
+                            "content_type": "text",
+                            "attributes": {
+                                "text": "Blog de santa elena"
+                            },
+                            "content_hash": "2537004e00952d78b5b67270bdcab45e310d742a",
+                            "locale": "es"
+                        },
+                        {
+                            "entry_id": "sebh-subheadline",
+                            "name": "Subtitiular de la pagina de blog",
+                            "content_type": "markdown",
+                            "attributes": {
+                                "text": "Este es el blog de santa elena. Explora los temas que te interesan"
+                            },
+                            "content_hash": "91378942cc989a5ae6c54821190f2a75fc49abe8",
+                            "locale": "es"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "santa-elena-home-page": {
+        "page_id": "santa-elena-home-page",
+        "name": "Pagina de inicio",
+        "content_hash": "",
+        "locales_content": {
+            "en": [
+                {
+                    "section_id": "stehp-hero-section",
+                    "name": "Sección inicial",
+                    "content": [
+                        {
+                            "entry_id": "stehp-hero-section-subheadline",
+                            "name": "Texto debajo del logo",
+                            "content_type": "text",
+                            "attributes": {
+                                "instructions": "Se descriptivo, la gente debe entender rapidamente de que se el sitio con este texto.",
+                                "text": "Age of Mythology is a real-time strategy video game developed by Ensemble Studios and published by Microsoft Game Studios. It was released on October 31, 2002 in North America and on November 14, 2002 in Europe. and it's great!"
+                            },
+                            "content_hash": "c0f0cd503e6ce50b7dee0a8bf3320c994a27e566",
+                            "locale": "en"
+                        }
+                    ]
+                },
+                {
+                    "section_id": "stehp-about-section",
+                    "name": "Sección sobre nosotros",
+                    "content": [
+                        {
+                            "entry_id": "stehp-as-card-one-title",
+                            "name": "Primer titulo en sobre nosotros",
+                            "content_type": "text",
+                            "attributes": {
+                                "text": "Our Mission!"
+                            },
+                            "content_hash": "d3072c447feb2db1044e868e22bfb1476c1f97d2",
+                            "locale": "en"
+                        },
+                        {
+                            "entry_id": "stehp-as-card-one-content",
+                            "name": "Primer contenido en sobre nosotros",
+                            "content_type": "markdown",
+                            "attributes": {
+                                "text": "**!En Santa Elena, celebramos la vida.**\n\nDesde Guadalajara, Jalisco, nos dedicamos a crear momentos de paz y recuerdo, enfatizando la alegría y el legado de cada vida\n\nCon profundo respeto y cariño, ofrecemos servicios personalizados para honrar y recordar a sus seres queridos.\n\nNuestros valores son:\n\n- El Servicio\n- La Empatia\n- EL Honor\n\nDesde Guadalajara, Jalisco, nos dedicamos a crear momentos de paz y recuerdo, enfatizando la alegría y el legado de cada vida!\n"
+                            },
+                            "content_hash": "2b15af455859048e345908b4a720e90b0ea33783",
+                            "locale": "en"
+                        },
+                        {
+                            "entry_id": "stehp-as-card-two-title",
+                            "name": "Segundo titulo en sobre nosotros",
+                            "content_type": "text",
+                            "attributes": {
+                                "text": "Nuestra Vision"
+                            },
+                            "content_hash": "8fe3f507d6739d59b21e4823ba3cc8f17d9b1079",
+                            "locale": "en"
+                        },
+                        {
+                            "entry_id": "stehp-as-card-two-content",
+                            "name": "Segundo contenido en sobre nosotros",
+                            "content_type": "markdown",
+                            "attributes": {
+                                "text": "Con profundo respeto y cariño, ofrecemos servicios personalizados para honrar y recordar a sus seres queridos.\n\nDesde Guadalajara, Jalisco, nos dedicamos a crear momentos de paz y recuerdo, enfatizando la alegría y el legado de cada vida"
+                            },
+                            "content_hash": "e21723991767b9aa6cb56a09b198d83cb1482b32",
+                            "locale": "en"
+                        }
+                    ]
+                },
+                {
+                    "section_id": "stehp-parallax-divisor-section",
+                    "name": "Sección divisor parallax",
+                    "content": [
+                        {
+                            "entry_id": "stehp-pds-title",
+                            "name": "Titulo en divisor parallax",
+                            "content_type": "text",
+                            "attributes": {
+                                "text": "Today, Tomorrow,<br/>And Beyond!"
+                            },
+                            "content_hash": "23336b12deff11426bbe4a2aab3b050e1a551111",
+                            "locale": "en"
+                        }
+                    ]
+                },
+                {
+                    "section_id": "stehp-services-section",
+                    "name": "Sección de servicios",
+                    "content": [
+                        {
+                            "entry_id": "stehp-sc-instructions",
+                            "name": "Instrucciones en servicios",
+                            "content_type": "text",
+                            "attributes": {
+                                "text": "Un lugar para vivir, trabajar y disfrutar"
+                            },
+                            "content_hash": "ef24ffe9f0f2d9a32218d2ba1c5741b78c6e068e",
+                            "locale": "en"
+                        }
+                    ]
+                },
+                {
+                    "section_id": "stehp-contact-section",
+                    "name": "Sección de contacto",
+                    "content": [
+                        {
+                            "entry_id": "stehp-cc-whatsapp-redirection",
+                            "name": "Redirección de whatsapp en contacto",
+                            "content_type": "text",
+                            "attributes": {
+                                "href": "https://wa.me/5213313045999"
+                            },
+                            "content_hash": "f15f225c1212b84300eed13b6c4b38282a112cb0",
+                            "locale": "en"
+                        },
+                        {
+                            "entry_id": "stehp-cc-social-list-facebook",
+                            "name": "Red social: Facebook",
+                            "content_type": "text",
+                            "attributes": {
+                                "instructions": "Aqui lo mas importante es el Hipervinculo, esta es la direccion de la pagina de faceboo",
+                                "text": "Un lugar para vivir, trabajar y disfrutar"
+                            },
+                            "content_hash": "923444b8bfa1dde32cad337f82eb61f812446249",
+                            "locale": "en"
+                        },
+                        {
+                            "entry_id": "stehp-cc-social-list-instagram",
+                            "name": "Redireccion de Instagram",
+                            "content_type": "text",
+                            "attributes": {},
+                            "content_hash": "fdbd18253f6437a861fbbfb447864f1b7ed04463",
+                            "locale": "en"
+                        }
+                    ]
+                }
+            ],
+            "es": [
+                {
+                    "section_id": "stehp-hero-section",
+                    "name": "Sección inicial",
+                    "content": [
+                        {
+                            "entry_id": "stehp-hero-section-subheadline",
+                            "name": "Texto debajo del logo",
+                            "content_type": "text",
+                            "attributes": {
+                                "instructions": "Se descriptivo, la gente debe entender rapidamente de que se trata la pagina con este texto.",
+                                "text": "Age of Mythology es un videojuego increible de estrategia en tiempo real desarrollado por Ensemble Studios y publicado por Microsoft Game Studios. Fue lanzado el 31 de octubre de 2002 en Norteamérica y el 14 de noviembre de 2002 en Europa. y es genial!"
+                            },
+                            "content_hash": "641c5c57a73317bf73672da55621781bc4197546",
+                            "locale": "es"
+                        }
+                    ]
+                },
+                {
+                    "section_id": "stehp-about-section",
+                    "name": "Sección sobre nosotros",
+                    "content": [
+                        {
+                            "entry_id": "stehp-as-card-one-title",
+                            "name": "Primer titulo en sobre nosotros",
+                            "content_type": "text",
+                            "attributes": {
+                                "text": "Nuestra Mision!"
+                            },
+                            "content_hash": "d5f9a3db15910f47830bfff08029ceda757ecc45",
+                            "locale": "es"
+                        },
+                        {
+                            "entry_id": "stehp-as-card-one-content",
+                            "name": "Primer contenido en sobre nosotros",
+                            "content_type": "markdown",
+                            "attributes": {
+                                "text": "**!En Santa Elena, celebramos la vida.**\n\nDesde Guadalajara, Jalisco, nos dedicamos a crear momentos de paz y recuerdo, enfatizando la alegría y el legado de cada vida\n\nCon profundo respeto y cariño, ofrecemos servicios personalizados para honrar y recordar a sus seres queridos.\n\nNuestros valores son:\n\n- El Servicio\n- La Empatia\n- EL Honor\n\nDesde Guadalajara, Jalisco, nos dedicamos a crear momentos de paz y recuerdo, enfatizando la alegría y el legado de cada vida!\n"
+                            },
+                            "content_hash": "2b15af455859048e345908b4a720e90b0ea33783",
+                            "locale": "es"
+                        },
+                        {
+                            "entry_id": "stehp-as-card-two-title",
+                            "name": "Segundo titulo en sobre nosotros",
+                            "content_type": "text",
+                            "attributes": {
+                                "text": "Nuestra Vision"
+                            },
+                            "content_hash": "8fe3f507d6739d59b21e4823ba3cc8f17d9b1079",
+                            "locale": "es"
+                        },
+                        {
+                            "entry_id": "stehp-as-card-two-content",
+                            "name": "Segundo contenido en sobre nosotros",
+                            "content_type": "markdown",
+                            "attributes": {
+                                "text": "Con profundo respeto y cariño, ofrecemos servicios personalizados para honrar y recordar a sus seres queridos.\n\nDesde Guadalajara, Jalisco, nos dedicamos a crear momentos de paz y recuerdo, enfatizando la alegría y el legado de cada vida"
+                            },
+                            "content_hash": "e21723991767b9aa6cb56a09b198d83cb1482b32",
+                            "locale": "es"
+                        }
+                    ]
+                },
+                {
+                    "section_id": "stehp-parallax-divisor-section",
+                    "name": "Sección divisor parallax",
+                    "content": [
+                        {
+                            "entry_id": "stehp-pds-title",
+                            "name": "Titulo en divisor parallax",
+                            "content_type": "text",
+                            "attributes": {
+                                "text": "Today, Tomorrow,<br/>And Beyond!"
+                            },
+                            "content_hash": "23336b12deff11426bbe4a2aab3b050e1a551111",
+                            "locale": "es"
+                        }
+                    ]
+                },
+                {
+                    "section_id": "stehp-services-section",
+                    "name": "Sección de servicios",
+                    "content": [
+                        {
+                            "entry_id": "stehp-sc-instructions",
+                            "name": "Instrucciones en servicios",
+                            "content_type": "text",
+                            "attributes": {
+                                "text": "Un lugar para vivir, trabajar y disfrutar"
+                            },
+                            "content_hash": "ef24ffe9f0f2d9a32218d2ba1c5741b78c6e068e",
+                            "locale": "es"
+                        }
+                    ]
+                },
+                {
+                    "section_id": "stehp-contact-section",
+                    "name": "Sección de contacto",
+                    "content": [
+                        {
+                            "entry_id": "stehp-cc-whatsapp-redirection",
+                            "name": "Redirección de whatsapp en contacto",
+                            "content_type": "text",
+                            "attributes": {
+                                "href": "https://wa.me/5213313045999"
+                            },
+                            "content_hash": "f15f225c1212b84300eed13b6c4b38282a112cb0",
+                            "locale": "es"
+                        },
+                        {
+                            "entry_id": "stehp-cc-social-list-facebook",
+                            "name": "Red social: Facebook",
+                            "content_type": "text",
+                            "attributes": {
+                                "instructions": "Aqui lo mas importante es el Hipervinculo, esta es la direccion de la pagina de faceboo",
+                                "text": "Un lugar para vivir, trabajar y disfrutar"
+                            },
+                            "content_hash": "923444b8bfa1dde32cad337f82eb61f812446249",
+                            "locale": "es"
+                        },
+                        {
+                            "entry_id": "stehp-cc-social-list-instagram",
+                            "name": "Redireccion de Instagram",
+                            "content_type": "text",
+                            "attributes": {},
+                            "content_hash": "fdbd18253f6437a861fbbfb447864f1b7ed04463",
+                            "locale": "es"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "santa-elena-navigation-options": {
+        "page_id": "santa-elena-navigation-options",
+        "name": "Navigation",
+        "content_hash": "",
+        "locales_content": {
+            "en": [
+                {
+                    "section_id": "seno-navbar-options",
+                    "name": "nav options",
+                    "content": [
+                        {
+                            "entry_id": "seno-home-redirect",
+                            "name": "inicio",
+                            "content_type": "text",
+                            "attributes": {
+                                "href": "/#/",
+                                "instructions": "Controla la navegacion al sitio de inicio.",
+                                "text": "Home"
+                            },
+                            "content_hash": "863d767b0ccbf4fa88987dd592bffe854f2b2cad",
+                            "locale": "en"
+                        },
+                        {
+                            "entry_id": "seno-blog-redirect",
+                            "name": "blog",
+                            "content_type": "text",
+                            "attributes": {
+                                "href": "/#/blog",
+                                "instructions": "Controla el redireccionamiento al blog",
+                                "text": "Blog"
+                            },
+                            "content_hash": "e89ec239a38ef31110319c643c3f7d1059072d98",
+                            "locale": "en"
+                        },
+                        {
+                            "entry_id": "sdjsajlkisad",
+                            "name": "Otro Link",
+                            "content_type": "text",
+                            "attributes": {
+                                "href": "/nosotros",
+                                "text": "About"
+                            },
+                            "content_hash": "f6f5742a952a5dacd982ee530088e23c0aca2111",
+                            "locale": "en"
+                        }
+                    ]
+                }
+            ],
+            "es": [
+                {
+                    "section_id": "seno-navbar-options",
+                    "name": "nav options",
+                    "content": [
+                        {
+                            "entry_id": "seno-home-redirect",
+                            "name": "inicio",
+                            "content_type": "text",
+                            "attributes": {
+                                "href": "/",
+                                "instructions": "Controla la navegacion al sitio de inicio.",
+                                "text": "Inicio"
+                            },
+                            "content_hash": "25f0fe508aaafa2e45c2bd633f265f169ae0a7c6",
+                            "locale": "es"
+                        },
+                        {
+                            "entry_id": "seno-blog-redirect",
+                            "name": "blog",
+                            "content_type": "text",
+                            "attributes": {
+                                "href": "/blog",
+                                "instructions": "Controla el redireccionamiento al blog",
+                                "text": "Blog"
+                            },
+                            "content_hash": "989a980702701a97bf67a88d4e04377ddac4d810",
+                            "locale": "es"
+                        },
+                        {
+                            "entry_id": "sdjsajlkisad",
+                            "name": "Otro Link",
+                            "content_type": "text",
+                            "attributes": {
+                                "href": "/nosotros",
+                                "text": "Nosotros"
+                            },
+                            "content_hash": "6151ff92baf5b21e86c60cd29577295e0244e134",
+                            "locale": "es"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

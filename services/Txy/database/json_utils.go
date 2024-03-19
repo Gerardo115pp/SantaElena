@@ -34,7 +34,8 @@ func loadContentFromJson(json_filename string) (*models.PageContent, error) {
 	var page_sections []models.ContentSection
 	content_bytes, err := os.ReadFile(json_filename)
 	if err != nil {
-		echo.Echo(echo.RedBG, fmt.Sprintf("Error while reading file '%s': %s", json_filename, err))
+		cwd, _ := os.Getwd()
+		echo.Echo(echo.RedBG, fmt.Sprintf("Error while reading file '%s' in cwd '%s': %s", json_filename, cwd, err))
 		return page_content, err
 	}
 

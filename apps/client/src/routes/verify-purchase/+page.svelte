@@ -1,22 +1,13 @@
 <script>
     import CTloader from "@components/Loaders/CTloader.svelte";
     import { OrphanOrderVerification, verifyOrder } from "@libs/LiberyPayments/models/payments"
-    import { navbar_solid } from "@stores/layout";
     import { defineNavbarDarkColorSchema } from "@themes/component_themes";
     import Footer from "@components/Footer/Footer.svelte";
     import { onMount } from "svelte";
     import MainLogo from "@components/UI/MainLogo.svelte";
+    import { browser } from "$app/environment";
 
     
-    /*=============================================
-    =            Setup            =
-    =============================================*/
-    
-        window.scrollTo(0, 0);
-
-        navbar_solid.set(true);
-    
-    /*=====  End of Setup  ======*/
     
     
     
@@ -40,6 +31,9 @@
     /*=====  End of Properties  ======*/
 
     onMount(async () => {
+        if (browser) {
+            window.scrollTo(0, 0);
+        }
         defineNavbarDarkColorSchema();
 
         await updateOrderVerification();

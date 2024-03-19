@@ -39,6 +39,7 @@ var WORDPRESS_SERVICE string = os.Getenv("WORDPRESS_SERVICE")
 var SSL_CA_PATH string = os.Getenv("SSL_CA_PATH")
 var JWT_SECRET string = os.Getenv("JWT_SECRET")
 var DOMAIN_SECRET string = os.Getenv("DOMAIN_SECRET")
+var DEVELOPMENT_MODE_OVERRIDE string = os.Getenv("DEVELOPMENT_MODE") // if equals to 'off' DEVELOPMENT_MODE is false even if SSL_CA_PATH is set
 
 // --------Settings--------
 
@@ -78,7 +79,7 @@ func VerifyConfig() {
 
 	TRADES_DB = path.Join(DATABASE_DIRECTORY, "stripe.db")
 
-	if SSL_CA_PATH != "" {
+	if SSL_CA_PATH != "" && DEVELOPMENT_MODE_OVERRIDE != "off" {
 		DEVELOPMENT_MODE = true
 	}
 

@@ -173,7 +173,9 @@ server {
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
         proxy_method $request_method;
-        proxy_pass https://dev-santa-elena.mx:5005;
+        # proxy_pass https://dev-santa-elena.mx:5005;
+        proxy_pass http://dev-santa-elena.mx:5005;
+        # proxy_pass http://127.0.0.1:5005;
     }
 
     location = /favicon.ico {
